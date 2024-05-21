@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/utils/responsive.dart';
+import 'package:hirevire_app/utils/size_util.dart';
 
 class AppTextThemes {
   static double _getResponsiveFontSize(BuildContext context, double baseSize) {
@@ -21,7 +22,7 @@ class AppTextThemes {
 
   static TextStyle titleStyle(BuildContext context) {
     return TextStyle(
-      fontSize: _getResponsiveFontSize(context, 26.0),
+      fontSize: _getResponsiveFontSize(context, 26.0.adaptSize(context)),
       fontWeight: FontWeight.w700,
       color: AppColors.textPrimary,
     );
@@ -29,7 +30,7 @@ class AppTextThemes {
 
   static TextStyle screenTitleStyle(BuildContext context) {
     return TextStyle(
-      fontSize: _getResponsiveFontSize(context, 20.0),
+      fontSize: _getResponsiveFontSize(context, 20.0.adaptSize(context)),
       fontWeight: FontWeight.w600,
       color: AppColors.textPrimary,
     );
@@ -37,7 +38,7 @@ class AppTextThemes {
 
   static TextStyle subtitleStyle(BuildContext context) {
     return TextStyle(
-      fontSize: _getResponsiveFontSize(context, 18.0),
+      fontSize: _getResponsiveFontSize(context, 18.0.adaptSize(context)),
       fontWeight: FontWeight.w500,
       color: AppColors.textPrimary,
     );
@@ -45,7 +46,7 @@ class AppTextThemes {
 
   static TextStyle bodyTextStyle(BuildContext context) {
     return TextStyle(
-      fontSize: _getResponsiveFontSize(context, 16.0),
+      fontSize: _getResponsiveFontSize(context, 16.0.adaptSize(context)),
       fontWeight: FontWeight.w400,
       color: AppColors.textPrimary,
     );
@@ -53,9 +54,17 @@ class AppTextThemes {
 
   static TextStyle buttonTextStyle(BuildContext context) {
     return TextStyle(
-      fontSize: _getResponsiveFontSize(context, 14.0),
-      fontWeight: FontWeight.w600,
+      fontSize: _getResponsiveFontSize(context, 16.0.adaptSize(context)),
+      fontWeight: FontWeight.w500,
       color: Colors.white,
+    );
+  }
+
+  static TextStyle smallText(BuildContext context) {
+    return TextStyle(
+      fontSize: _getResponsiveFontSize(context, 14.0.adaptSize(context)),
+      fontWeight: FontWeight.w400,
+      color: AppColors.textPrimary,
     );
   }
 }

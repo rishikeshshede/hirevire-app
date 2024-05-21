@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
-import 'package:hirevire_app/user_interface/onboarding/onboartding.dart';
+import 'package:hirevire_app/user_interface/onboarding/onboarding_screen.dart';
 import 'package:hirevire_app/utils/persistence_handler.dart';
 
 class NavigationController extends GetxController {
@@ -34,7 +34,7 @@ class NavigationController extends GetxController {
   }
 
   navigate(VoidCallback toScreen) {
-    return Timer(const Duration(seconds: 3), () {
+    return Timer(const Duration(seconds: 1), () {
       toScreen();
     });
   }
