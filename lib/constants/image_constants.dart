@@ -6,7 +6,11 @@ class ImageConstant {
   static String logo = "$imagePath/logo.jpg";
   static String notFound = "$imagePath/image_not_found.png";
   static String cover = "$imagePath/cover.jpg";
+  static String dummyUserImage = "$imagePath/user.png";
 
   // ICONS
   static String linkedInLogo = "$iconPath/linkedin-icon.svg";
+  static String arrowLeft = "$iconPath/arrow-left.png";
+  static String arrowNext = "$iconPath/arrow-next.png";
+  static String editIcon = "$iconPath/edit.png";
 }

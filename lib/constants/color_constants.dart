@@ -6,12 +6,13 @@ class AppColors {
   static const Color primaryLight = Color(0xFF00B4D8);
   static const Color accent = Color(0xFFADE8F4);
   static const Color secondary = Color(0xFF48CAE4);
-  static const Color background = Color(0xFFF4F4F6);
+  static const Color background = Color(0xFFFFFFFF);
   static const Color textPrimary = Color(0xFF001D3D);
   static const Color textSecondary = Color.fromARGB(255, 101, 125, 136);
   static const Color disabled = Color(0xFFEEEEEE);
   static const Color red = Color(0xFFDE3939);
   static const Color green = Color(0xFF1FB453);
+  static const Color black = Color(0xFF0F0F0F);
 
   static const gradientPrimary = [
     primaryLight,

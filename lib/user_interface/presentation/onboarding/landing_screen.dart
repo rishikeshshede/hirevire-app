@@ -1,14 +1,16 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hirevire_app/common/widgets/button_primary.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
+import 'package:hirevire_app/user_interface/routes/app_routes.dart';
 import 'package:hirevire_app/utils/responsive.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 
-class OnboardingScreen extends StatelessWidget {
-  const OnboardingScreen({super.key});
+class LandingScreen extends StatelessWidget {
+  const LandingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +64,9 @@ class OnboardingScreen extends StatelessWidget {
             ButtonPrimary(
               btnText: 'Use Email',
               btnColor: Colors.black87,
-              onPressed: () {},
+              onPressed: () {
+                Get.toNamed(AppRoutes.emailScreen);
+              },
             ),
             SizedBox(height: 40.h(context)),
             const TermsAndContitionsWidget(),
@@ -83,9 +87,9 @@ class TermsAndContitionsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: RichText(
+      child: Text.rich(
         textAlign: TextAlign.center,
-        text: TextSpan(
+        TextSpan(
           children: [
             TextSpan(
               text: 'By signing up, you agree to our ',
