@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:hirevire_app/user_interface/presentation/onboarding/details_screens.dart/bio_section.dart';
-import 'package:hirevire_app/user_interface/presentation/onboarding/details_screens.dart/name_dob_section.dart';
-import 'package:hirevire_app/user_interface/presentation/onboarding/details_screens.dart/phone_number.dart';
+import 'package:hirevire_app/constants/global_constants.dart';
+import 'package:hirevire_app/user_interface/presentation/onboarding/personal_details.dart/bio_section.dart';
+import 'package:hirevire_app/user_interface/presentation/onboarding/personal_details.dart/name_dob_section.dart';
+import 'package:hirevire_app/user_interface/presentation/onboarding/personal_details.dart/phone_number.dart';
+import 'package:hirevire_app/user_interface/presentation/onboarding/professional_details/skills_section.dart';
 import 'package:hirevire_app/user_interface/routes/app_routes.dart';
 import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/validation_util.dart';
@@ -17,6 +19,9 @@ class UserOnbController extends GetxController {
   RxBool isStep1Valid = false.obs;
   RxBool isNumberValid = false.obs;
   RxBool isBioValid = false.obs;
+  RxString searchQuery = ''.obs;
+  RxList<String> selectedSkills = <String>[].obs;
+  RxList<String> filteredSuggestions = <String>[].obs;
 
   final PageController pageController = PageController(initialPage: 0);
   TextEditingController emailController = TextEditingController();
@@ -28,6 +33,7 @@ class UserOnbController extends GetxController {
   TextEditingController numberController = TextEditingController();
   TextEditingController headlineController = TextEditingController();
   TextEditingController bioController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
 
   FocusNode emailFocusNode = FocusNode();
   final List<FocusNode> otpFocusNodes = List.generate(6, (_) => FocusNode());
@@ -36,6 +42,15 @@ class UserOnbController extends GetxController {
   FocusNode numberFocusNode = FocusNode();
   FocusNode headlineFocusNode = FocusNode();
   FocusNode bioFocusNode = FocusNode();
+  final FocusNode searchFocusNode = FocusNode();
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Bind the filteredSuggestions to changes in searchQuery
+    debounce(searchQuery, (_) => updateSkillsSuggestions(),
+        time: const Duration(milliseconds: 300));
+  }
 
   // ----------------- Methods -----------------
 
@@ -44,6 +59,7 @@ class UserOnbController extends GetxController {
       const NameDobSection(),
       const NumberSection(),
       const BioSection(),
+      const SkillsSection(),
     ];
   }
 
@@ -103,7 +119,6 @@ class UserOnbController extends GetxController {
         }
         break;
     }
-    print('dob: $index, $value, $isValueValid, ${errorMsg.value}');
     isDataProvided();
     return isValueValid;
   }
@@ -211,6 +226,27 @@ class UserOnbController extends GetxController {
       isBioValid.value = false;
       errorMsg.value = "Invalid number";
     }
+  }
+
+  void updateSkillsSuggestions() {
+    if (searchQuery.isEmpty) {
+      filteredSuggestions.value = [];
+    } else {
+      filteredSuggestions.value = GlobalConstants.suggestions
+          .where((skill) =>
+              skill.toLowerCase().contains(searchQuery.toLowerCase()))
+          .toList();
+    }
+  }
+
+  void addSkill(String skill) {
+    if (!selectedSkills.contains(skill)) {
+      selectedSkills.add(skill);
+    }
+  }
+
+  void removeSkill(String skill) {
+    selectedSkills.remove(skill);
   }
 
   // ----------------- Navigations -----------------

@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 import 'package:hirevire_app/common/screens/splash_screen.dart';
 import 'package:hirevire_app/common/screens/unknown_route_screen.dart';
-import 'package:hirevire_app/user_interface/presentation/onboarding/details_screens.dart/sliding_base.dart';
+import 'package:hirevire_app/user_interface/presentation/onboarding/personal_details.dart/sliding_base.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/landing_screen.dart';
-import 'package:hirevire_app/user_interface/presentation/onboarding/otp_screen.dart';
-import 'package:hirevire_app/user_interface/presentation/onboarding/provide_email_screen.dart';
+import 'package:hirevire_app/user_interface/presentation/onboarding/auth/otp_screen.dart';
+import 'package:hirevire_app/user_interface/presentation/onboarding/auth/provide_email_screen.dart';
 
 class AppRoutes {
   // Routes
