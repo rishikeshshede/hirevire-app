@@ -59,6 +59,7 @@ class LandingScreen extends StatelessWidget {
               btnText: 'Login with LinkedIn',
               textColor: AppColors.primary,
               btnColor: AppColors.background,
+              iconPosition: IconPosition.left,
               onPressed: () {},
             ),
             ButtonPrimary(

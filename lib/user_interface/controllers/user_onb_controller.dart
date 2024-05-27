@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:hirevire_app/constants/global_constants.dart';
-import 'package:hirevire_app/user_interface/presentation/onboarding/personal_details.dart/bio_section.dart';
+import 'package:hirevire_app/user_interface/presentation/onboarding/professional_details/bio_section.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/personal_details.dart/name_dob_section.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/personal_details.dart/phone_number.dart';
+import 'package:hirevire_app/user_interface/presentation/onboarding/professional_details/experience_section.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/professional_details/skills_section.dart';
+import 'package:hirevire_app/user_interface/presentation/onboarding/professional_details/social_urls_section.dart';
 import 'package:hirevire_app/user_interface/routes/app_routes.dart';
 import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/validation_util.dart';
@@ -18,10 +20,25 @@ class UserOnbController extends GetxController {
   RxString errorMsg = ''.obs;
   RxBool isStep1Valid = false.obs;
   RxBool isNumberValid = false.obs;
-  RxBool isBioValid = false.obs;
+  RxBool isHeadlineValid = false.obs;
+  RxBool skillsAdded = false.obs;
+  RxBool addingExp = false.obs;
+  RxBool expAdded = false.obs;
   RxString searchQuery = ''.obs;
   RxList<String> selectedSkills = <String>[].obs;
   RxList<String> filteredSuggestions = <String>[].obs;
+  RxList<Map<String, dynamic>> addedExp = <Map<String, dynamic>>[].obs;
+  RxList<Map<String, dynamic>> socialProfiles = <Map<String, dynamic>>[].obs;
+  RxString employmentType = GlobalConstants.employmentTypes[0].obs;
+  RxString socialProfileType =
+      GlobalConstants.socialProfileTypesMap.keys.first.obs;
+  RxBool isAddingUrl = false.obs;
+  RxString locationType = GlobalConstants.locationTypes[0].obs;
+  RxBool stillWorking = true.obs;
+  RxString startMonth = GlobalConstants.monthsMap.keys.first.obs;
+  RxString startYear = GlobalConstants.years[0].obs;
+  RxString endMonth = GlobalConstants.monthsMap.keys.first.obs;
+  RxString endYear = GlobalConstants.years[0].obs;
 
   final PageController pageController = PageController(initialPage: 0);
   TextEditingController emailController = TextEditingController();
@@ -34,6 +51,11 @@ class UserOnbController extends GetxController {
   TextEditingController headlineController = TextEditingController();
   TextEditingController bioController = TextEditingController();
   TextEditingController searchController = TextEditingController();
+  TextEditingController expTitleController = TextEditingController();
+  TextEditingController expDescriptionController = TextEditingController();
+  TextEditingController companyNameController = TextEditingController();
+  TextEditingController companyLocationController = TextEditingController();
+  TextEditingController socialUrlController = TextEditingController();
 
   FocusNode emailFocusNode = FocusNode();
   final List<FocusNode> otpFocusNodes = List.generate(6, (_) => FocusNode());
@@ -43,6 +65,11 @@ class UserOnbController extends GetxController {
   FocusNode headlineFocusNode = FocusNode();
   FocusNode bioFocusNode = FocusNode();
   final FocusNode searchFocusNode = FocusNode();
+  final FocusNode expTitleFocusNode = FocusNode();
+  final FocusNode expDescriptionFocusNode = FocusNode();
+  final FocusNode companyNameFocusNode = FocusNode();
+  final FocusNode companyLocationFocusNode = FocusNode();
+  final FocusNode socialUrlFocusNode = FocusNode();
 
   @override
   void onInit() {
@@ -54,12 +81,14 @@ class UserOnbController extends GetxController {
 
   // ----------------- Methods -----------------
 
-  sectionWidgets() {
+  List<Widget> sectionWidgets() {
     return [
       const NameDobSection(),
       const NumberSection(),
       const BioSection(),
       const SkillsSection(),
+      const ExperienceSection(),
+      const SocialUrlsSection(),
     ];
   }
 
@@ -197,6 +226,7 @@ class UserOnbController extends GetxController {
 
   void moveToNextStep() {
     if (currentProgressIndex < sectionWidgets().length) {
+      errorMsg.value = '';
       currentProgressIndex += 1;
       pageController.animateToPage(
         currentProgressIndex.value,
@@ -210,6 +240,7 @@ class UserOnbController extends GetxController {
     if (numberController.value.text.trim().length == 10) {
       errorMsg.value = "";
       isNumberValid.value = true;
+      numberFocusNode.unfocus();
       moveToNextStep();
     } else {
       isNumberValid.value = false;
@@ -217,14 +248,25 @@ class UserOnbController extends GetxController {
     }
   }
 
-  validateBioSection() {
-    if (numberController.value.text.trim().length == 10) {
-      isBioValid.value = true;
+  validateHeadline() {
+    if (headlineController.value.text.isNotEmpty) {
+      isHeadlineValid.value = true;
       errorMsg.value = "";
       moveToNextStep();
     } else {
-      isBioValid.value = false;
-      errorMsg.value = "Invalid number";
+      isHeadlineValid.value = false;
+      errorMsg.value = "No headline provided";
+    }
+  }
+
+  validateSkillsSection() {
+    if (selectedSkills.isNotEmpty) {
+      skillsAdded.value = true;
+      errorMsg.value = "";
+      moveToNextStep();
+    } else {
+      skillsAdded.value = false;
+      errorMsg.value = "No skills added";
     }
   }
 
@@ -248,6 +290,61 @@ class UserOnbController extends GetxController {
   void removeSkill(String skill) {
     selectedSkills.remove(skill);
   }
+
+  searchExpTitle() {}
+
+  searchCompany() {}
+
+  searchCompanyLocation() {}
+
+  toggleStillWorkingValue() {
+    stillWorking.value = !stillWorking.value;
+  }
+
+  saveExp() {
+    // add data to map
+    clearExpControllers();
+  }
+
+  validateAddedExp() {
+    if (addedExp.isNotEmpty) {
+      expAdded.value = true;
+      errorMsg.value = "";
+      clearExpControllers();
+      moveToNextStep();
+    } else {
+      expAdded.value = false;
+      errorMsg.value = "No experience added";
+    }
+  }
+
+  void clearExpControllers() {
+    addingExp.value = false;
+    stillWorking.value = false;
+    expTitleController.clear();
+    expDescriptionController.clear();
+    companyNameController.clear();
+    companyLocationController.clear();
+  }
+
+  checkUrlStatus() {
+    isAddingUrl.value = socialUrlController.value.text.trim().isNotEmpty &&
+        socialUrlController.value.text.trim() != 'Select';
+  }
+
+  addSocialUrl() {
+    checkUrlStatus();
+    if (isAddingUrl.value) {
+      socialProfiles.add({
+        "platform": socialProfileType.value,
+        "url": socialUrlController.value.text.trim()
+      });
+      socialUrlController.clear();
+      checkUrlStatus();
+    }
+  }
+
+  clearAddProfileEntry() {}
 
   // ----------------- Navigations -----------------
 

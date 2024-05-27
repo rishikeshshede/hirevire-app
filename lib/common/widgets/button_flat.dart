@@ -7,22 +7,31 @@ class ButtonFlat extends StatelessWidget {
     super.key,
     required this.onTap,
     required this.btnText,
+    this.height,
+    this.fontSize = 16,
   });
 
   final VoidCallback onTap;
   final String btnText;
+  final double? height;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Text(
-        btnText,
-        style: AppTextThemes.smallText(context)
-            .copyWith(
-              fontWeight: FontWeight.w600,
-            )
-            .copyWith(fontSize: 12.5.adaptSize(context)),
+      child: Container(
+        height: height ?? 42,
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        alignment: Alignment.center,
+        child: Text(
+          btnText,
+          style: AppTextThemes.smallText(context)
+              .copyWith(
+                fontWeight: FontWeight.w600,
+              )
+              .copyWith(fontSize: fontSize!.adaptSize(context)),
+        ),
       ),
     );
   }

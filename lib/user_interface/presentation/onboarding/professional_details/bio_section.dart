@@ -4,6 +4,7 @@ import 'package:hirevire_app/common/widgets/body_text_widget.dart';
 import 'package:hirevire_app/common/widgets/button_circular.dart';
 import 'package:hirevire_app/common/widgets/button_flat.dart';
 import 'package:hirevire_app/common/widgets/custom_image_view.dart';
+import 'package:hirevire_app/common/widgets/error_text_widget.dart';
 import 'package:hirevire_app/common/widgets/heading_large.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/common/widgets/text_field.dart';
@@ -92,6 +93,9 @@ class BioSection extends GetWidget<UserOnbController> {
                   controller: controller.headlineController,
                   focusNode: controller.headlineFocusNode,
                   maxLength: GlobalConstants.maxHeadlineChars,
+                  onChanged: (String value) {
+                    controller.isHeadlineValid.value = value.isNotEmpty;
+                  },
                   onEditingComplete: () {
                     controller.headlineFocusNode.unfocus();
                     FocusScope.of(context)
@@ -111,6 +115,9 @@ class BioSection extends GetWidget<UserOnbController> {
                     controller.bioFocusNode.unfocus();
                   },
                 ),
+                Obx(
+                  () => ErrorTextWidget(text: controller.errorMsg.value),
+                ),
                 SizedBox(height: 15.h(context)),
               ],
             ),
@@ -126,12 +133,14 @@ class BioSection extends GetWidget<UserOnbController> {
               },
               btnText: "Skip",
             ),
-            ButtonCircular(
-              icon: ImageConstant.arrowNext,
-              onPressed: () {
-                controller.moveToNextStep();
-              },
-              isActive: true,
+            Obx(
+              () => ButtonCircular(
+                icon: ImageConstant.arrowNext,
+                onPressed: () {
+                  controller.validateHeadline();
+                },
+                isActive: controller.isHeadlineValid.value,
+              ),
             ),
           ],
         ),

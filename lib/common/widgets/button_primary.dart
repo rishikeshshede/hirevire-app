@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hirevire_app/common/widgets/custom_image_view.dart';
+import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
 import 'package:hirevire_app/utils/size_util.dart';
@@ -16,6 +17,8 @@ class ButtonPrimary extends StatelessWidget {
     this.iconHeight,
     this.iconPadding,
     this.textColor,
+    this.iconPosition = IconPosition.center,
+    this.iconColor,
   });
 
   final String btnText;
@@ -27,6 +30,8 @@ class ButtonPrimary extends StatelessWidget {
   final String? iconPath;
   final double? iconHeight;
   final double? iconPadding;
+  final IconPosition iconPosition;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -44,24 +49,43 @@ class ButtonPrimary extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: (iconPosition == IconPosition.left ||
+                  iconPosition == IconPosition.right)
+              ? MainAxisAlignment.spaceBetween
+              : MainAxisAlignment.center,
           children: [
-            if (iconPath != null && iconPath!.isNotEmpty)
+            iconPosition == IconPosition.left
+                ? CustomImageView(
+                    imagePath: iconPath,
+                    height: iconHeight?.h(context) ?? 32.h(context),
+                    padding: iconPadding,
+                  )
+                : const HorizontalSpace(space: 8),
+            if (iconPosition == IconPosition.center && iconPath != null)
               CustomImageView(
                 imagePath: iconPath,
                 height: iconHeight?.h(context) ?? 32.h(context),
                 padding: iconPadding,
+                margin: const EdgeInsets.only(right: 8),
+                color: iconColor,
               ),
-            if (iconPath == null || iconPath == '') const SizedBox(width: 8),
             Text(
               btnText,
               style: AppTextThemes.buttonTextStyle(context)
                   .copyWith(color: textColor),
             ),
-            const SizedBox(width: 8),
+            iconPosition == IconPosition.right
+                ? CustomImageView(
+                    imagePath: iconPath,
+                    height: iconHeight?.h(context) ?? 32.h(context),
+                    padding: iconPadding,
+                  )
+                : const HorizontalSpace(space: 8),
           ],
         ),
       ),
     );
   }
 }
+
+enum IconPosition { left, center, right }

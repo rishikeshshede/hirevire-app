@@ -4,6 +4,7 @@ import 'package:hirevire_app/common/widgets/body_text_widget.dart';
 import 'package:hirevire_app/common/widgets/button_circular.dart';
 import 'package:hirevire_app/common/widgets/button_flat.dart';
 import 'package:hirevire_app/common/widgets/custom_chip.dart';
+import 'package:hirevire_app/common/widgets/error_text_widget.dart';
 import 'package:hirevire_app/common/widgets/heading_large.dart';
 import 'package:hirevire_app/common/widgets/text_field.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
@@ -78,6 +79,9 @@ class SkillsSection extends GetWidget<UserOnbController> {
                     ),
                   );
                 }),
+                Obx(
+                  () => ErrorTextWidget(text: controller.errorMsg.value),
+                ),
                 SizedBox(height: 15.h(context)),
                 Obx(() {
                   if (controller.selectedSkills.isEmpty) {
@@ -108,15 +112,19 @@ class SkillsSection extends GetWidget<UserOnbController> {
             ButtonFlat(
               onTap: () {
                 controller.moveToNextStep();
+                controller.searchFocusNode.unfocus();
               },
               btnText: "Skip",
             ),
-            ButtonCircular(
-              icon: ImageConstant.arrowNext,
-              onPressed: () {
-                controller.moveToNextStep();
-              },
-              isActive: true,
+            Obx(
+              () => ButtonCircular(
+                icon: ImageConstant.arrowNext,
+                onPressed: () {
+                  controller.searchFocusNode.unfocus();
+                  controller.moveToNextStep();
+                },
+                isActive: controller.selectedSkills.isNotEmpty,
+              ),
             ),
           ],
         ),

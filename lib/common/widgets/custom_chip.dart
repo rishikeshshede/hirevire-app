@@ -34,7 +34,10 @@ class CustomChip extends StatelessWidget {
           ),
           GestureDetector(
             onTap: onRemove,
-            child: const Icon(Icons.cancel_outlined),
+            child: const Icon(
+              Icons.cancel_outlined,
+              color: AppColors.red,
+            ),
           )
         ],
       ),

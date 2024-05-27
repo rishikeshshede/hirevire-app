@@ -119,7 +119,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         children: [
           if (widget.titleText != null)
             Padding(
-              padding: const EdgeInsets.only(left: 6.0),
+              padding: const EdgeInsets.only(left: 5.0),
               child: Text(
                 widget.titleText!,
                 style: AppTextThemes.smallText(context)
