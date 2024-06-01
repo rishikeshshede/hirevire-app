@@ -39,7 +39,7 @@ class AppRoutes {
       name: otpScreen,
       page: () => const OTPScreen(),
       transition: Transition.rightToLeft,
-      transitionDuration: const Duration(milliseconds: 500),
+      transitionDuration: const Duration(milliseconds: 300),
     ),
     GetPage(
       name: introScreen,

@@ -68,7 +68,7 @@ class ExperienceCard extends StatelessWidget {
                           Text(
                             experience['location'],
                             style:
-                                AppTextThemes.subtitleStyle(context).copyWith(
+                                AppTextThemes.bodyTextStyle(context).copyWith(
                               fontSize: 14,
                               color: AppColors.textSecondary,
                             ),
@@ -77,7 +77,7 @@ class ExperienceCard extends StatelessWidget {
                           Text(
                             " • ",
                             style:
-                                AppTextThemes.subtitleStyle(context).copyWith(
+                                AppTextThemes.bodyTextStyle(context).copyWith(
                               fontSize: 14,
                               color: AppColors.textSecondary,
                             ),
@@ -86,7 +86,7 @@ class ExperienceCard extends StatelessWidget {
                           Text(
                             "${experience['locationType']}",
                             style:
-                                AppTextThemes.subtitleStyle(context).copyWith(
+                                AppTextThemes.bodyTextStyle(context).copyWith(
                               fontSize: 14,
                               color: AppColors.textSecondary,
                             ),

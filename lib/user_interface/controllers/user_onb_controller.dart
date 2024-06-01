@@ -147,20 +147,20 @@ class UserOnbController extends GetxController {
       case 0:
         if (value.length == 2) {
           isValueValid = intValue > 0 && intValue <= 31;
-          errorMsg.value = isValueValid ? "" : "Invalid date";
+          errorMsg.value = isValueValid ? "" : "*Invalid date";
         }
         break;
       case 1:
         if (value.length == 2) {
           isValueValid = intValue > 0 && intValue <= 12;
-          errorMsg.value = isValueValid ? "" : "Invalid month";
+          errorMsg.value = isValueValid ? "" : "*Invalid month";
         }
         break;
       case 2:
         if (value.length == 4) {
           isValueValid =
               intValue > 1930 && intValue <= 2015; // hardcoded for now
-          errorMsg.value = isValueValid ? "" : "Invalid year";
+          errorMsg.value = isValueValid ? "" : "*Invalid year";
         }
         break;
     }
@@ -206,7 +206,7 @@ class UserOnbController extends GetxController {
       return true;
     } else {
       isDobValid.value = false;
-      errorMsg.value = 'Invalid date of birth';
+      errorMsg.value = '*Invalid date of birth';
       return false;
     }
   }
@@ -262,7 +262,7 @@ class UserOnbController extends GetxController {
       moveToNextStep();
     } else {
       isNumberValid.value = false;
-      errorMsg.value = "Invalid number";
+      errorMsg.value = "*Invalid number";
     }
   }
 
@@ -271,10 +271,11 @@ class UserOnbController extends GetxController {
       isHeadlineValid.value = true;
       errorMsg.value = "";
       headlineFocusNode.unfocus();
+      bioFocusNode.unfocus();
       moveToNextStep();
     } else {
       isHeadlineValid.value = false;
-      errorMsg.value = "No headline provided";
+      errorMsg.value = "*No headline provided";
     }
   }
 
@@ -365,7 +366,7 @@ class UserOnbController extends GetxController {
       moveToNextStep();
     } else {
       expAdded.value = false;
-      errorMsg.value = "No experience added";
+      errorMsg.value = "*No experience added";
     }
   }
 
@@ -386,7 +387,7 @@ class UserOnbController extends GetxController {
 
   checkUrlStatus() {
     isAddingUrl.value = socialUrlController.value.text.trim().isNotEmpty &&
-        socialUrlController.value.text.trim() != 'Select';
+        socialProfileType.value.trim() != 'Select';
   }
 
   clearSocialControllers() {
@@ -403,7 +404,14 @@ class UserOnbController extends GetxController {
         "url": socialUrlController.value.text.trim()
       });
       socialUrlController.clear();
+      errorMsg.value = '';
       checkUrlStatus();
+    } else {
+      if (socialUrlController.value.text.trim().isEmpty) {
+        errorMsg.value = '*URL missing';
+      } else if (socialProfileType.value.trim() == 'Select') {
+        errorMsg.value = '*Select platform type';
+      }
     }
   }
 

@@ -5,6 +5,7 @@ import 'package:hirevire_app/common/widgets/button_circular.dart';
 import 'package:hirevire_app/common/widgets/button_flat.dart';
 import 'package:hirevire_app/common/widgets/button_primary.dart';
 import 'package:hirevire_app/common/widgets/dropdown_widget.dart';
+import 'package:hirevire_app/common/widgets/error_text_widget.dart';
 import 'package:hirevire_app/common/widgets/heading_large.dart';
 import 'package:hirevire_app/common/widgets/social_url_cards.dart';
 import 'package:hirevire_app/common/widgets/text_field.dart';
@@ -36,7 +37,7 @@ class SocialUrlsSection extends GetWidget<UserOnbController> {
                 Obx(
                   () => DropdownWidget(
                     controller: controller,
-                    title: 'Platform type',
+                    title: 'Platform type*',
                     list: GlobalConstants.socialProfileTypesMap.keys.toList(),
                     initialValue: controller.socialProfileType.value,
                     onChanged: (String? value) {
@@ -48,19 +49,23 @@ class SocialUrlsSection extends GetWidget<UserOnbController> {
                 ),
                 SizedBox(height: 15.h(context)),
                 CustomTextField(
-                    titleText: "URL*",
-                    labelText: 'Ex: https://linkedin.com/hirevire',
-                    textInputType: TextInputType.text,
-                    textInputAction: TextInputAction.done,
-                    controller: controller.socialUrlController,
-                    focusNode: controller.socialUrlFocusNode,
-                    onChanged: (String value) {
-                      controller.checkUrlStatus();
-                    },
-                    onEditingComplete: () {
-                      controller.socialUrlFocusNode.unfocus();
-                      controller.addSocialUrl();
-                    }),
+                  titleText: "URL*",
+                  labelText: 'Ex: https://linkedin.com/hirevire',
+                  textInputType: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  controller: controller.socialUrlController,
+                  focusNode: controller.socialUrlFocusNode,
+                  onChanged: (String value) {
+                    controller.checkUrlStatus();
+                  },
+                  onEditingComplete: () {
+                    controller.socialUrlFocusNode.unfocus();
+                    controller.addSocialUrl();
+                  },
+                ),
+                Obx(
+                  () => ErrorTextWidget(text: controller.errorMsg.value),
+                ),
                 SizedBox(height: 15.h(context)),
                 Obx(
                   () => controller.isAddingUrl.value
@@ -101,10 +106,7 @@ class SocialUrlsSection extends GetWidget<UserOnbController> {
                                   ['platform'],
                               url: controller.socialProfiles[index]['url'],
                               onTap: () {
-                                controller.socialProfiles.removeWhere((map) =>
-                                    map['platform'] ==
-                                    controller.socialProfiles[index]
-                                        ['platform']);
+                                controller.socialProfiles.removeAt(index);
                               },
                             );
                           }),

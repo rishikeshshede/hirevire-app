@@ -19,45 +19,40 @@ class SocialUrlCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Container(
-          height: 60,
-          margin: EdgeInsets.only(right: 8.w(context), bottom: 10.w(context)),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-            color: AppColors.disabled.withOpacity(.7),
-            borderRadius: BorderRadius.circular(12),
+    return Container(
+      height: 60.w(context),
+      margin: EdgeInsets.only(bottom: 10.w(context)),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: AppColors.disabled.withOpacity(.7),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          CustomImageView(
+            imagePath: GlobalConstants.socialProfileTypesMap[platform],
+            height: 20,
           ),
-          child: Row(
-            children: [
-              CustomImageView(
-                imagePath: GlobalConstants.socialProfileTypesMap[platform],
-                height: 20,
-              ),
-              const HorizontalSpace(space: 8),
-              Expanded(
-                child: Text(
-                  url,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              )
-            ],
-          ),
-        ),
-        Positioned(
-          top: -6,
-          right: 0,
-          child: GestureDetector(
-            onTap: onTap,
-            child: const Icon(
-              Icons.cancel_outlined,
-              color: AppColors.red,
+          const HorizontalSpace(space: 8),
+          Expanded(
+            child: Text(
+              url,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-        )
-      ],
+          GestureDetector(
+            onTap: onTap, // show warning
+            child: SizedBox(
+              width: 40.w(context),
+              height: 60.w(context),
+              child: const Icon(
+                Icons.delete,
+                color: AppColors.red,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
