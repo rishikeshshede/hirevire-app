@@ -123,8 +123,7 @@ class SocialUrlsSection extends GetWidget<UserOnbController> {
                   children: [
                     ButtonFlat(
                       onTap: () {
-                        controller.socialUrlController.clear();
-                        controller.socialProfiles.clear();
+                        controller.clearSocialControllers();
                         controller.moveToNextStep();
                       },
                       btnText: "Skip",
@@ -132,7 +131,7 @@ class SocialUrlsSection extends GetWidget<UserOnbController> {
                     ButtonCircular(
                       icon: ImageConstant.arrowNext,
                       onPressed: () {
-                        controller.validateAddedExp();
+                        controller.moveToNextStep();
                       },
                       isActive: controller.socialProfiles.isNotEmpty,
                     ),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -6,11 +8,13 @@ import 'package:hirevire_app/user_interface/presentation/onboarding/professional
 import 'package:hirevire_app/user_interface/presentation/onboarding/personal_details.dart/name_dob_section.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/personal_details.dart/phone_number.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/professional_details/experience_section.dart';
+import 'package:hirevire_app/user_interface/presentation/onboarding/professional_details/location_section.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/professional_details/skills_section.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/professional_details/social_urls_section.dart';
 import 'package:hirevire_app/user_interface/routes/app_routes.dart';
 import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/validation_util.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UserOnbController extends GetxController {
   RxBool isEmailValid = false.obs;
@@ -24,6 +28,7 @@ class UserOnbController extends GetxController {
   RxBool skillsAdded = false.obs;
   RxBool addingExp = false.obs;
   RxBool expAdded = false.obs;
+  RxBool isSigningUp = false.obs;
   RxString searchQuery = ''.obs;
   RxList<String> selectedSkills = <String>[].obs;
   RxList<String> filteredSuggestions = <String>[].obs;
@@ -32,6 +37,7 @@ class UserOnbController extends GetxController {
   RxString employmentType = GlobalConstants.employmentTypes[0].obs;
   RxString socialProfileType =
       GlobalConstants.socialProfileTypesMap.keys.first.obs;
+  RxString preferredJobMode = GlobalConstants.locationTypes[0].obs;
   RxBool isAddingUrl = false.obs;
   RxString locationType = GlobalConstants.locationTypes[0].obs;
   RxBool stillWorking = true.obs;
@@ -39,6 +45,11 @@ class UserOnbController extends GetxController {
   RxString startYear = GlobalConstants.years[0].obs;
   RxString endMonth = GlobalConstants.monthsMap.keys.first.obs;
   RxString endYear = GlobalConstants.years[0].obs;
+
+  final imagePicker = ImagePicker();
+  Rx<File?> profilePic = Rx<File?>(null);
+
+  // Text Controllers
 
   final PageController pageController = PageController(initialPage: 0);
   TextEditingController emailController = TextEditingController();
@@ -56,6 +67,9 @@ class UserOnbController extends GetxController {
   TextEditingController companyNameController = TextEditingController();
   TextEditingController companyLocationController = TextEditingController();
   TextEditingController socialUrlController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+
+  // Text Focus nodes
 
   FocusNode emailFocusNode = FocusNode();
   final List<FocusNode> otpFocusNodes = List.generate(6, (_) => FocusNode());
@@ -70,6 +84,7 @@ class UserOnbController extends GetxController {
   final FocusNode companyNameFocusNode = FocusNode();
   final FocusNode companyLocationFocusNode = FocusNode();
   final FocusNode socialUrlFocusNode = FocusNode();
+  final FocusNode locationFocusNode = FocusNode();
 
   @override
   void onInit() {
@@ -89,6 +104,7 @@ class UserOnbController extends GetxController {
       const SkillsSection(),
       const ExperienceSection(),
       const SocialUrlsSection(),
+      const LocationSection(),
     ];
   }
 
@@ -225,7 +241,7 @@ class UserOnbController extends GetxController {
   }
 
   void moveToNextStep() {
-    if (currentProgressIndex < sectionWidgets().length) {
+    if (currentProgressIndex < sectionWidgets().length - 1) {
       errorMsg.value = '';
       currentProgressIndex += 1;
       pageController.animateToPage(
@@ -233,6 +249,8 @@ class UserOnbController extends GetxController {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
+    } else if (currentProgressIndex.value == sectionWidgets().length - 1) {
+      // signup
     }
   }
 
@@ -252,6 +270,7 @@ class UserOnbController extends GetxController {
     if (headlineController.value.text.isNotEmpty) {
       isHeadlineValid.value = true;
       errorMsg.value = "";
+      headlineFocusNode.unfocus();
       moveToNextStep();
     } else {
       isHeadlineValid.value = false;
@@ -302,8 +321,40 @@ class UserOnbController extends GetxController {
   }
 
   saveExp() {
-    // add data to map
-    clearExpControllers();
+    bool isEndDateAdded;
+
+    if (stillWorking.value) {
+      isEndDateAdded = true;
+    } else if (endMonth.value != 'Month' && endYear.value != 'Year') {
+      isEndDateAdded = true;
+    } else {
+      isEndDateAdded = false;
+    }
+
+    if (expTitleController.value.text.isNotEmpty &&
+        companyNameController.value.text.isNotEmpty &&
+        startMonth.value != 'Month' &&
+        startYear.value != 'Year' &&
+        isEndDateAdded) {
+      errorMsg.value = "";
+      Map<String, dynamic> exp = {
+        'title': expTitleController.value.text.trim(),
+        'company': companyNameController.value.text.trim(),
+        'location': companyLocationController.value.text.trim(),
+        'description': expDescriptionController.value.text.trim(),
+        'employmentType': employmentType.value == "Please select"
+            ? null
+            : employmentType.value,
+        'locationType':
+            locationType.value == "Please select" ? null : locationType.value,
+        'startDate': "$startMonth $startYear",
+        'endDate': stillWorking.value ? "Present" : "$endMonth $endYear",
+      };
+      addedExp.add(exp);
+      clearExpControllers();
+    } else {
+      errorMsg.value = "*Add required fields";
+    }
   }
 
   validateAddedExp() {
@@ -320,16 +371,28 @@ class UserOnbController extends GetxController {
 
   void clearExpControllers() {
     addingExp.value = false;
-    stillWorking.value = false;
+    stillWorking.value = true;
     expTitleController.clear();
-    expDescriptionController.clear();
     companyNameController.clear();
     companyLocationController.clear();
+    expDescriptionController.clear();
+    employmentType.value = GlobalConstants.employmentTypes[0];
+    locationType.value = GlobalConstants.locationTypes[0];
+    startMonth.value = GlobalConstants.monthsMap.keys.first;
+    startYear.value = GlobalConstants.years[0];
+    endMonth.value = GlobalConstants.monthsMap.keys.first;
+    endYear.value = GlobalConstants.years[0];
   }
 
   checkUrlStatus() {
     isAddingUrl.value = socialUrlController.value.text.trim().isNotEmpty &&
         socialUrlController.value.text.trim() != 'Select';
+  }
+
+  clearSocialControllers() {
+    socialUrlController.clear();
+    socialProfiles.clear();
+    socialProfileType.value = GlobalConstants.socialProfileTypesMap.keys.first;
   }
 
   addSocialUrl() {
@@ -344,7 +407,22 @@ class UserOnbController extends GetxController {
     }
   }
 
-  clearAddProfileEntry() {}
+  Future<void> pickImage() async {
+    final pickedFile = await imagePicker.pickImage(
+        source: ImageSource.gallery, imageQuality: 80);
+
+    if (pickedFile != null) {
+      profilePic.value = File(pickedFile.path);
+    }
+  }
+
+  signup() async {
+    isSigningUp.value = true;
+    Future.delayed(const Duration(seconds: 3), () {
+      isSigningUp.value = false;
+      navigateToBaseNav();
+    });
+  }
 
   // ----------------- Navigations -----------------
 
@@ -354,5 +432,9 @@ class UserOnbController extends GetxController {
 
   navigateToIntroScreen() {
     Get.toNamed(AppRoutes.introScreen);
+  }
+
+  navigateToBaseNav() {
+    Get.toNamed(AppRoutes.userBaseNavigator);
   }
 }

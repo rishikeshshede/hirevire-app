@@ -40,4 +40,8 @@ class NavigationController extends GetxController {
       toScreen();
     });
   }
+
+  void onNavTabTap(int index) {
+    currentTabIndex.value = index;
+  }
 }

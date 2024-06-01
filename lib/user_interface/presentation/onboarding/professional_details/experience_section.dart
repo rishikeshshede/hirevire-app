@@ -5,6 +5,8 @@ import 'package:hirevire_app/common/widgets/button_circular.dart';
 import 'package:hirevire_app/common/widgets/button_flat.dart';
 import 'package:hirevire_app/common/widgets/button_primary.dart';
 import 'package:hirevire_app/common/widgets/dropdown_widget.dart';
+import 'package:hirevire_app/common/widgets/error_text_widget.dart';
+import 'package:hirevire_app/common/widgets/experience_card.dart';
 import 'package:hirevire_app/common/widgets/heading_large.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/common/widgets/text_field.dart';
@@ -48,6 +50,7 @@ class ExperienceSection extends GetWidget<UserOnbController> {
                         ),
                 ),
                 SizedBox(height: 15.h(context)),
+                // Controls while addding Exp
                 Obx(
                   () => controller.addingExp.value
                       ? Row(
@@ -83,28 +86,25 @@ class ExperienceSection extends GetWidget<UserOnbController> {
                           iconColor: AppColors.primaryDark,
                         ),
                 ),
-                SizedBox(height: 10.h(context)),
-                // TODO: SHOW ADDED EXP
+                SizedBox(height: 15.h(context)),
+                // Add Experience Form
                 Obx(
                   () => controller.addingExp.value
                       ? Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             color: AppColors.background,
-                            // boxShadow: const [
-                            //   BoxShadow(
-                            //     color: Colors.red,
-                            //     spreadRadius: 2,
-                            //     blurRadius: 5,
-                            //     offset: Offset(0, 1),
-                            //   ),
-                            // ],
                             border: Border.all(color: Colors.grey[350]!),
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(12)),
                           ),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Obx(
+                                () => ErrorTextWidget(
+                                    text: controller.errorMsg.value),
+                              ),
                               CustomTextField(
                                 titleText: "Title*",
                                 labelText: 'Ex: Software Engineer',
@@ -261,41 +261,68 @@ class ExperienceSection extends GetWidget<UserOnbController> {
                                 ],
                               ),
                               VerticalSpace(space: 15.w(context)),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: DropdownWidget(
-                                      controller: controller,
-                                      title: 'End date*',
-                                      list: GlobalConstants.monthsMap.keys
-                                          .toList(),
-                                      initialValue: controller.endMonth.value,
-                                      onChanged: (String? value) {
-                                        if (value != null) {
-                                          controller.endMonth.value = value;
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                  const HorizontalSpace(space: 8),
-                                  Expanded(
-                                    child: DropdownWidget(
-                                      controller: controller,
-                                      title: '',
-                                      list: GlobalConstants.years,
-                                      initialValue: controller.endYear.value,
-                                      onChanged: (String? value) {
-                                        if (value != null) {
-                                          controller.endYear.value = value;
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
+                              Obx(
+                                () => controller.stillWorking.value
+                                    ? Container()
+                                    : Row(
+                                        children: [
+                                          Expanded(
+                                            child: DropdownWidget(
+                                              controller: controller,
+                                              title: 'End date*',
+                                              list: GlobalConstants
+                                                  .monthsMap.keys
+                                                  .toList(),
+                                              initialValue:
+                                                  controller.endMonth.value,
+                                              onChanged: (String? value) {
+                                                if (value != null) {
+                                                  controller.endMonth.value =
+                                                      value;
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                          const HorizontalSpace(space: 8),
+                                          Expanded(
+                                            child: DropdownWidget(
+                                              controller: controller,
+                                              title: '',
+                                              list: GlobalConstants.years,
+                                              initialValue:
+                                                  controller.endYear.value,
+                                              onChanged: (String? value) {
+                                                if (value != null) {
+                                                  controller.endYear.value =
+                                                      value;
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                               ),
                               VerticalSpace(space: 15.w(context)),
                             ],
                           ),
+                        )
+                      : Container(),
+                ),
+                // Added Experience Cards
+                SizedBox(height: 20.h(context)),
+                Obx(
+                  () => !controller.addingExp.value &&
+                          controller.addedExp.isNotEmpty
+                      ? Column(
+                          children: List.generate(controller.addedExp.length,
+                              (index) {
+                            return ExperienceCard(
+                              experience: controller.addedExp[index],
+                              onDelete: () {
+                                controller.addedExp.removeAt(index);
+                              },
+                            );
+                          }),
                         )
                       : Container(),
                 ),
@@ -321,7 +348,7 @@ class ExperienceSection extends GetWidget<UserOnbController> {
                       onPressed: () {
                         controller.validateAddedExp();
                       },
-                      isActive: controller.expAdded.value,
+                      isActive: controller.addedExp.isNotEmpty,
                     ),
                   ],
                 ),

@@ -16,6 +16,7 @@ class CustomImageView extends StatelessWidget {
   final BorderRadius? radius;
   final BoxBorder? border;
   final double? padding;
+  final ImageType? imageType;
 
   /// [CustomImageView] can be used for showing any type of images.
   /// It will show the placeholder image if the image is not found on the network.
@@ -33,6 +34,7 @@ class CustomImageView extends StatelessWidget {
     this.border,
     this.placeholder = 'assets/images/image_not_found.png',
     this.padding,
+    this.imageType,
   });
 
   @override
@@ -67,11 +69,12 @@ class CustomImageView extends StatelessWidget {
   }
 
   Widget _getImageTypeWidget(String imagePath) {
+    if (imageType == ImageType.file) {
+      return _buildFileImage(imagePath);
+    }
     switch (imagePath.imageType) {
       case ImageType.svg:
         return _buildSvgImage(imagePath);
-      case ImageType.file:
-        return _buildFileImage(imagePath);
       case ImageType.network:
         return _buildNetworkImage(imagePath);
       case ImageType.png:

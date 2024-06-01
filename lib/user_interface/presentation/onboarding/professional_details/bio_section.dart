@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hirevire_app/common/widgets/body_text_widget.dart';
 import 'package:hirevire_app/common/widgets/button_circular.dart';
-import 'package:hirevire_app/common/widgets/button_flat.dart';
 import 'package:hirevire_app/common/widgets/custom_image_view.dart';
 import 'package:hirevire_app/common/widgets/error_text_widget.dart';
 import 'package:hirevire_app/common/widgets/heading_large.dart';
@@ -41,6 +40,7 @@ class BioSection extends GetWidget<UserOnbController> {
                     GestureDetector(
                       onTap: () {
                         debugPrint('change profile pic');
+                        controller.pickImage();
                       },
                       child: Stack(
                         children: [
@@ -51,10 +51,10 @@ class BioSection extends GetWidget<UserOnbController> {
                               shape: BoxShape.circle,
                               color: AppColors.disabled.withOpacity(0.5),
                             ),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.dummyUserImage,
-                              padding: 30,
-                              color: Colors.grey[350],
+                            child: Obx(
+                              () => controller.profilePic.value?.path == null
+                                  ? dummyImage()
+                                  : selectedImage(),
                             ),
                           ),
                           Positioned(
@@ -87,7 +87,7 @@ class BioSection extends GetWidget<UserOnbController> {
                 ),
                 SizedBox(height: 40.h(context)),
                 CustomTextField(
-                  titleText: "Your headline",
+                  titleText: "Your headline*",
                   textInputType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   controller: controller.headlineController,
@@ -125,14 +125,8 @@ class BioSection extends GetWidget<UserOnbController> {
         ),
         const VerticalSpace(),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            ButtonFlat(
-              onTap: () {
-                controller.moveToNextStep();
-              },
-              btnText: "Skip",
-            ),
             Obx(
               () => ButtonCircular(
                 icon: ImageConstant.arrowNext,
@@ -146,6 +140,24 @@ class BioSection extends GetWidget<UserOnbController> {
         ),
         SizedBox(height: 16.h(context)),
       ],
+    );
+  }
+
+  CustomImageView dummyImage() {
+    return CustomImageView(
+      imagePath: ImageConstant.dummyUserImage,
+      padding: 30,
+      color: Colors.grey[350],
+    );
+  }
+
+  Widget selectedImage() {
+    return CustomImageView(
+      imagePath: controller.profilePic.value?.path,
+      imageType: ImageType.file,
+      fit: BoxFit.cover,
+      padding: 0,
+      radius: BorderRadius.circular(100),
     );
   }
 }

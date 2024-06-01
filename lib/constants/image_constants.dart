@@ -18,4 +18,6 @@ class ImageConstant {
   static String arrowNext = "$iconPath/arrow-next.png";
   static String editIcon = "$iconPath/edit.png";
   static String bagIcon = "$iconPath/experience-bag.png";
+  static String tickIcon = "$iconPath/tick.png";
+  static String linkOtherIcon = "$iconPath/link-other.png";
 }

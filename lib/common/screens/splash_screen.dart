@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hirevire_app/common/controllers/navigation_controller.dart';
+import 'package:hirevire_app/user_interface/controllers/navigation_controller.dart';
 import 'package:hirevire_app/common/widgets/custom_image_view.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
@@ -21,7 +21,6 @@ class SplashScreen extends StatelessWidget {
         child: CustomImageView(
           imagePath: ImageConstant.logo,
           height: 212.h(context),
-          // width: 119.h,
         ),
       ),
     );

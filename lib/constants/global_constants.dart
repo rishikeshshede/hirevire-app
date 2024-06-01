@@ -17,6 +17,7 @@ class GlobalConstants {
   ];
 
   static List<String> employmentTypes = [
+    "Please select",
     'Full-time',
     'Part-time',
     'Self-employed',
@@ -26,6 +27,7 @@ class GlobalConstants {
   ];
 
   static List<String> locationTypes = [
+    "Please select",
     'Onsite',
     'Hybrid',
     'Remote',
@@ -38,6 +40,7 @@ class GlobalConstants {
     'Instagram': ImageConstant.instagramLogo,
     'X': ImageConstant.xLogo,
     'Youtube': ImageConstant.youtubeLogo,
+    'Other': ImageConstant.linkOtherIcon,
   };
 
   static Map<String, int> monthsMap = {
