@@ -67,4 +67,12 @@ class AppTextThemes {
       color: AppColors.textPrimary,
     );
   }
+
+  static TextStyle extraSmallText(BuildContext context) {
+    return TextStyle(
+      fontSize: _getResponsiveFontSize(context, 12.5.adaptSize(context)),
+      fontWeight: FontWeight.w400,
+      color: AppColors.textPrimary,
+    );
+  }
 }

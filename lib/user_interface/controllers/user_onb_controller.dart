@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:hirevire_app/constants/endpoint_constants.dart';
+import 'package:hirevire_app/constants/error_constants.dart';
 import 'package:hirevire_app/constants/global_constants.dart';
+import 'package:hirevire_app/services/api_service.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/professional_details/bio_section.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/personal_details.dart/name_dob_section.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/personal_details.dart/phone_number.dart';
@@ -13,10 +16,18 @@ import 'package:hirevire_app/user_interface/presentation/onboarding/professional
 import 'package:hirevire_app/user_interface/presentation/onboarding/professional_details/social_urls_section.dart';
 import 'package:hirevire_app/user_interface/routes/app_routes.dart';
 import 'package:hirevire_app/utils/datetime_util.dart';
+import 'package:hirevire_app/utils/log_handler.dart';
+import 'package:hirevire_app/utils/show_toast_util.dart';
 import 'package:hirevire_app/utils/validation_util.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserOnbController extends GetxController {
+  late ApiClient apiClient;
+  String country = "IN";
+  String countryCode = "+91";
+  String defaultItemId = "Other";
+
+  RxBool isLoading = false.obs;
   RxBool isEmailValid = false.obs;
   RxBool isOtpLengthValid = false.obs;
   RxInt currentProgressIndex = 0.obs;
@@ -29,9 +40,19 @@ class UserOnbController extends GetxController {
   RxBool addingExp = false.obs;
   RxBool expAdded = false.obs;
   RxBool isSigningUp = false.obs;
-  RxString searchQuery = ''.obs;
-  RxList<String> selectedSkills = <String>[].obs;
-  RxList<String> filteredSuggestions = <String>[].obs;
+  RxString skillsSearchQuery = ''.obs;
+  RxString titleSearchQuery = ''.obs;
+  RxString companySearchQuery = ''.obs;
+  RxMap<String, dynamic> headlineObj = <String, dynamic>{}.obs;
+  RxMap<String, dynamic> companyJobTitleObj = <String, dynamic>{}.obs;
+  RxMap<String, dynamic> companyObj = <String, dynamic>{}.obs;
+  RxList<Map<String, dynamic>> selectedSkills = <Map<String, dynamic>>[].obs;
+  RxList<Map<String, dynamic>> filteredSkillsSuggestions =
+      <Map<String, dynamic>>[].obs;
+  RxList<Map<String, dynamic>> filteredTitleSuggestions =
+      <Map<String, dynamic>>[].obs;
+  RxList<Map<String, dynamic>> filteredCompanySuggestions =
+      <Map<String, dynamic>>[].obs;
   RxList<Map<String, dynamic>> addedExp = <Map<String, dynamic>>[].obs;
   RxList<Map<String, dynamic>> socialProfiles = <Map<String, dynamic>>[].obs;
   RxString employmentType = GlobalConstants.employmentTypes[0].obs;
@@ -61,9 +82,11 @@ class UserOnbController extends GetxController {
   TextEditingController numberController = TextEditingController();
   TextEditingController headlineController = TextEditingController();
   TextEditingController bioController = TextEditingController();
-  TextEditingController searchController = TextEditingController();
+  TextEditingController skillsSearchController = TextEditingController();
   TextEditingController expTitleController = TextEditingController();
   TextEditingController expDescriptionController = TextEditingController();
+  TextEditingController companyIdController =
+      TextEditingController(text: 'Other');
   TextEditingController companyNameController = TextEditingController();
   TextEditingController companyLocationController = TextEditingController();
   TextEditingController socialUrlController = TextEditingController();
@@ -89,12 +112,21 @@ class UserOnbController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    apiClient = ApiClient();
     // Bind the filteredSuggestions to changes in searchQuery
-    debounce(searchQuery, (_) => updateSkillsSuggestions(),
+    debounce(skillsSearchQuery, (_) => suggestSkills(),
+        time: const Duration(milliseconds: 300));
+    debounce(titleSearchQuery, (_) => suggestTitles(),
+        time: const Duration(milliseconds: 300));
+    debounce(companySearchQuery, (_) => suggestCompany(),
         time: const Duration(milliseconds: 300));
   }
 
   // ----------------- Methods -----------------
+
+  showBottomToast(String message) {
+    ToastWidgit.bottomToast(message);
+  }
 
   List<Widget> sectionWidgets() {
     return [
@@ -108,17 +140,38 @@ class UserOnbController extends GetxController {
     ];
   }
 
-  bool validateEmail({String? email}) {
+  void validateEmail({String? email}) {
     String emailToValidate = email ?? emailController.text.trim();
-    bool isValid = ValidationUtil.validateEmail(emailToValidate);
-
-    isEmailValid.value = isValid;
-
-    return isValid;
+    isEmailValid.value = ValidationUtil.validateEmail(emailToValidate);
   }
 
-  Future<void> sendOtp() async {
-    // SEND OTP
+  Future<void> sendOtp({bool navigate = true}) async {
+    emailFocusNode.unfocus();
+    isLoading.value = true;
+    String endpoint = Endpoints.sendOtp;
+    Map<String, dynamic> body = {"email": emailController.text.trim()};
+
+    try {
+      Map<String, dynamic> response = await apiClient.post(endpoint, body);
+
+      if (response['success']) {
+        if (navigate) {
+          navigateToOtpScreen();
+        } else {
+          showBottomToast("OTP sent successfully");
+        }
+      } else {
+        String errorMsg =
+            response['error']['message'] ?? Errors.somethingWentWrong;
+        showBottomToast(errorMsg);
+        LogHandler.error(errorMsg);
+      }
+    } catch (error) {
+      showBottomToast(Errors.somethingWentWrong);
+      LogHandler.error(error);
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   void validateOtpLength() {
@@ -128,8 +181,68 @@ class UserOnbController extends GetxController {
   }
 
   Future<void> verifyOTP() async {
-    // SHOW LOADER
-    navigateToIntroScreen();
+    isLoading.value = true;
+    String endpoint = Endpoints.verifyOTP;
+
+    String otp =
+        otpControllers.map((controller) => controller.text.trim()).join();
+    Map<String, dynamic> body = {
+      "email": emailController.text.trim(),
+      "otp": otp,
+    };
+
+    try {
+      Map<String, dynamic> response = await apiClient.post(endpoint, body);
+
+      if (response['success']) {
+        navigateToIntroScreen();
+      } else {
+        String errorMsg =
+            response['error']['message'] ?? Errors.somethingWentWrong;
+        showBottomToast(errorMsg);
+        LogHandler.error(errorMsg);
+      }
+    } catch (error) {
+      showBottomToast(Errors.somethingWentWrong);
+      LogHandler.error(error);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> suggestTitles() async {
+    if (titleSearchQuery.isEmpty) {
+      filteredTitleSuggestions.value = [];
+    } else {
+      String endpoint = Endpoints.searchJobTitles;
+      String searchQuery = "$endpoint/${titleSearchQuery.value}";
+
+      try {
+        Map<String, dynamic> response = await apiClient.get(searchQuery);
+        if (response['success']) {
+          List<Map<String, dynamic>> convertedList =
+              List<Map<String, dynamic>>.from(response['body']['data']);
+          filteredTitleSuggestions.value = convertedList;
+        } else {
+          String errorMsg =
+              response['error']['message'] ?? Errors.somethingWentWrong;
+          showBottomToast(errorMsg);
+          LogHandler.error(errorMsg);
+        }
+      } catch (error) {
+        showBottomToast(error.toString());
+        LogHandler.error(error);
+      }
+    }
+  }
+
+  void setTitle(Map<String, dynamic> selectedTitle) {
+    headlineController.text = selectedTitle['name'];
+    titleSearchQuery.value = '';
+    headlineObj.value = {
+      'data': selectedTitle['_id'],
+      'name': selectedTitle['name'],
+    };
   }
 
   validateName() {
@@ -223,7 +336,7 @@ class UserOnbController extends GetxController {
     isStep1Valid.value = dob.length == 8 && validateName();
   }
 
-  validateStep1() {
+  validateNameDob() {
     isStep1Valid.value = validateName() && isDobCorrect();
   }
 
@@ -256,13 +369,13 @@ class UserOnbController extends GetxController {
 
   validateNumber() {
     if (numberController.value.text.trim().length == 10) {
-      errorMsg.value = "";
+      // errorMsg.value = "";
       isNumberValid.value = true;
       numberFocusNode.unfocus();
       moveToNextStep();
     } else {
       isNumberValid.value = false;
-      errorMsg.value = "*Invalid number";
+      // errorMsg.value = "*Invalid number";
     }
   }
 
@@ -290,30 +403,107 @@ class UserOnbController extends GetxController {
     }
   }
 
-  void updateSkillsSuggestions() {
-    if (searchQuery.isEmpty) {
-      filteredSuggestions.value = [];
+  Future<void> suggestSkills() async {
+    if (skillsSearchQuery.isEmpty) {
+      filteredSkillsSuggestions.value = [];
     } else {
-      filteredSuggestions.value = GlobalConstants.suggestions
-          .where((skill) =>
-              skill.toLowerCase().contains(searchQuery.toLowerCase()))
-          .toList();
+      String endpoint = Endpoints.searchSkills;
+      String searchQuery = "$endpoint/${skillsSearchQuery.value}";
+
+      try {
+        Map<String, dynamic> response = await apiClient.get(searchQuery);
+
+        if (response['success']) {
+          List<Map<String, dynamic>> convertedList =
+              List<Map<String, dynamic>>.from(response['body']['data']);
+          filteredSkillsSuggestions.value = convertedList;
+        } else {
+          String errorMsg =
+              response['error']['message'] ?? Errors.somethingWentWrong;
+          showBottomToast(errorMsg);
+          LogHandler.error(errorMsg);
+        }
+      } catch (error) {
+        showBottomToast(error.toString());
+        LogHandler.error(error);
+      }
     }
   }
 
-  void addSkill(String skill) {
-    if (!selectedSkills.contains(skill)) {
-      selectedSkills.add(skill);
+  void addSkill(Map<String, dynamic> selectedSkill) {
+    Map<String, dynamic> skillMap = {
+      'data': selectedSkill['_id'],
+      'name': selectedSkill['name'],
+    };
+
+    bool skillExists = false;
+
+    if (selectedSkills.isEmpty) {
+      selectedSkills.add(skillMap);
+    } else {
+      for (var i = 0; i < selectedSkills.length; i++) {
+        var skill = selectedSkills[i];
+        if (skill['name'].toString().toLowerCase() ==
+            selectedSkill['name'].toString().toLowerCase()) {
+          skillExists = true;
+          return;
+        }
+      }
+      if (!skillExists) {
+        selectedSkills.add(skillMap);
+      }
+    }
+    skillsSearchController.clear();
+  }
+
+  void removeSkill(Map<String, dynamic> titleObj) {
+    selectedSkills.removeWhere((skill) => skill['name'] == titleObj['name']);
+  }
+
+  Future<void> suggestCompany() async {
+    if (companySearchQuery.isEmpty) {
+      filteredCompanySuggestions.value = [];
+    } else {
+      String endpoint = Endpoints.searchCompanies;
+      String searchQuery = "$endpoint/${companySearchQuery.value}";
+
+      try {
+        Map<String, dynamic> response = await apiClient.get(searchQuery);
+
+        if (response['success']) {
+          List<Map<String, dynamic>> convertedList =
+              List<Map<String, dynamic>>.from(response['body']['data']);
+          filteredCompanySuggestions.value = convertedList;
+        } else {
+          String errorMsg =
+              response['error']['message'] ?? Errors.somethingWentWrong;
+          showBottomToast(errorMsg);
+          LogHandler.error(errorMsg);
+        }
+      } catch (error) {
+        showBottomToast(error.toString());
+        LogHandler.error(error);
+      }
     }
   }
 
-  void removeSkill(String skill) {
-    selectedSkills.remove(skill);
+  setCompanyJobTitle(Map<String, dynamic> selectedCompanyJobTitle) {
+    expTitleController.text = selectedCompanyJobTitle['name'];
+    titleSearchQuery.value = '';
+    companyJobTitleObj.value = {
+      'data': selectedCompanyJobTitle['_id'],
+      'name': selectedCompanyJobTitle['name'],
+    };
   }
 
-  searchExpTitle() {}
-
-  searchCompany() {}
+  setCompanyName(Map<String, dynamic> selectedCompany) {
+    companyNameController.text = selectedCompany['name'];
+    companySearchQuery.value = '';
+    companyObj.value = {
+      'data': selectedCompany['_id'],
+      'name': selectedCompany['name'],
+    };
+  }
 
   searchCompanyLocation() {}
 
@@ -339,17 +529,46 @@ class UserOnbController extends GetxController {
         isEndDateAdded) {
       errorMsg.value = "";
       Map<String, dynamic> exp = {
-        'title': expTitleController.value.text.trim(),
-        'company': companyNameController.value.text.trim(),
-        'location': companyLocationController.value.text.trim(),
+        'title': companyJobTitleObj,
+        'company': companyObj,
+        "location": {
+          "country": companyLocationController.value.text.trim(),
+          "state": "",
+          "city": "",
+          "address": {"line1": "", "line2": ""}
+        },
         'description': expDescriptionController.value.text.trim(),
         'employmentType': employmentType.value == "Please select"
             ? null
             : employmentType.value,
-        'locationType':
+        'jobMode':
             locationType.value == "Please select" ? null : locationType.value,
-        'startDate': "$startMonth $startYear",
-        'endDate': stillWorking.value ? "Present" : "$endMonth $endYear",
+        'startDate': DatetimeUtil.getDateTimeFromString(
+          "01",
+          GlobalConstants.monthsMap[startMonth.value]
+              .toString()
+              .padLeft(2, '0'),
+          startYear.value,
+        ).toIso8601String(),
+        "stillWorking": stillWorking.value,
+        'endDate': stillWorking.value
+            ? null
+            : DatetimeUtil.getDateTimeFromString(
+                "28",
+                GlobalConstants.monthsMap[endMonth.value]
+                    .toString()
+                    .padLeft(2, '0'),
+                endYear.value,
+              ).toIso8601String(),
+        "skills": [],
+        "media": [
+          {
+            "title": "Resume",
+            "url": "https://example.com/project-a",
+            "type": "image",
+            "thumbnail": "https://example.com/project-a-thumbnail"
+          }
+        ],
       };
       addedExp.add(exp);
       clearExpControllers();
@@ -424,12 +643,83 @@ class UserOnbController extends GetxController {
     }
   }
 
+  Future<void> uploadProfilePic() async {
+    String endpoint = Endpoints.uploadProfilePicture;
+
+    try {
+      Map<String, dynamic> response =
+          await apiClient.uploadImageOrVideo(endpoint, profilePic.value!);
+
+      if (response['success']) {
+        // String url = response['body']['data'];
+        // TODO: save URL in user model
+      } else {
+        String errorMsg =
+            response['error']['message'] ?? Errors.somethingWentWrong;
+        showBottomToast(errorMsg);
+        LogHandler.error(errorMsg);
+      }
+    } catch (error) {
+      showBottomToast(error.toString());
+      LogHandler.error(errorMsg);
+    }
+  }
+
   signup() async {
     isSigningUp.value = true;
-    Future.delayed(const Duration(seconds: 3), () {
+
+    String endpoint = Endpoints.signup;
+    String? number;
+
+    if (numberController.value.text.trim().length == 10) {
+      number = "$countryCode ${numberController.value.text.trim()}";
+    }
+
+    Map<String, dynamic> body = {
+      "name": nameController.value.text.trim(),
+      "email": emailController.value.text.trim(),
+      "phone": number,
+      "profilePicUrl": null,
+      "headline": headlineObj,
+      "bio": bioController.value.text.trim(),
+      "skills": selectedSkills,
+      "experience": addedExp,
+      "socialUrls": socialProfiles,
+      "location": {
+        "country": locationController.value.text.trim(),
+        "state": "",
+        "city": "",
+        "address": {"line1": "", "line2": ""}
+      },
+      "preferredJobModes": [preferredJobMode.value],
+    };
+    LogHandler.debug(body);
+
+    try {
+      Map<String, dynamic> response = await apiClient.post(endpoint, body);
+
+      if (response['success']) {
+        // TODO: save user data to user model
+
+        if (profilePic.value != null) {
+          await uploadProfilePic();
+        }
+
+        List<String> name = nameController.value.text.trim().split(' ');
+        navigateToBaseNav();
+        showBottomToast("Welcome ${name[0]}!");
+      } else {
+        String errorMsg =
+            response['error']['message'] ?? Errors.somethingWentWrong;
+        showBottomToast(errorMsg);
+        LogHandler.error(errorMsg);
+      }
+    } catch (error) {
+      showBottomToast(Errors.somethingWentWrong);
+      LogHandler.error(error);
+    } finally {
       isSigningUp.value = false;
-      navigateToBaseNav();
-    });
+    }
   }
 
   // ----------------- Navigations -----------------

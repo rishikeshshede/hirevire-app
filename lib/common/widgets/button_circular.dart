@@ -28,6 +28,7 @@ class ButtonCircular extends StatelessWidget {
       child: Container(
         height: size.w(context),
         width: size.w(context),
+        margin: const EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: isActive ? btnColor : AppColors.disabled,

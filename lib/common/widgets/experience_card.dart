@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
+import 'package:hirevire_app/constants/global_constants.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
 import 'package:hirevire_app/utils/responsive.dart';
 
@@ -31,7 +32,7 @@ class ExperienceCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      experience['title'],
+                      experience['title']['name'],
                       style: AppTextThemes.subtitleStyle(context).copyWith(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
@@ -40,7 +41,7 @@ class ExperienceCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          experience['company'],
+                          experience['company']['name'],
                           style: AppTextThemes.subtitleStyle(context).copyWith(
                             fontSize: 14,
                           ),
@@ -56,7 +57,11 @@ class ExperienceCard extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      "${experience['startDate']} - ${experience['endDate']}",
+                      getFormattedDates(
+                        experience['startDate'],
+                        experience['endDate'],
+                        experience['stillWorking'],
+                      ),
                       style: AppTextThemes.bodyTextStyle(context).copyWith(
                         fontSize: 14,
                         color: AppColors.textSecondary,
@@ -64,16 +69,16 @@ class ExperienceCard extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        if (experience['location'] != '')
+                        if (experience['location']['country'] != '')
                           Text(
-                            experience['location'],
+                            experience['location']['country'],
                             style:
                                 AppTextThemes.bodyTextStyle(context).copyWith(
                               fontSize: 14,
                               color: AppColors.textSecondary,
                             ),
                           ),
-                        if (experience['locationType'] != null)
+                        if (experience['jobMode'] != null)
                           Text(
                             " • ",
                             style:
@@ -82,9 +87,9 @@ class ExperienceCard extends StatelessWidget {
                               color: AppColors.textSecondary,
                             ),
                           ),
-                        if (experience['locationType'] != null)
+                        if (experience['jobMode'] != null)
                           Text(
-                            "${experience['locationType']}",
+                            "${experience['jobMode']}",
                             style:
                                 AppTextThemes.bodyTextStyle(context).copyWith(
                               fontSize: 14,
@@ -119,5 +124,37 @@ class ExperienceCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  getFormattedDates(String startDate, String? endDate, bool stillWorking) {
+    DateTime startDateTime = DateTime.parse(startDate);
+    DateTime? endDateTime =
+        endDate == null ? DateTime.now() : DateTime.parse(endDate);
+
+    String startDateStr = getDate(startDateTime);
+    String endDateStr = getEndDate(endDateTime, stillWorking);
+
+    return "$startDateStr - $endDateStr";
+  }
+
+  String getDate(DateTime date) {
+    int month = date.month;
+    String monthStr = '';
+    for (var entry in GlobalConstants.monthsMap.entries) {
+      if (entry.value == month) {
+        monthStr = entry.key;
+      }
+    }
+
+    String dateStr = '$monthStr ${date.year}';
+    return dateStr;
+  }
+
+  getEndDate(DateTime? date, bool stillWorking) {
+    if (stillWorking) {
+      return 'Present';
+    } else {
+      return getDate(date!);
+    }
   }
 }

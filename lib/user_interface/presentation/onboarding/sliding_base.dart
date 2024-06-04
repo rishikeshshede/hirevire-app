@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hirevire_app/common/widgets/animated_progress_indicator.dart';
 import 'package:hirevire_app/common/widgets/padded_container.dart';
+import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/user_interface/controllers/user_onb_controller.dart';
 
 class SlidingBase extends GetWidget<UserOnbController> {
@@ -14,6 +15,7 @@ class SlidingBase extends GetWidget<UserOnbController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const VerticalSpace(),
           // --------------- Progress Indicator ---------------
           Obx(
             () => AnimatedProgressIndicator(

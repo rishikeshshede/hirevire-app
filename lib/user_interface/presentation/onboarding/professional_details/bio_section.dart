@@ -34,12 +34,12 @@ class BioSection extends GetWidget<UserOnbController> {
                       "Stand out from crowd with your Headline, Bio and a clear and professional profile picture.",
                 ),
                 SizedBox(height: 30.h(context)),
+                // Profile picture
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
                       onTap: () {
-                        debugPrint('change profile pic');
                         controller.pickImage();
                       },
                       child: Stack(
@@ -95,13 +95,50 @@ class BioSection extends GetWidget<UserOnbController> {
                   maxLength: GlobalConstants.maxHeadlineChars,
                   onChanged: (String value) {
                     controller.isHeadlineValid.value = value.isNotEmpty;
+                    controller.titleSearchQuery.value = value;
                   },
                   onEditingComplete: () {
+                    controller.setTitle({
+                      "_id": controller.defaultItemId,
+                      "name": controller.headlineController.value.text.trim(),
+                    });
                     controller.headlineFocusNode.unfocus();
                     FocusScope.of(context)
                         .requestFocus(controller.bioFocusNode);
                   },
                 ),
+                Obx(() {
+                  if (controller.filteredTitleSuggestions.isEmpty) {
+                    return Container();
+                  }
+                  return ConstrainedBox(
+                    constraints: BoxConstraints(maxHeight: 180.h(context)),
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 6),
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(8)),
+                        border: Border.all(color: Colors.grey[350]!),
+                        color: AppColors.disabled.withOpacity(.6),
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: controller.filteredTitleSuggestions
+                              .map((suggestion) => ListTile(
+                                    dense: true,
+                                    title: Text(suggestion['name']),
+                                    onTap: () {
+                                      controller.setTitle(suggestion);
+                                    },
+                                  ))
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
                 SizedBox(height: 10.h(context)),
                 CustomTextField(
                   titleText: "Your bio",
@@ -131,6 +168,12 @@ class BioSection extends GetWidget<UserOnbController> {
               () => ButtonCircular(
                 icon: ImageConstant.arrowNext,
                 onPressed: () {
+                  if (controller.headlineObj.isEmpty) {
+                    controller.setTitle({
+                      "_id": controller.defaultItemId,
+                      "name": controller.headlineController.value.text.trim(),
+                    });
+                  }
                   controller.validateHeadline();
                 },
                 isActive: controller.isHeadlineValid.value,

@@ -30,20 +30,21 @@ class NumberSection extends GetWidget<UserOnbController> {
               readOnly: true,
               width: 80.w(context),
               titleText: 'Country',
-              labelText: "IN +91",
+              labelText: "${controller.country} ${controller.countryCode}",
             ),
             const HorizontalSpace(),
             Expanded(
               child: CustomTextField(
                 titleText: '',
                 textInputType: TextInputType.number,
-                textInputAction: TextInputAction.next,
+                textInputAction: TextInputAction.done,
                 controller: controller.numberController,
                 focusNode: controller.numberFocusNode,
                 maxLength: 10,
                 onChanged: (String value) {
                   controller.isNumberValid.value =
-                      controller.numberController.value.text.trim().isNotEmpty;
+                      controller.numberController.value.text.trim().length ==
+                          10;
                 },
                 onEditingComplete: () {
                   controller.numberFocusNode.unfocus();
@@ -60,12 +61,16 @@ class NumberSection extends GetWidget<UserOnbController> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ButtonFlat(
-              onTap: () {
-                controller.numberFocusNode.unfocus();
-                controller.moveToNextStep();
-              },
-              btnText: "Skip",
+            Obx(
+              () => controller.isNumberValid.value
+                  ? Container()
+                  : ButtonFlat(
+                      onTap: () {
+                        controller.numberFocusNode.unfocus();
+                        controller.moveToNextStep();
+                      },
+                      btnText: "Skip",
+                    ),
             ),
             Obx(
               () => ButtonCircular(

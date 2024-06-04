@@ -8,7 +8,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 class ApiClient {
-  static const String _baseUrl = 'http://3.109.32.206:3000/';
+  static const String _baseUrl = 'http://192.168.29.243:5000/api/v1/';
   static const Duration timeoutDuration = Duration(seconds: 30);
 
   ApiClient._();
@@ -146,7 +146,7 @@ class ApiClient {
     };
   }
 
-  static dynamic uploadImageOrVideo(String endpoint, File imageFile) async {
+  dynamic uploadImageOrVideo(String endpoint, File imageFile) async {
     final Uri url = Uri.parse(endpoint);
     var request = http.MultipartRequest('POST', url);
 
@@ -174,7 +174,7 @@ class ApiClient {
     }
   }
 
-  static dynamic uploadFile(String url, File file) async {
+  dynamic uploadFile(String url, File file) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
     var fileStream = http.ByteStream(file.openRead());
     var length = await file.length();

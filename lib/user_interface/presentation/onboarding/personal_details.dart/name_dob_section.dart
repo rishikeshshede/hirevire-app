@@ -104,7 +104,7 @@ class NameDobSection extends GetWidget<UserOnbController> {
               () => ButtonCircular(
                 icon: ImageConstant.arrowNext,
                 onPressed: () {
-                  controller.validateStep1();
+                  controller.validateNameDob();
                   controller.moveToNextStep();
                 },
                 isActive: controller.isStep1Valid.value,

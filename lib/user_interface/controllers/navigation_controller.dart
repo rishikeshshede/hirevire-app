@@ -33,6 +33,7 @@ class NavigationController extends GetxController {
   void toOnboardingScreen() {
     Get.put(UserOnbController());
     Get.toNamed(AppRoutes.landingScreen);
+    // Get.toNamed(AppRoutes.introScreen);
   }
 
   navigate(VoidCallback toScreen) {

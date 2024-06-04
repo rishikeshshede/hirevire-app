@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hirevire_app/common/widgets/body_text_widget.dart';
 import 'package:hirevire_app/common/widgets/button_circular.dart';
 import 'package:hirevire_app/common/widgets/heading_large.dart';
+import 'package:hirevire_app/common/widgets/loader_circular.dart';
 import 'package:hirevire_app/common/widgets/padded_container.dart';
 import 'package:hirevire_app/common/widgets/text_field.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
@@ -21,10 +22,13 @@ class ProvideEmailScreen extends GetWidget<UserOnbController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const HeadingLarge(heading: "Can we get your email, please?"),
+            const HeadingLarge(
+              heading: "Can we get your email, please?",
+            ),
             SizedBox(height: 10.h(context)),
             const BodyTextWidget(
-                text: "We use email to make make sure everyone here is real."),
+              text: "We use email to make make sure everyone here is real.",
+            ),
             SizedBox(height: 40.h(context)),
             CustomTextField(
               titleText: 'Email',
@@ -37,9 +41,7 @@ class ProvideEmailScreen extends GetWidget<UserOnbController> {
                 controller.validateEmail();
               },
               onEditingComplete: () {
-                controller.emailFocusNode.unfocus();
                 controller.sendOtp();
-                controller.navigateToOtpScreen();
               },
             ),
             const Spacer(),
@@ -47,14 +49,15 @@ class ProvideEmailScreen extends GetWidget<UserOnbController> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Obx(
-                  () => ButtonCircular(
-                    icon: ImageConstant.arrowNext,
-                    onPressed: () {
-                      controller.sendOtp();
-                      controller.navigateToOtpScreen();
-                    },
-                    isActive: controller.isEmailValid.value,
-                  ),
+                  () => controller.isLoading.value
+                      ? const LoaderCircular()
+                      : ButtonCircular(
+                          icon: ImageConstant.arrowNext,
+                          onPressed: () {
+                            controller.sendOtp();
+                          },
+                          isActive: controller.isEmailValid.value,
+                        ),
                 ),
                 SizedBox(width: 4.h(context)),
               ],

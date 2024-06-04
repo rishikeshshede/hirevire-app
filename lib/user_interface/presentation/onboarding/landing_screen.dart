@@ -59,7 +59,7 @@ class LandingScreen extends StatelessWidget {
               btnText: 'Login with LinkedIn',
               textColor: AppColors.primary,
               btnColor: AppColors.background,
-              iconPosition: IconPosition.left,
+              // iconPosition: IconPosition.left,
               onPressed: () {},
             ),
             ButtonPrimary(
@@ -94,11 +94,11 @@ class TermsAndContitionsWidget extends StatelessWidget {
           children: [
             TextSpan(
               text: 'By signing up, you agree to our ',
-              style: AppTextThemes.smallText(context),
+              style: AppTextThemes.extraSmallText(context),
             ),
             TextSpan(
               text: 'Terms',
-              style: AppTextThemes.smallText(context).copyWith(
+              style: AppTextThemes.extraSmallText(context).copyWith(
                 fontWeight: FontWeight.bold,
                 decoration: TextDecoration.underline,
               ),
@@ -109,11 +109,11 @@ class TermsAndContitionsWidget extends StatelessWidget {
             ),
             TextSpan(
               text: '. See how we use your data in our ',
-              style: AppTextThemes.smallText(context),
+              style: AppTextThemes.extraSmallText(context),
             ),
             TextSpan(
               text: 'Privacy Policy.',
-              style: AppTextThemes.smallText(context).copyWith(
+              style: AppTextThemes.extraSmallText(context).copyWith(
                 fontWeight: FontWeight.bold,
                 decoration: TextDecoration.underline,
                 height: 1.5,

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hirevire_app/common/widgets/button_circular.dart';
 import 'package:hirevire_app/common/widgets/button_flat.dart';
 import 'package:hirevire_app/common/widgets/heading_large.dart';
+import 'package:hirevire_app/common/widgets/loader_circular.dart';
 import 'package:hirevire_app/common/widgets/padded_container.dart';
 import 'package:hirevire_app/common/widgets/text_field.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
@@ -95,6 +96,9 @@ class OTPScreen extends GetWidget<UserOnbController> {
               },
               onEditingComplete: () {
                 controller.otpFocusNodes[index].unfocus();
+                if (index == controller.otpControllers.length - 1) {
+                  controller.verifyOTP();
+                }
               },
             );
           }),
@@ -105,21 +109,23 @@ class OTPScreen extends GetWidget<UserOnbController> {
           children: [
             ButtonFlat(
               onTap: () {
-                controller.sendOtp();
+                controller.sendOtp(navigate: false);
               },
               btnText: "Didn't get a code?",
             ),
             Obx(
-              () => Padding(
-                padding: EdgeInsets.only(right: 4.h(context)),
-                child: ButtonCircular(
-                  icon: ImageConstant.arrowNext,
-                  onPressed: () {
-                    controller.verifyOTP();
-                  },
-                  isActive: controller.isOtpLengthValid.value,
-                ),
-              ),
+              () => controller.isLoading.value
+                  ? const LoaderCircular()
+                  : Padding(
+                      padding: EdgeInsets.only(right: 4.h(context)),
+                      child: ButtonCircular(
+                        icon: ImageConstant.arrowNext,
+                        onPressed: () {
+                          controller.verifyOTP();
+                        },
+                        isActive: controller.isOtpLengthValid.value,
+                      ),
+                    ),
             ),
           ],
         ),

@@ -123,12 +123,16 @@ class SocialUrlsSection extends GetWidget<UserOnbController> {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ButtonFlat(
-                      onTap: () {
-                        controller.clearSocialControllers();
-                        controller.moveToNextStep();
-                      },
-                      btnText: "Skip",
+                    Obx(
+                      () => controller.socialProfiles.isNotEmpty
+                          ? Container()
+                          : ButtonFlat(
+                              onTap: () {
+                                controller.clearSocialControllers();
+                                controller.moveToNextStep();
+                              },
+                              btnText: "Skip",
+                            ),
                     ),
                     ButtonCircular(
                       icon: ImageConstant.arrowNext,

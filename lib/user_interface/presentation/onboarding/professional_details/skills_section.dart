@@ -6,6 +6,7 @@ import 'package:hirevire_app/common/widgets/button_flat.dart';
 import 'package:hirevire_app/common/widgets/custom_chip.dart';
 import 'package:hirevire_app/common/widgets/error_text_widget.dart';
 import 'package:hirevire_app/common/widgets/heading_large.dart';
+import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/common/widgets/text_field.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
@@ -37,17 +38,25 @@ class SkillsSection extends GetWidget<UserOnbController> {
                   titleText: "Skills",
                   textInputType: TextInputType.text,
                   textInputAction: TextInputAction.done,
-                  controller: controller.searchController,
+                  controller: controller.skillsSearchController,
                   focusNode: controller.searchFocusNode,
                   onChanged: (value) {
-                    controller.searchQuery.value = value;
+                    controller.skillsSearchQuery.value = value;
                   },
                   onEditingComplete: () {
-                    controller.searchFocusNode.unfocus();
+                    if (controller
+                        .skillsSearchController.value.text.isNotEmpty) {
+                      controller.addSkill({
+                        "_id": controller.defaultItemId,
+                        "name":
+                            controller.skillsSearchController.value.text.trim(),
+                      });
+                      controller.skillsSearchQuery.value = '';
+                    }
                   },
                 ),
                 Obx(() {
-                  if (controller.filteredSuggestions.isEmpty) {
+                  if (controller.filteredSkillsSuggestions.isEmpty) {
                     return Container();
                   }
                   return ConstrainedBox(
@@ -64,13 +73,13 @@ class SkillsSection extends GetWidget<UserOnbController> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: controller.filteredSuggestions
+                          children: controller.filteredSkillsSuggestions
                               .map((suggestion) => ListTile(
                                     dense: true,
-                                    title: Text(suggestion),
+                                    title: Text(suggestion['name'] ?? ''),
                                     onTap: () {
                                       controller.addSkill(suggestion);
-                                      controller.searchQuery.value = '';
+                                      controller.skillsSearchQuery.value = '';
                                     },
                                   ))
                               .toList(),
@@ -83,25 +92,22 @@ class SkillsSection extends GetWidget<UserOnbController> {
                   () => ErrorTextWidget(text: controller.errorMsg.value),
                 ),
                 SizedBox(height: 15.h(context)),
-                Obx(() {
-                  if (controller.selectedSkills.isEmpty) {
-                    return Container();
-                  }
-                  return Wrap(
+                Obx(
+                  () => Wrap(
                     spacing: 8,
                     runSpacing: 8,
                     children: List.generate(
                       controller.selectedSkills.length,
                       (index) => CustomChip(
-                        text: controller.selectedSkills[index],
+                        text: controller.selectedSkills[index]['name'],
                         onRemove: () {
                           controller
                               .removeSkill(controller.selectedSkills[index]);
                         },
                       ),
                     ),
-                  );
-                }),
+                  ),
+                ),
               ],
             ),
           ),
@@ -109,12 +115,16 @@ class SkillsSection extends GetWidget<UserOnbController> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ButtonFlat(
-              onTap: () {
-                controller.moveToNextStep();
-                controller.searchFocusNode.unfocus();
-              },
-              btnText: "Skip",
+            Obx(
+              () => controller.selectedSkills.isEmpty
+                  ? ButtonFlat(
+                      onTap: () {
+                        controller.moveToNextStep();
+                        controller.searchFocusNode.unfocus();
+                      },
+                      btnText: "Skip",
+                    )
+                  : const HorizontalSpace(),
             ),
             Obx(
               () => ButtonCircular(

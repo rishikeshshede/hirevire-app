@@ -113,13 +113,60 @@ class ExperienceSection extends GetWidget<UserOnbController> {
                                 controller: controller.expTitleController,
                                 focusNode: controller.expTitleFocusNode,
                                 onChanged: (String value) {
-                                  controller.searchExpTitle();
+                                  controller.titleSearchQuery.value = value;
                                 },
                                 onEditingComplete: () {
+                                  controller.setCompanyJobTitle({
+                                    "_id": controller.defaultItemId,
+                                    "name": controller
+                                        .expTitleController.value.text
+                                        .trim(),
+                                  });
                                   controller.expTitleFocusNode.unfocus();
                                   FocusScope.of(context).requestFocus(
                                       controller.companyNameFocusNode);
                                 },
+                              ),
+                              Obx(
+                                () => controller
+                                        .filteredTitleSuggestions.isEmpty
+                                    ? Container()
+                                    : ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                            maxHeight: 180.h(context)),
+                                        child: Container(
+                                          margin: const EdgeInsets.only(top: 6),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(8)),
+                                            border: Border.all(
+                                                color: Colors.grey[350]!),
+                                            color: AppColors.disabled
+                                                .withOpacity(.6),
+                                          ),
+                                          child: SingleChildScrollView(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: controller
+                                                  .filteredTitleSuggestions
+                                                  .map((suggestion) => ListTile(
+                                                        dense: true,
+                                                        title: Text(
+                                                            suggestion['name']),
+                                                        onTap: () {
+                                                          controller
+                                                              .setCompanyJobTitle(
+                                                                  suggestion);
+                                                        },
+                                                      ))
+                                                  .toList(),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                               ),
                               VerticalSpace(space: 15.w(context)),
                               CustomTextField(
@@ -130,13 +177,60 @@ class ExperienceSection extends GetWidget<UserOnbController> {
                                 controller: controller.companyNameController,
                                 focusNode: controller.companyNameFocusNode,
                                 onChanged: (String value) {
-                                  controller.searchExpTitle();
+                                  controller.companySearchQuery.value = value;
                                 },
                                 onEditingComplete: () {
+                                  controller.setCompanyName({
+                                    "_id": controller.defaultItemId,
+                                    "name": controller
+                                        .companyNameController.value.text
+                                        .trim(),
+                                  });
                                   controller.companyNameFocusNode.unfocus();
                                   FocusScope.of(context).requestFocus(
                                       controller.companyLocationFocusNode);
                                 },
+                              ),
+                              Obx(
+                                () => controller
+                                        .filteredCompanySuggestions.isEmpty
+                                    ? Container()
+                                    : ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                            maxHeight: 180.h(context)),
+                                        child: Container(
+                                          margin: const EdgeInsets.only(top: 6),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(8)),
+                                            border: Border.all(
+                                                color: Colors.grey[350]!),
+                                            color: AppColors.disabled
+                                                .withOpacity(.6),
+                                          ),
+                                          child: SingleChildScrollView(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: controller
+                                                  .filteredCompanySuggestions
+                                                  .map((suggestion) => ListTile(
+                                                        dense: true,
+                                                        title: Text(
+                                                            suggestion['name']),
+                                                        onTap: () {
+                                                          controller
+                                                              .setCompanyName(
+                                                                  suggestion);
+                                                        },
+                                                      ))
+                                                  .toList(),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                               ),
                               VerticalSpace(space: 15.w(context)),
                               CustomTextField(
@@ -148,7 +242,7 @@ class ExperienceSection extends GetWidget<UserOnbController> {
                                     controller.companyLocationController,
                                 focusNode: controller.companyLocationFocusNode,
                                 onChanged: (String value) {
-                                  controller.searchExpTitle();
+                                  // controller.searchExpTitle();
                                 },
                                 onEditingComplete: () {
                                   controller.companyLocationFocusNode.unfocus();
@@ -167,7 +261,7 @@ class ExperienceSection extends GetWidget<UserOnbController> {
                                     GlobalConstants.maxExpDescriptionChars,
                                 maxLines: 4,
                                 onChanged: (String value) {
-                                  controller.searchExpTitle();
+                                  // controller.searchExpTitle();
                                 },
                                 onEditingComplete: () {
                                   controller.expDescriptionFocusNode.unfocus();
@@ -308,8 +402,8 @@ class ExperienceSection extends GetWidget<UserOnbController> {
                         )
                       : Container(),
                 ),
-                // Added Experience Cards
                 SizedBox(height: 20.h(context)),
+                // Added Experience Cards
                 Obx(
                   () => !controller.addingExp.value &&
                           controller.addedExp.isNotEmpty
@@ -336,16 +430,34 @@ class ExperienceSection extends GetWidget<UserOnbController> {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ButtonFlat(
-                      onTap: () {
-                        controller.clearExpControllers();
-                        controller.moveToNextStep();
-                      },
-                      btnText: "Skip",
+                    Obx(
+                      () => controller.addedExp.isNotEmpty
+                          ? Container()
+                          : ButtonFlat(
+                              onTap: () {
+                                controller.clearExpControllers();
+                                controller.moveToNextStep();
+                              },
+                              btnText: "Skip",
+                            ),
                     ),
                     ButtonCircular(
                       icon: ImageConstant.arrowNext,
                       onPressed: () {
+                        if (controller.companyJobTitleObj.isEmpty) {
+                          controller.setCompanyJobTitle({
+                            "_id": controller.defaultItemId,
+                            "name":
+                                controller.expTitleController.value.text.trim(),
+                          });
+                        }
+                        if (controller.companyObj.isEmpty) {
+                          controller.setCompanyName({
+                            "_id": controller.defaultItemId,
+                            "name": controller.companyNameController.value.text
+                                .trim(),
+                          });
+                        }
                         controller.validateAddedExp();
                       },
                       isActive: controller.addedExp.isNotEmpty,
