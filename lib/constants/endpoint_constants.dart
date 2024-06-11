@@ -1,4 +1,5 @@
 class Endpoints {
+  // ############## User Endpoints ##############
   // GET Endpoint
   static const String searchJobTitles = 'master/jobTitles/by-name';
   static const String searchCompanies = 'master/companies/by-name';
@@ -14,4 +15,9 @@ class Endpoints {
   // UPDATE Endpoints
 
   // DELETE Endpoints
+
+  // ############## Recruiter Endpoints ##############
+
+  // POST Endpoints
+  static const String recruiterSignin = 'auth/recruiter/signin';
 }

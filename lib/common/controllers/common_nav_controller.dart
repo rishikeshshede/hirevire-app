@@ -9,7 +9,7 @@ import 'package:hirevire_app/utils/persistence_handler.dart';
 
 class CommonNavController extends GetxController {
   RxBool isNew = true.obs; // default: true
-  RxBool isEmployee = false.obs; // default: false
+  RxBool isEmployer = false.obs; // default: false
   RxBool isSignedIn = false.obs; // default: false
   RxBool isEmailVerified = false.obs; // default: false
   RxBool isUserRegistered = false.obs; // default: false
@@ -29,9 +29,9 @@ class CommonNavController extends GetxController {
   fetchAllLocalValues() async {
     isNew.value =
         await PersistenceHandler.getBool(PersistenceKeys.isNew) ?? isNew.value;
-    isEmployee.value =
-        await PersistenceHandler.getBool(PersistenceKeys.isEmployee) ??
-            isEmployee.value;
+    isEmployer.value =
+        await PersistenceHandler.getBool(PersistenceKeys.isEmployer) ??
+            isEmployer.value;
     isSignedIn.value =
         await PersistenceHandler.getBool(PersistenceKeys.isSignedIn) ??
             isSignedIn.value;
@@ -55,7 +55,7 @@ class CommonNavController extends GetxController {
   checkLocalDataAndNavigate() {
     isNew.value
         ? navigate(() => toCommonOnboardingScreen())
-        : isEmployee.value
+        : isEmployer.value
             ? isSignedIn.value
                 ? navigate(() => toEmpBaseNav())
                 : navigate(() => toEmpLoginScreen())
@@ -88,6 +88,7 @@ class CommonNavController extends GetxController {
 
   void toEmpBaseNav() {
     // Get.toNamed(AppRoutes.empBaseNavigator);
+    Get.toNamed(AppRoutes.userBaseNavigator);
   }
 
   void toUserBaseNav() {

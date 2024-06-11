@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:hirevire_app/common/models/text_model.dart';
 import 'package:hirevire_app/constants/endpoint_constants.dart';
 import 'package:hirevire_app/constants/error_constants.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
@@ -24,8 +23,6 @@ class UserOnbController extends GetxController {
   RxString errorMsg = ''.obs;
   RxBool isSigningUp = false.obs;
 
-  RxList<TextModel> texts = <TextModel>[].obs;
-
   // Text Controllers
   TextEditingController emailController = TextEditingController();
   final List<TextEditingController> otpControllers =
@@ -35,7 +32,6 @@ class UserOnbController extends GetxController {
       List.generate(3, (_) => TextEditingController());
 
   // Text Focus nodes
-
   FocusNode emailFocusNode = FocusNode();
   final List<FocusNode> otpFocusNodes = List.generate(6, (_) => FocusNode());
   FocusNode nameFocusNode = FocusNode();
@@ -325,7 +321,7 @@ class UserOnbController extends GetxController {
   }
 
   navigateToNameScreen() {
-    PersistenceHandler.setBool(PersistenceKeys.isEmployee, false);
+    PersistenceHandler.setBool(PersistenceKeys.isEmployer, false);
     PersistenceHandler.setBool(PersistenceKeys.isEmailVerified, true);
     PersistenceHandler.setString(
         PersistenceKeys.email, emailController.text.trim());

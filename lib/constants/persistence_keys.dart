@@ -2,7 +2,7 @@ class PersistenceKeys {
   // ------------- Common keys -------------
 
   static const String isNew = 'isNew';
-  static const String isEmployee = 'isEmployee';
+  static const String isEmployer = 'isEmployer';
   static const String isSignedIn = 'isSignedIn';
   static const String authToken = 'authToken';
   static const String name = 'name';
