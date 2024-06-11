@@ -8,7 +8,10 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 class ApiClient {
-  static const String _baseUrl = 'http://192.168.29.243:5000/api/v1/';
+  static const String _baseUrl = 'http://192.168.29.243:5000/api/v1/'; // wifi
+  // static const String _baseUrl =
+  //     'http://192.168.11.29:5000/api/v1/'; // Mobile hotspot
+
   static const Duration timeoutDuration = Duration(seconds: 30);
 
   ApiClient._();

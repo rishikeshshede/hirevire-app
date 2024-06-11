@@ -10,10 +10,10 @@ import 'package:hirevire_app/common/widgets/text_field.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/global_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
-import 'package:hirevire_app/user_interface/controllers/user_onb_controller.dart';
+import 'package:hirevire_app/user_interface/controllers/profile_controller.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 
-class BioSection extends GetWidget<UserOnbController> {
+class BioSection extends GetWidget<ProfileController> {
   const BioSection({super.key});
 
   @override

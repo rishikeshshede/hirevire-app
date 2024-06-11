@@ -9,12 +9,16 @@ class ButtonFlat extends StatelessWidget {
     required this.btnText,
     this.height,
     this.fontSize = 16,
+    this.horizontalPadding,
+    this.verticalPadding,
   });
 
   final VoidCallback onTap;
   final String btnText;
   final double? height;
   final double? fontSize;
+  final double? horizontalPadding;
+  final double? verticalPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +26,9 @@ class ButtonFlat extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: height ?? 42,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 5,
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontalPadding ?? 15,
+          vertical: verticalPadding ?? 5,
         ),
         alignment: Alignment.center,
         child: Text(

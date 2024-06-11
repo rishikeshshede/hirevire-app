@@ -4,7 +4,7 @@ import 'package:hirevire_app/common/widgets/custom_image_view.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/user_interface/controllers/navigation_controller.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
-import 'package:hirevire_app/user_interface/presentation/home_screen.dart';
+import 'package:hirevire_app/user_interface/presentation/home/home_screen.dart';
 import 'package:hirevire_app/user_interface/presentation/second_tab_screen.dart';
 import 'package:hirevire_app/user_interface/presentation/third_tab_screen.dart';
 import 'package:hirevire_app/utils/size_util.dart';
@@ -17,7 +17,8 @@ class UserBaseNavigator extends StatefulWidget {
 }
 
 class _UserBaseNavigatorState extends State<UserBaseNavigator> {
-  final NavigationController controller = Get.find(tag: 'navController');
+  final NavigationController controller =
+      Get.put(NavigationController(), tag: 'navController');
 
   final Color _selectedItemColor = AppColors.primaryDark;
   final Color _unselectedItemColor = Colors.grey;

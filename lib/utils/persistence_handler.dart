@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hirevire_app/utils/log_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PersistenceHandler {
@@ -39,17 +40,23 @@ class PersistenceHandler {
 
   static Future<dynamic> getString(String key) async {
     await init();
-    return _sharedPreferences?.getString(key);
+    String? value = _sharedPreferences?.getString(key);
+    logData(key, value);
+    return value;
   }
 
   static Future<dynamic> getBool(String key) async {
     await init();
-    return _sharedPreferences?.getBool(key);
+    bool? value = _sharedPreferences?.getBool(key);
+    logData(key, value);
+    return value;
   }
 
   static Future<dynamic> getInt(String key) async {
     await init();
-    return _sharedPreferences?.getInt(key);
+    int? value = _sharedPreferences?.getInt(key);
+    logData(key, value);
+    return value;
   }
 
   // ------------- DELETE values -------------
@@ -70,5 +77,9 @@ class PersistenceHandler {
   static deleteAll() async {
     await init();
     return await _sharedPreferences?.clear();
+  }
+
+  static void logData(String key, dynamic value) {
+    LogHandler.debug("$key: $value");
   }
 }

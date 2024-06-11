@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hirevire_app/common/screens/unknown_route_screen.dart';
 import 'package:hirevire_app/themes/app_theme.dart';
-import 'package:hirevire_app/user_interface/routes/app_routes.dart';
+import 'package:hirevire_app/routes/app_routes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

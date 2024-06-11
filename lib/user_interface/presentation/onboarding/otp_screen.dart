@@ -1,12 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hirevire_app/common/controllers/text_controller.dart';
 import 'package:hirevire_app/common/widgets/button_circular.dart';
 import 'package:hirevire_app/common/widgets/button_flat.dart';
 import 'package:hirevire_app/common/widgets/heading_large.dart';
 import 'package:hirevire_app/common/widgets/loader_circular.dart';
 import 'package:hirevire_app/common/widgets/padded_container.dart';
 import 'package:hirevire_app/common/widgets/text_field.dart';
+import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
 import 'package:hirevire_app/user_interface/controllers/user_onb_controller.dart';
@@ -15,6 +17,7 @@ import 'package:hirevire_app/utils/size_util.dart';
 
 class OTPScreen extends GetWidget<UserOnbController> {
   const OTPScreen({super.key});
+  static TextController textController = Get.find(tag: 'textController');
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +25,22 @@ class OTPScreen extends GetWidget<UserOnbController> {
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const HeadingLarge(heading: "Verify your email"),
+        HeadingLarge(heading: textController.getText('otpHeading')),
         SizedBox(height: 10.h(context)),
         Text.rich(
           TextSpan(
             children: [
               TextSpan(
                 text:
-                    "Enter the code we've sent by text to ${controller.emailController.text.trim()}. ",
+                    "${textController.getText('otpSubHeading')} ${controller.emailController.text.trim()}. ",
                 style: AppTextThemes.bodyTextStyle(context),
               ),
               TextSpan(
                 text: 'Change email',
                 style: AppTextThemes.bodyTextStyle(context).copyWith(
-                  decoration: TextDecoration.underline,
+                  // decoration: TextDecoration.underline,
+                  color: AppColors.primaryDark,
                   fontWeight: FontWeight.w500,
-                  fontSize: 13,
                 ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
@@ -103,16 +106,23 @@ class OTPScreen extends GetWidget<UserOnbController> {
             );
           }),
         ),
-        const Spacer(),
+        SizedBox(height: 20.h(context)),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             ButtonFlat(
               onTap: () {
                 controller.sendOtp(navigate: false);
               },
-              btnText: "Didn't get a code?",
+              btnText: textController.getText('otpResendText'),
+              horizontalPadding: 0,
             ),
+          ],
+        ),
+        const Spacer(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
             Obx(
               () => controller.isLoading.value
                   ? const LoaderCircular()

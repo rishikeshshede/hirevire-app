@@ -1,16 +1,19 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hirevire_app/common/controllers/text_controller.dart';
+import 'package:hirevire_app/common/widgets/body_text_widget.dart';
 import 'package:hirevire_app/common/widgets/button_primary.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
-import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
-import 'package:hirevire_app/user_interface/routes/app_routes.dart';
+import 'package:hirevire_app/routes/app_routes.dart';
 import 'package:hirevire_app/utils/responsive.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 
-class LandingScreen extends StatelessWidget {
-  const LandingScreen({super.key});
+class CommonLandingScreen extends StatelessWidget {
+  CommonLandingScreen({super.key});
+
+  final TextController textController = Get.find(tag: 'textController');
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +26,13 @@ class LandingScreen extends StatelessWidget {
           horizontal: 16.w(context),
           vertical: 8.h(context),
         ),
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(ImageConstant.cover),
-            fit: BoxFit.cover,
-            opacity: 0.6,
-          ),
-        ),
+        // decoration: BoxDecoration(
+        // image: DecorationImage(
+        //   image: AssetImage(ImageConstant.cover),
+        //   fit: BoxFit.cover,
+        //   opacity: 0.6,
+        // ),
+        // ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -52,21 +55,24 @@ class LandingScreen extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            ButtonPrimary(
-              iconPath: ImageConstant.linkedInLogo,
-              iconHeight: 28,
-              iconPadding: 3,
-              btnText: 'Login with LinkedIn',
-              textColor: AppColors.primary,
-              btnColor: AppColors.background,
-              // iconPosition: IconPosition.left,
-              onPressed: () {},
+            BodyTextWidget(
+              text: "I am looking",
+              style: AppTextThemes.bodyTextStyle(context).copyWith(
+                fontWeight: FontWeight.w500,
+              ),
             ),
             ButtonPrimary(
-              btnText: 'Use Email',
+              btnText: 'To hire',
               btnColor: Colors.black87,
               onPressed: () {
-                Get.toNamed(AppRoutes.emailScreen);
+                Get.toNamed(AppRoutes.empLoginScreen);
+              },
+            ),
+            ButtonPrimary(
+              btnText: 'For job',
+              btnColor: Colors.black87,
+              onPressed: () {
+                Get.toNamed(AppRoutes.userEamilValidationScreen);
               },
             ),
             SizedBox(height: 40.h(context)),

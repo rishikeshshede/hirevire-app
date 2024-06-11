@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hirevire_app/common/controllers/common_nav_controller.dart';
+import 'package:hirevire_app/common/controllers/text_controller.dart';
 import 'package:hirevire_app/common/widgets/body_text_widget.dart';
 import 'package:hirevire_app/common/widgets/button_circular.dart';
 import 'package:hirevire_app/common/widgets/heading_large.dart';
@@ -10,8 +12,12 @@ import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/user_interface/controllers/user_onb_controller.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 
-class ProvideEmailScreen extends GetWidget<UserOnbController> {
-  const ProvideEmailScreen({super.key});
+class UserEmailValidationScreen extends GetWidget<UserOnbController> {
+  const UserEmailValidationScreen({super.key});
+
+  static TextController textController = Get.find(tag: 'textController');
+  static CommonNavController commonNavController =
+      Get.find(tag: 'commonNavController');
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +28,14 @@ class ProvideEmailScreen extends GetWidget<UserOnbController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const HeadingLarge(
-              heading: "Can we get your email, please?",
+            HeadingLarge(
+              heading: commonNavController.isUserRegistered.value
+                  ? textController.getText('signinEmailHeading')
+                  : textController.getText('signupEmailHeading'),
             ),
             SizedBox(height: 10.h(context)),
-            const BodyTextWidget(
-              text: "We use email to make make sure everyone here is real.",
+            BodyTextWidget(
+              text: textController.getText('signupEmailSubHeading'),
             ),
             SizedBox(height: 40.h(context)),
             CustomTextField(
