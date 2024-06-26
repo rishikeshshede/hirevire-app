@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:hirevire_app/common/screens/splash_screen.dart';
+import 'package:hirevire_app/common/screens/unknown_route_screen.dart';
 import 'package:hirevire_app/themes/app_theme.dart';
+import 'package:hirevire_app/routes/app_routes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +22,12 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Hirevire',
       theme: theme(),
-      home: SplashScreen(),
+      initialRoute: AppRoutes.initialRoute,
+      getPages: AppRoutes.pages,
+      unknownRoute: GetPage(
+        name: '/unknownRoute',
+        page: () => const UnknownRouteScreen(),
+      ),
     );
   }
 }
