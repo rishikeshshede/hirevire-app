@@ -42,6 +42,7 @@ class JobCard extends StatelessWidget {
                       imagePath: job.companyLogoUrl,
                       height: 24,
                       imageType: ImageType.network,
+                      showLoader: false,
                     ),
                     const HorizontalSpace(),
                     Text(
