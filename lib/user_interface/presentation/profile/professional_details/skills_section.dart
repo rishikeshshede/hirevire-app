@@ -10,10 +10,10 @@ import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/common/widgets/text_field.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
-import 'package:hirevire_app/user_interface/controllers/profile_controller.dart';
+import 'package:hirevire_app/user_interface/controllers/complete_profile_controller.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 
-class SkillsSection extends GetWidget<ProfileController> {
+class SkillsSection extends GetWidget<CompleteProfileController> {
   const SkillsSection({super.key});
 
   @override

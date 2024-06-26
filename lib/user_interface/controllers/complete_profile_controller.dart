@@ -20,7 +20,7 @@ import 'package:hirevire_app/utils/log_handler.dart';
 import 'package:hirevire_app/utils/show_toast_util.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ProfileController extends GetxController {
+class CompleteProfileController extends GetxController {
   late ApiClient apiClient;
   String country = "IN";
   String countryCode = "+91";

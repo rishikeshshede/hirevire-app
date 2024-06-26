@@ -5,10 +5,12 @@ import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/global_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
-import 'package:hirevire_app/utils/size_util.dart';
+import 'package:hirevire_app/user_interface/presentation/jobs_tab/components/job_card.dart';
+import 'package:hirevire_app/user_interface/presentation/jobs_tab/controllers/jobs_controller.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class JobsTab extends StatelessWidget {
+  const JobsTab({super.key});
+  static final JobsController jobsController = Get.find(tag: 'jobsController');
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +22,9 @@ class HomeScreen extends StatelessWidget {
         centerTitle: false,
         title: Obx(
           () => Text(
-            'Hi Rishi',
-            style: AppTextThemes.titleStyle(context).copyWith(fontSize: 18),
+            'Hi ${jobsController.name}',
+            style:
+                AppTextThemes.screenTitleStyle(context).copyWith(fontSize: 18),
           ),
         ),
         actions: [
@@ -30,20 +33,25 @@ class HomeScreen extends StatelessWidget {
             child: Container(
               margin: EdgeInsets.only(
                   right: GlobalConstants.screenHorizontalPadding),
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(3),
               height: 35,
               width: 35,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.primary,
-              ),
               child: CustomImageView(
-                imagePath: ImageConstant.userIcon,
-                width: 18.w(context),
+                imagePath: ImageConstant.settingsIcon,
               ),
             ),
           ),
         ],
+      ),
+      body: Stack(
+        children: List.generate(
+          jobsController.jobs.length,
+          (index) => JobCard(
+            jobsController: jobsController,
+            job: jobsController.jobs[index],
+            index: index,
+          ),
+        ),
       ),
     );
   }

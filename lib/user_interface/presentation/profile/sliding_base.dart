@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:hirevire_app/common/widgets/animated_progress_indicator.dart';
 import 'package:hirevire_app/common/widgets/padded_container.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
-import 'package:hirevire_app/user_interface/controllers/profile_controller.dart';
+import 'package:hirevire_app/user_interface/controllers/complete_profile_controller.dart';
 
-class SlidingBase extends GetWidget<ProfileController> {
+class SlidingBase extends GetWidget<CompleteProfileController> {
   const SlidingBase({super.key});
 
   @override

@@ -17,7 +17,12 @@ class ImageConstant {
   static String arrowLeft = "$iconPath/arrow-left.png";
   static String arrowNext = "$iconPath/arrow-next.png";
   static String editIcon = "$iconPath/edit.png";
-  static String bagIcon = "$iconPath/experience-bag.png";
   static String tickIcon = "$iconPath/tick.png";
   static String linkOtherIcon = "$iconPath/link-other.png";
+  static String userIcon = "$iconPath/user.png";
+  static String bagIcon = "$iconPath/experience-bag.png";
+  static String applicationIcon = "$iconPath/applications.png";
+  static String chatIcon = "$iconPath/chat-icon.png";
+  static String settingsIcon = "$iconPath/settings-icon.png";
+  static String chatButtonIcon = "$iconPath/chat-button.png";
 }

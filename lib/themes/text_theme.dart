@@ -52,6 +52,14 @@ class AppTextThemes {
     );
   }
 
+  static TextStyle secondaryTextStyle(BuildContext context) {
+    return TextStyle(
+      fontSize: _getResponsiveFontSize(context, 16.0.adaptSize(context)),
+      fontWeight: FontWeight.w400,
+      color: AppColors.greyDisabled,
+    );
+  }
+
   static TextStyle buttonTextStyle(BuildContext context) {
     return TextStyle(
       fontSize: _getResponsiveFontSize(context, 16.0.adaptSize(context)),

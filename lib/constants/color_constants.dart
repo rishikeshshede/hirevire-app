@@ -13,6 +13,7 @@ class AppColors {
   static const Color red = Color(0xFFDE3939);
   static const Color green = Color(0xFF1FB453);
   static const Color black = Color(0xFF0F0F0F);
+  static const Color greyDisabled = Color(0xFF98A2B3);
 
   static const gradientPrimary = [
     primaryLight,

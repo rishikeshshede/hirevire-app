@@ -43,3 +43,11 @@ flutter:
           weight: 600
         - asset: assets/fonts/Poppins-Bold.ttf
           weight: 700
+    - family: Uber-Move
+      fonts:
+        - asset: assets/fonts/Uber-Move.ttf
+          weight: 400
+        - asset: assets/fonts/Uber-Move-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Uber-Move-Bold.ttf
+          weight: 700

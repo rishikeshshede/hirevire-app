@@ -4,8 +4,8 @@ import 'package:hirevire_app/common/widgets/custom_image_view.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/user_interface/controllers/navigation_controller.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
-import 'package:hirevire_app/user_interface/presentation/home/home_screen.dart';
-import 'package:hirevire_app/user_interface/presentation/second_tab_screen.dart';
+import 'package:hirevire_app/user_interface/presentation/jobs_tab/bindings/jobs_binding.dart';
+import 'package:hirevire_app/user_interface/presentation/jobs_tab/jobs_tab.dart';
 import 'package:hirevire_app/user_interface/presentation/third_tab_screen.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 
@@ -21,18 +21,39 @@ class _UserBaseNavigatorState extends State<UserBaseNavigator> {
       Get.put(NavigationController(), tag: 'navController');
 
   final Color _selectedItemColor = AppColors.primaryDark;
-  final Color _unselectedItemColor = Colors.grey;
+  final Color _unselectedItemColor = AppColors.greyDisabled;
 
-  final List _screens = [
-    const HomeScreen(),
-    const SecondTabScreen(),
-    const ThirdTabScreen(),
-  ];
+  Widget jobsTab() {
+    JobsBinding().dependencies();
+    return const JobsTab();
+  }
+
+  Widget applicationsTab() {
+    // ThirdTabBinding().dependencies();
+    return const ThirdTabScreen();
+  }
+
+  Widget chatTab() {
+    // ThirdTabBinding().dependencies();
+    return const ThirdTabScreen();
+  }
+
+  late final List<Widget> _screens;
 
   Color _changeIconColor(currentIndex) {
     return controller.currentTabIndex.value == currentIndex
         ? _selectedItemColor
         : _unselectedItemColor;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      jobsTab(),
+      applicationsTab(),
+      applicationsTab(),
+    ];
   }
 
   @override
@@ -47,9 +68,9 @@ class _UserBaseNavigatorState extends State<UserBaseNavigator> {
           selectedItemColor: _selectedItemColor,
           unselectedItemColor: _unselectedItemColor,
           backgroundColor: AppColors.background,
-          selectedFontSize: 12,
-          unselectedFontSize: 11,
-          elevation: 3,
+          selectedFontSize: 11,
+          unselectedFontSize: 10,
+          elevation: 5,
           items: [
             BottomNavigationBarItem(
               icon: ColorFiltered(
@@ -58,11 +79,11 @@ class _UserBaseNavigatorState extends State<UserBaseNavigator> {
                   BlendMode.srcIn,
                 ),
                 child: CustomImageView(
-                  imagePath: ImageConstant.dummyUserImage,
+                  imagePath: ImageConstant.bagIcon,
                   width: 18.w(context),
                 ),
               ),
-              label: 'Home',
+              label: 'Jobs',
             ),
             BottomNavigationBarItem(
               icon: ColorFiltered(
@@ -71,11 +92,11 @@ class _UserBaseNavigatorState extends State<UserBaseNavigator> {
                   BlendMode.srcIn,
                 ),
                 child: CustomImageView(
-                  imagePath: ImageConstant.dummyUserImage,
+                  imagePath: ImageConstant.applicationIcon,
                   width: 18.w(context),
                 ),
               ),
-              label: 'Second Tab',
+              label: 'My Applications',
             ),
             BottomNavigationBarItem(
               icon: ColorFiltered(
@@ -84,11 +105,11 @@ class _UserBaseNavigatorState extends State<UserBaseNavigator> {
                   BlendMode.srcIn,
                 ),
                 child: CustomImageView(
-                  imagePath: ImageConstant.dummyUserImage,
+                  imagePath: ImageConstant.chatIcon,
                   width: 18.w(context),
                 ),
               ),
-              label: 'Third Tab',
+              label: 'Chat',
             ),
           ],
         ),

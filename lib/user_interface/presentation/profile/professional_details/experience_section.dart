@@ -14,10 +14,10 @@ import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/global_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
-import 'package:hirevire_app/user_interface/controllers/profile_controller.dart';
+import 'package:hirevire_app/user_interface/controllers/complete_profile_controller.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 
-class ExperienceSection extends GetWidget<ProfileController> {
+class ExperienceSection extends GetWidget<CompleteProfileController> {
   const ExperienceSection({super.key});
 
   @override

@@ -4,6 +4,7 @@ class GlobalConstants {
   static int maxHeadlineChars = 50;
   static int maxBioChars = 1000;
   static int maxExpDescriptionChars = 4000;
+  static double screenHorizontalPadding = 16.0;
   static var suggestions = [
     'Web Development',
     'Web Design',

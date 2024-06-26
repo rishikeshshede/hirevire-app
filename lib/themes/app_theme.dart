@@ -7,7 +7,7 @@ ThemeData theme() {
   return ThemeData(
     primaryColor: AppColors.primary,
     scaffoldBackgroundColor: AppColors.background,
-    fontFamily: "Poppins",
+    fontFamily: "Uber-Move",
     visualDensity: VisualDensity.adaptivePlatformDensity,
     unselectedWidgetColor: AppColors.disabled,
   );
