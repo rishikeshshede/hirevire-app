@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hirevire_app/common/controllers/navigation_controller.dart';
+import 'package:hirevire_app/common/controllers/common_nav_controller.dart';
+import 'package:hirevire_app/common/widgets/custom_image_view.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
-import 'package:hirevire_app/themes/text_theme.dart';
+import 'package:hirevire_app/constants/image_constants.dart';
+import 'package:hirevire_app/utils/size_util.dart';
 
 class SplashScreen extends StatelessWidget {
   SplashScreen({super.key});
 
-  final NavigationController navController =
-      Get.put(tag: 'navController', NavigationController());
+  final CommonNavController commonNavController =
+      Get.put(tag: 'commonNavController', CommonNavController());
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +18,9 @@ class SplashScreen extends StatelessWidget {
       body: Container(
         alignment: Alignment.center,
         color: AppColors.primaryDark,
-        child: Text(
-          'Hirevire',
-          style: AppTextThemes.titleStyle(context).copyWith(
-            color: AppColors.secondary,
-            fontWeight: FontWeight.w600,
-          ),
-          textAlign: TextAlign.center,
+        child: CustomImageView(
+          imagePath: ImageConstant.logo,
+          height: 212.h(context),
         ),
       ),
     );

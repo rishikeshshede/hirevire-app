@@ -11,6 +11,7 @@
 migrate_working_dir/
 Searching
 *.apk
+*.sh
 
 # IntelliJ related
 *.iml
