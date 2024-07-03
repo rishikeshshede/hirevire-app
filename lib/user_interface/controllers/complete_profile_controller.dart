@@ -115,7 +115,7 @@ class CompleteProfileController extends GetxController {
 
   List<Widget> sectionWidgets() {
     return [
-      const NameDobSection(),
+      //const NameDobSection(),
       const NumberSection(),
       const BioSection(),
       const SkillsSection(),

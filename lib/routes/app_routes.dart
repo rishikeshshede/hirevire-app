@@ -7,6 +7,7 @@ import 'package:hirevire_app/user_interface/presentation/base_navigator.dart';
 import 'package:hirevire_app/common/screens/common_landing_screen.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/bindings/user_onb_binding.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/name_dob_section.dart';
+import 'package:hirevire_app/user_interface/presentation/profile/professional_details/bindings/user_profile_binding.dart';
 import 'package:hirevire_app/user_interface/presentation/profile/sliding_base.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/otp_screen.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/user_email_validation_screen.dart';
@@ -60,6 +61,7 @@ class AppRoutes {
     GetPage(
       name: completeProfile,
       page: () => const SlidingBase(),
+      binding: UserProfileBinding(),
     ),
     GetPage(
       name: userBaseNavigator,

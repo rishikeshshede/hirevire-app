@@ -7,6 +7,11 @@ import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
 import 'package:hirevire_app/user_interface/presentation/jobs_tab/components/job_card.dart';
 import 'package:hirevire_app/user_interface/presentation/jobs_tab/controllers/jobs_controller.dart';
+import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:hirevire_app/utils/show_toast_util.dart';
+
+import '../../../routes/app_routes.dart';
+import '../profile/sliding_base.dart';
 
 class JobsTab extends StatelessWidget {
   const JobsTab({super.key});
@@ -43,15 +48,61 @@ class JobsTab extends StatelessWidget {
           ),
         ],
       ),
-      body: Stack(
-        children: List.generate(
-          jobsController.jobs.length,
-          (index) => JobCard(
-            jobsController: jobsController,
-            job: jobsController.jobs[index],
-            index: index,
-          ),
-        ),
+      body: Obx(() {
+          return
+            jobsController.jobs.value.isEmpty
+          ?
+            const Center(
+                    child: Text('No jobs available'),
+            )
+          :
+            Column(
+            children: [
+              Expanded(
+                child: Center(
+                  child: CardSwiper(
+                    cardsCount: jobsController.jobs.length,
+                    cardBuilder: (context, index, percentThresholdX, percentThresholdY) {
+                      final job = jobsController.jobs[index];
+                      return JobCard(
+                        jobsController: jobsController,
+                        job: job,
+                        index: index,
+                      );
+                    },
+                    onSwipe: (index, percentThresholdX, direction) {
+                      if (direction == CardSwiperDirection.right) {
+                        jobsController.applyJob(jobsController.jobs[index]);
+
+                        Get.toNamed(AppRoutes.completeProfile);
+
+                        ToastWidgit.styledToast(
+                          "Applied",
+                          context,
+                          true
+                        );
+                      } else if (direction == CardSwiperDirection.left) {
+                        jobsController.rejectJob(jobsController.jobs[index]);
+                        ToastWidgit.styledToast(
+                          "Rejected",
+                          context,
+                          false
+                        );
+                      }
+                      debugPrint(jobsController.jobs.length.toString());
+                      return true;
+                    },
+                    //allowedSwipeDirection: AllowedSwipeDirection.horizontal,
+                    scale: 0.9,
+                    maxAngle: 30.0,
+                    padding: EdgeInsets.zero,
+                    isLoop: false,
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
