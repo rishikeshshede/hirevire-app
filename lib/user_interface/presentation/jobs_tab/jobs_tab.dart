@@ -46,6 +46,19 @@ class JobsTab extends StatelessWidget {
               ),
             ),
           ),
+          GestureDetector(
+            onTap: () {},
+            child: Container(
+              margin: EdgeInsets.only(
+                  right: GlobalConstants.screenHorizontalPadding),
+              padding: const EdgeInsets.all(3),
+              height: 35,
+              width: 35,
+              child: CustomImageView(
+                imagePath: ImageConstant.userIcon,
+              ),
+            ),
+          ),
         ],
       ),
       body: Obx(() {
@@ -74,7 +87,9 @@ class JobsTab extends StatelessWidget {
                       if (direction == CardSwiperDirection.right) {
                         jobsController.applyJob(jobsController.jobs[index]);
 
-                        Get.toNamed(AppRoutes.completeProfile);
+                        if(jobsController.isProfileComplete.value == false) {
+                          Get.toNamed(AppRoutes.completeProfile);
+                        }
 
                         ToastWidgit.styledToast(
                           "Applied",

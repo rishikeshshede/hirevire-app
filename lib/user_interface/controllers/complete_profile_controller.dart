@@ -19,6 +19,8 @@ import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/log_handler.dart';
 import 'package:hirevire_app/utils/show_toast_util.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../constants/persistence_keys.dart';
+import '../../utils/persistence_handler.dart';
 
 class CompleteProfileController extends GetxController {
   late ApiClient apiClient;
@@ -506,6 +508,7 @@ class CompleteProfileController extends GetxController {
 
       if (response['success']) {
         // TODO: save user data to user model
+        debugPrint(response.toString());
 
         if (profilePic.value != null) {
           await uploadProfilePic();
@@ -524,6 +527,10 @@ class CompleteProfileController extends GetxController {
     } finally {
       isSigningUp.value = false;
     }
+  }
+
+  Future<void> saveProfileCompleteData(Map<String, dynamic> responseLogin) async {
+    PersistenceHandler.setBool(PersistenceKeys.isProfileComplete, true);
   }
 
   // ----------------- Navigations -----------------

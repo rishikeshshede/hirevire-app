@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
 import 'package:hirevire_app/services/api_service.dart';
 import 'package:hirevire_app/user_interface/models/job_model.dart';
@@ -11,6 +12,7 @@ class JobsController extends GetxController {
 
   RxBool isLoading = false.obs;
   RxString name = ''.obs;
+  RxBool isProfileComplete = false.obs;
   RxList<bool> isOpen = [true, false, false].obs;
 
   RxList<JobModel> jobs = <JobModel>[].obs;
@@ -29,6 +31,7 @@ class JobsController extends GetxController {
 
   fetchLocalData() async {
     name.value = await PersistenceHandler.getString(PersistenceKeys.name);
+    isProfileComplete.value = await PersistenceHandler.getBool(PersistenceKeys.isProfileComplete);
   }
 
   fetchJobs() async {
