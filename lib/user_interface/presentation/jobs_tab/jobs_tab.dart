@@ -87,15 +87,27 @@ class JobsTab extends StatelessWidget {
                       if (direction == CardSwiperDirection.right) {
                         jobsController.applyJob(jobsController.jobs[index]);
 
-                        if(jobsController.isProfileComplete.value == false) {
+                        ToastWidgit.styledToast(
+                            "Accepted",
+                            context,
+                            true
+                        );
+
+                        if (jobsController.isProfileComplete.value == false) {
                           Get.toNamed(AppRoutes.completeProfile);
                         }
+                        else {
+                          final job = jobsController.jobs[index];
+                          Get.toNamed(
+                            AppRoutes.jobApplicationForm,
+                            arguments: {
+                              'jobsController': jobsController,
+                              'job': job,
+                              'index': index,
+                            },
+                          );
+                        }
 
-                        ToastWidgit.styledToast(
-                          "Applied",
-                          context,
-                          true
-                        );
                       } else if (direction == CardSwiperDirection.left) {
                         jobsController.rejectJob(jobsController.jobs[index]);
                         ToastWidgit.styledToast(

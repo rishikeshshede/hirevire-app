@@ -7,6 +7,11 @@ import 'package:hirevire_app/user_interface/models/job_model.dart';
 import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/persistence_handler.dart';
 
+import '../../../../constants/endpoint_constants.dart';
+import '../../../../constants/error_constants.dart';
+import '../../../../routes/app_routes.dart';
+import '../../../../utils/log_handler.dart';
+
 class JobsController extends GetxController {
   late ApiClient apiClient;
 
@@ -18,6 +23,10 @@ class JobsController extends GetxController {
   RxList<JobModel> jobs = <JobModel>[].obs;
   var status = ''.obs; // Status text
   var statusColor = Colors.transparent.obs; // Status color
+
+  TextEditingController nameController = TextEditingController();
+  FocusNode nameFocusNode = FocusNode();
+
 
   RxList<Map<String, dynamic>> suggestedJobs = <Map<String, dynamic>>[].obs;
 
@@ -58,6 +67,32 @@ class JobsController extends GetxController {
     status.value = 'Rejected';
     statusColor.value = Colors.red;
     // Handle job rejection logic
+  }
+
+  submitJobApplication() async {
+
+    String endpoint = ""; //Endpoints.submitJob; //TODO: add api endpoint
+
+    Map<String, dynamic> body = {
+
+    };
+    LogHandler.debug(body);
+
+    try {
+      Map<String, dynamic> response = await apiClient.post(endpoint, body);
+      LogHandler.debug(response);
+
+      if (response['success']) {
+
+        Get.back();
+      } else {
+        String errorMsg =
+            response['error']['message'] ?? Errors.somethingWentWrong;
+        LogHandler.error(errorMsg);
+      }
+    } catch (error) {
+      LogHandler.error(error);
+    }
   }
 }
 
