@@ -153,6 +153,7 @@ class UserOnbController extends GetxController {
           errorMsg.value = isValueValid ? "" : "*Invalid date";
         } else if (value.length <= 2) {
           isValueValid = intValue > 0 && intValue <= 12;
+          shiftFocus = isValueValid && value.length == 2;
           errorMsg.value = isValueValid ? "" : "*Invalid month";
         }
         break;
