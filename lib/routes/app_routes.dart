@@ -13,6 +13,8 @@ import 'package:hirevire_app/user_interface/presentation/profile/sliding_base.da
 import 'package:hirevire_app/user_interface/presentation/onboarding/otp_screen.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/user_email_validation_screen.dart';
 
+import '../employer_interface/presentation/emp_base_navigator.dart';
+
 class AppRoutes {
   // Routes
   static const String initialRoute = '/';
@@ -30,6 +32,7 @@ class AppRoutes {
 
   // Employer Routes
   static const String empLoginScreen = '/empLoginScreen';
+  static const String empBaseNavigator = '/empBaseNavigator';
 
   // Pages
   static List<GetPage> pages = [
@@ -80,6 +83,10 @@ class AppRoutes {
       name: empLoginScreen,
       page: () => const EmpLoginScreen(),
       binding: EmpLoginBinding(),
+    ),
+    GetPage(
+      name: empBaseNavigator,
+      page: () => const EmployerBaseNavigator(),
     ),
   ];
 }

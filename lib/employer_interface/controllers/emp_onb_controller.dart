@@ -61,6 +61,8 @@ class EmpOnbController extends GetxController {
       Map<String, dynamic> response = await apiClient.post(endpoint, body);
       LogHandler.debug(response);
 
+      //navigateToBaseNav();
+
       if (response['success']) {
         String token = response['body']['token'];
         PersistenceHandler.setString(PersistenceKeys.authToken, token);
@@ -89,7 +91,6 @@ class EmpOnbController extends GetxController {
     PersistenceHandler.setBool(PersistenceKeys.isNew, false);
     PersistenceHandler.setBool(PersistenceKeys.isEmployer, true);
     PersistenceHandler.setBool(PersistenceKeys.isSignedIn, true);
-    // Get.toNamed(AppRoutes.empBaseNavigator);
-    Get.toNamed(AppRoutes.userBaseNavigator);
+    Get.toNamed(AppRoutes.empBaseNavigator);
   }
 }
