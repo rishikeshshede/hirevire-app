@@ -10,7 +10,7 @@ import 'package:hirevire_app/utils/persistence_handler.dart';
 import '../../../../constants/error_constants.dart';
 import '../../../../utils/log_handler.dart';
 
-class RequisitionsController extends GetxController {
+class JobPostingsController extends GetxController {
   late ApiClient apiClient;
 
   RxBool isLoading = false.obs;
@@ -18,7 +18,7 @@ class RequisitionsController extends GetxController {
   RxBool isProfileComplete = false.obs;
   RxList<bool> isOpen = [true, false, false].obs;
 
-  RxList<JobModel> requisitions = <JobModel>[].obs; //TODO: change this to requisitions model
+  RxList<JobModel> jobPostings = <JobModel>[].obs; //TODO: change this to requisitions model
   var status = ''.obs; // Status text
   var statusColor = Colors.transparent.obs; // Status color
 
@@ -33,15 +33,15 @@ class RequisitionsController extends GetxController {
     super.onInit();
     apiClient = ApiClient();
     fetchLocalData();
-    fetchRequisitions();
+    fetchJobPostings();
   }
 
   fetchLocalData() async {
     name.value = await PersistenceHandler.getString(PersistenceKeys.name);
   }
 
-  fetchRequisitions() async {
-    requisitions.value = JobModel().fromJsonList(dummyJobs);
+  fetchJobPostings() async {
+    jobPostings.value = JobModel().fromJsonList(dummyJobs);
   }
 
   String getPostTime(DateTime date) {

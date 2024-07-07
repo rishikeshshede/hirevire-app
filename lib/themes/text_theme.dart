@@ -83,4 +83,13 @@ class AppTextThemes {
       color: AppColors.textPrimary,
     );
   }
+
+  //specially made for the global/common components
+  static TextStyle genericTextStyle(BuildContext context, {Color? color, FontWeight? fontWeight, double? customFontSize}) {
+    return TextStyle(
+      fontSize: _getResponsiveFontSize(context, customFontSize ?? 12.0.adaptSize(context)),
+      fontWeight: fontWeight ?? FontWeight.w400,
+      color: color ?? AppColors.textPrimary,
+    );
+  }
 }

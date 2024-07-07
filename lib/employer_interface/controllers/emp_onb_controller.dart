@@ -61,7 +61,7 @@ class EmpOnbController extends GetxController {
       Map<String, dynamic> response = await apiClient.post(endpoint, body);
       LogHandler.debug(response);
 
-      //navigateToBaseNav();
+      navigateToBaseNav();
 
       if (response['success']) {
         String token = response['body']['token'];

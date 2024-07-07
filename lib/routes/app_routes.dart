@@ -14,6 +14,7 @@ import 'package:hirevire_app/user_interface/presentation/onboarding/otp_screen.d
 import 'package:hirevire_app/user_interface/presentation/onboarding/user_email_validation_screen.dart';
 
 import '../employer_interface/presentation/emp_base_navigator.dart';
+import '../employer_interface/presentation/requisitions_tab/components/create_job_posting_screen.dart';
 
 class AppRoutes {
   // Routes
@@ -33,6 +34,7 @@ class AppRoutes {
   // Employer Routes
   static const String empLoginScreen = '/empLoginScreen';
   static const String empBaseNavigator = '/empBaseNavigator';
+  static const String createJobPosting = '/createJobPosting';
 
   // Pages
   static List<GetPage> pages = [
@@ -87,6 +89,10 @@ class AppRoutes {
     GetPage(
       name: empBaseNavigator,
       page: () => const EmployerBaseNavigator(),
+    ),
+    GetPage(
+      name: createJobPosting,
+      page: () => const CreateJobPostingScreen(),
     ),
   ];
 }

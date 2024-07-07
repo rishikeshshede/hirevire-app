@@ -9,6 +9,7 @@ import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/global_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
+import 'package:hirevire_app/employer_interface/presentation/job_postings_tab/controllers/job_postings_controller.dart';
 import 'package:hirevire_app/employer_interface/presentation/requisitions_tab/controllers/requisitions_controller.dart';
 import 'package:hirevire_app/routes/app_routes.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
@@ -20,15 +21,15 @@ import 'package:hirevire_app/utils/size_util.dart';
 import '../../../../common/widgets/VideoPlayerWidget.dart';
 import '../../../../common/widgets/button_outline.dart';
 
-class RequisitionsCard extends StatelessWidget {
-  const RequisitionsCard({
+class JobPostingsCard extends StatelessWidget {
+  const JobPostingsCard({
     super.key,
-    required this.requisitionsController,
-    required this.requisition,
+    required this.jobPostingsController,
+    required this.jobPostings,
     required this.index,
   });
-  final RequisitionsController requisitionsController;
-  final JobModel requisition;
+  final JobPostingsController jobPostingsController;
+  final JobModel jobPostings;
   final int index;
 
   @override
@@ -43,38 +44,39 @@ class RequisitionsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          jobTitle(context),
-          const VerticalSpace(space: 4,),
-          Text(
-            requisition.companyName ?? '',
-            style: AppTextThemes.bodyTextStyle(context).copyWith(
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-          const VerticalSpace(),
+
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Openings',
-                style: AppTextThemes.secondaryTextStyle(context),
-              ),
-              const HorizontalSpace(),
-              Text(
-                '${requisition.applicants ?? ''}',
-                style: AppTextThemes.bodyTextStyle(context),
+              SkillChip(skill:'${jobPostings.applicants ?? ''} right swipes'),
+
+              Row(
+                children: [
+                  const GreenDot(),
+                  const HorizontalSpace(),
+                  Text(
+                    'in-progress', //TODO: application status hardcoded
+                    style: AppTextThemes.bodyTextStyle(context),
+                  ),
+                ],
               ),
             ],
           ),
-          const VerticalSpace(),
+
+          jobTitle(context),
+          const VerticalSpace(space: 4,),
           Row(
             children: [
               Text(
-                'Hiring Manager',
-                style: AppTextThemes.secondaryTextStyle(context),
+                jobPostings.companyName ?? '',
+                style: AppTextThemes.bodyTextStyle(context).copyWith(
+                  fontWeight: FontWeight.w300,
+                ),
               ),
-              const HorizontalSpace(),
+              const HorizontalSpace(space: 12),
+
               Text(
-                '${requisition.recruiter ?? ''}',
+                '${jobPostings.recruiter ?? ''}',
                 style: AppTextThemes.bodyTextStyle(context),
               ),
             ],
@@ -89,8 +91,41 @@ class RequisitionsCard extends StatelessWidget {
               ),
               const HorizontalSpace(),
               Text(
-                '${requisition.recruiter ?? ''}',
+                '${jobPostings.recruiter ?? ''}',
                 style: AppTextThemes.bodyTextStyle(context),
+              ),
+            ],
+          ),
+          const VerticalSpace(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Openings',
+                    style: AppTextThemes.secondaryTextStyle(context),
+                  ),
+                  const HorizontalSpace(),
+                  Text(
+                    '${jobPostings.applicants ?? ''}',
+                    style: AppTextThemes.bodyTextStyle(context),
+                  ),
+                ],
+              ),
+              const VerticalSpace(),
+              Row(
+                children: [
+                  Text(
+                    'Accepted',
+                    style: AppTextThemes.secondaryTextStyle(context),
+                  ),
+                  const HorizontalSpace(),
+                  Text(
+                    '${jobPostings.applicants ?? ''}',
+                    style: AppTextThemes.bodyTextStyle(context),
+                  ),
+                ],
               ),
             ],
           ),
@@ -99,22 +134,8 @@ class RequisitionsCard extends StatelessWidget {
           Row(
             children: [
               Flexible(
-                child: ButtonPrimary(
-                  btnText: 'Create job Posting',
-                  btnColor: AppColors.primaryDark,
-                  onPressed: () {
-                    Get.toNamed(AppRoutes.createJobPosting);
-                  },
-                  textStyle: AppTextThemes.genericTextStyle(
-                    context,
-                    color: AppColors.background,
-                  ),
-                ),
-              ),
-              const HorizontalSpace(space: 8),
-              Flexible(
                 child:  ButtonOutline(
-                  btnText: 'View job Posting',
+                  btnText: 'View applicants',
                   onPressed: () {},
                   textStyle: AppTextThemes.genericTextStyle(
                     context,
@@ -135,14 +156,14 @@ class RequisitionsCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         CustomImageView(
-          imagePath: requisition.companyLogoUrl,
+          imagePath: jobPostings.companyLogoUrl,
           height: 24,
           imageType: ImageType.network,
           showLoader: false,
         ),
         const HorizontalSpace(),
         Text(
-          requisition.companyName ?? '',
+          jobPostings.companyName ?? '',
           style: AppTextThemes.bodyTextStyle(context).copyWith(
             fontWeight: FontWeight.w500,
           ),
@@ -153,7 +174,7 @@ class RequisitionsCard extends StatelessWidget {
 
   Text jobPostingDate(BuildContext context) {
     return Text(
-      requisitionsController.getPostTime(requisition.postedOn ?? DateTime.now()),
+      jobPostingsController.getPostTime(jobPostings.postedOn ?? DateTime.now()),
       style: AppTextThemes.smallText(context),
     );
   }
@@ -169,7 +190,7 @@ class RequisitionsCard extends StatelessWidget {
           const GreenDot(),
           const HorizontalSpace(),
           Text(
-            '${requisition.applicants} applicants',
+            '${jobPostings.applicants} applicants',
             style: AppTextThemes.buttonTextStyle(context),
           ),
         ],
@@ -197,13 +218,13 @@ class RequisitionsCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      requisition.recruiter ?? 'Unknown',
+                      jobPostings.recruiter ?? 'Unknown',
                       style: AppTextThemes.screenTitleStyle(context).copyWith(
                         color: AppColors.background,
                       ),
                     ),
                     Text(
-                      requisition.recruiterDesignation ?? 'Recruiter',
+                      jobPostings.recruiterDesignation ?? 'Recruiter',
                       style: AppTextThemes.smallText(context).copyWith(
                         color: AppColors.background,
                       ),
@@ -229,7 +250,7 @@ class RequisitionsCard extends StatelessWidget {
 
   Text jobTitle(BuildContext context) {
     return Text(
-      requisition.jobTitle ?? 'Unknown job title',
+      jobPostings.jobTitle ?? 'Unknown job title',
       style: AppTextThemes.titleStyle(context).copyWith(
         fontWeight: FontWeight.w500,
         fontSize: 22.w(context),
@@ -239,14 +260,14 @@ class RequisitionsCard extends StatelessWidget {
 
   Text jobLocation(BuildContext context) {
     return Text(
-      requisition.location ?? '',
+      jobPostings.location ?? '',
       style: AppTextThemes.secondaryTextStyle(context),
     );
   }
 
   Text ctcDetails(BuildContext context) {
     return Text(
-      requisition.ctc == null ? '' : '  ·  ${requisition.ctc} LPA',
+      jobPostings.ctc == null ? '' : '  ·  ${jobPostings.ctc} LPA',
       style: AppTextThemes.secondaryTextStyle(context),
     );
   }
@@ -257,8 +278,8 @@ class RequisitionsCard extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: List.generate(
-        requisition.skills!.length,
-        (index) => SkillChip(skill: requisition.skills![index]),
+        jobPostings.skills!.length,
+        (index) => SkillChip(skill: jobPostings.skills![index]),
       ),
     );
   }
@@ -278,7 +299,7 @@ class RequisitionsCard extends StatelessWidget {
         plan.description ?? 'No plan provided',
         style: AppTextThemes.bodyTextStyle(context),
       ),
-      isExpanded: requisitionsController.isOpen[index],
+      isExpanded: jobPostingsController.isOpen[index],
       canTapOnHeader: true,
       backgroundColor: AppColors.background,
     );
@@ -286,7 +307,7 @@ class RequisitionsCard extends StatelessWidget {
 
   Text perks(BuildContext context) {
     return Text(
-      requisition.perks ?? 'Not mentioned',
+      jobPostings.perks ?? 'Not mentioned',
       style: AppTextThemes.bodyTextStyle(context),
     );
   }
@@ -294,7 +315,7 @@ class RequisitionsCard extends StatelessWidget {
   Row socialHandles(BuildContext context) {
     return Row(
       children: List.generate(
-        requisition.socialHandles!.length,
+        jobPostings.socialHandles!.length,
         (index) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 4),
           margin: const EdgeInsets.only(right: 20),
@@ -303,11 +324,11 @@ class RequisitionsCard extends StatelessWidget {
             children: [
               CustomImageView(
                 imagePath: GlobalConstants
-                    .socialProfileTypesMap[requisition.socialHandles![index].platform],
+                    .socialProfileTypesMap[jobPostings.socialHandles![index].platform],
                 height: 30.w(context),
               ),
               Text(
-                requisition.socialHandles![index].platform ?? 'Other',
+                jobPostings.socialHandles![index].platform ?? 'Other',
                 style: AppTextThemes.extraSmallText(context),
               ),
             ],
