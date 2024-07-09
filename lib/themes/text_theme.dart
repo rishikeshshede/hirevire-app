@@ -46,7 +46,7 @@ class AppTextThemes {
 
   static TextStyle bodyTextStyle(BuildContext context) {
     return TextStyle(
-      fontSize: _getResponsiveFontSize(context, 16.0.adaptSize(context)),
+      fontSize: _getResponsiveFontSize(context, 14.0.adaptSize(context)),
       fontWeight: FontWeight.w400,
       color: AppColors.textPrimary,
     );
@@ -54,7 +54,7 @@ class AppTextThemes {
 
   static TextStyle secondaryTextStyle(BuildContext context) {
     return TextStyle(
-      fontSize: _getResponsiveFontSize(context, 16.0.adaptSize(context)),
+      fontSize: _getResponsiveFontSize(context, 14.0.adaptSize(context)),
       fontWeight: FontWeight.w400,
       color: AppColors.greyDisabled,
     );
@@ -62,7 +62,7 @@ class AppTextThemes {
 
   static TextStyle buttonTextStyle(BuildContext context) {
     return TextStyle(
-      fontSize: _getResponsiveFontSize(context, 16.0.adaptSize(context)),
+      fontSize: _getResponsiveFontSize(context, 14.0.adaptSize(context)),
       fontWeight: FontWeight.w500,
       color: Colors.white,
     );
@@ -70,7 +70,7 @@ class AppTextThemes {
 
   static TextStyle smallText(BuildContext context) {
     return TextStyle(
-      fontSize: _getResponsiveFontSize(context, 14.0.adaptSize(context)),
+      fontSize: _getResponsiveFontSize(context, 12.0.adaptSize(context)),
       fontWeight: FontWeight.w400,
       color: AppColors.textPrimary,
     );
@@ -78,7 +78,7 @@ class AppTextThemes {
 
   static TextStyle extraSmallText(BuildContext context) {
     return TextStyle(
-      fontSize: _getResponsiveFontSize(context, 12.5.adaptSize(context)),
+      fontSize: _getResponsiveFontSize(context, 10.5.adaptSize(context)),
       fontWeight: FontWeight.w400,
       color: AppColors.textPrimary,
     );
