@@ -96,6 +96,8 @@ class CompleteProfileController extends GetxController {
   final FocusNode socialUrlFocusNode = FocusNode();
   final FocusNode locationFocusNode = FocusNode();
 
+  var skillsRatings = <String, double>{}.obs; // Map to store ratings for skills
+
   @override
   void onInit() {
     super.onInit();
@@ -239,9 +241,35 @@ class CompleteProfileController extends GetxController {
     }
   }
 
+  // void addSkill(Map<String, dynamic> selectedSkill) {
+  //   Map<String, dynamic> skillMap = {
+  //     'data': selectedSkill['_id'],
+  //     'name': selectedSkill['name'],
+  //   };
+  //
+  //   bool skillExists = false;
+  //
+  //   if (selectedSkills.isEmpty) {
+  //     selectedSkills.add(skillMap);
+  //   } else {
+  //     for (var i = 0; i < selectedSkills.length; i++) {
+  //       var skill = selectedSkills[i];
+  //       if (skill['name'].toString().toLowerCase() ==
+  //           selectedSkill['name'].toString().toLowerCase()) {
+  //         skillExists = true;
+  //         return;
+  //       }
+  //     }
+  //     if (!skillExists) {
+  //       selectedSkills.add(skillMap);
+  //     }
+  //   }
+  //   skillsSearchController.clear();
+  // }
+
   void addSkill(Map<String, dynamic> selectedSkill) {
     Map<String, dynamic> skillMap = {
-      'data': selectedSkill['_id'],
+      '_id': selectedSkill['_id'],
       'name': selectedSkill['name'],
     };
 
@@ -249,9 +277,9 @@ class CompleteProfileController extends GetxController {
 
     if (selectedSkills.isEmpty) {
       selectedSkills.add(skillMap);
+      skillsRatings[selectedSkill['_id']] = 5.0; // Default rating
     } else {
-      for (var i = 0; i < selectedSkills.length; i++) {
-        var skill = selectedSkills[i];
+      for (var skill in selectedSkills) {
         if (skill['name'].toString().toLowerCase() ==
             selectedSkill['name'].toString().toLowerCase()) {
           skillExists = true;
@@ -260,14 +288,24 @@ class CompleteProfileController extends GetxController {
       }
       if (!skillExists) {
         selectedSkills.add(skillMap);
+        skillsRatings[selectedSkill['_id']] = 5.0; // Default rating
       }
     }
     skillsSearchController.clear();
   }
 
-  void removeSkill(Map<String, dynamic> titleObj) {
-    selectedSkills.removeWhere((skill) => skill['name'] == titleObj['name']);
+  void updateSkillRating(String skillId, double rating) {
+    skillsRatings[skillId] = rating;
   }
+
+  void removeSkill(Map<String, dynamic> skill) {
+    selectedSkills.remove(skill);
+    skillsRatings.remove(skill['data']);
+  }
+
+  // void removeSkill(Map<String, dynamic> titleObj) {
+  //   selectedSkills.removeWhere((skill) => skill['name'] == titleObj['name']);
+  // }
 
   Future<void> suggestCompany() async {
     if (companySearchQuery.isEmpty) {
