@@ -1,34 +1,34 @@
 import 'dart:convert';
 
 class Requisition {
-  String id;
-  RequestedBy requestedBy;
-  String title;
-  String department;
-  String jobMode;
-  String description;
-  List<Skill> requiredSkills;
-  int budgetAllocation;
-  String status;
-  List<String> assignedRecruiters;
-  DateTime createdAt;
-  DateTime updatedAt;
-  int version;
+  String? id;
+  RequestedBy? requestedBy;
+  String? title;
+  String? department;
+  String? jobMode;
+  String? description;
+  List<Skill>? requiredSkills;
+  int? budgetAllocation;
+  String? status;
+  List<String>? assignedRecruiters;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  int? version;
 
   Requisition({
-    required this.id,
-    required this.requestedBy,
-    required this.title,
-    required this.department,
-    required this.jobMode,
-    required this.description,
-    required this.requiredSkills,
-    required this.budgetAllocation,
-    required this.status,
-    required this.assignedRecruiters,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.version,
+    this.id,
+    this.requestedBy,
+    this.title,
+    this.department,
+    this.jobMode,
+    this.description,
+    this.requiredSkills,
+    this.budgetAllocation,
+    this.status,
+    this.assignedRecruiters,
+    this.createdAt,
+    this.updatedAt,
+    this.version,
   });
 
   factory Requisition.fromJson(Map<String, dynamic> json) {
@@ -52,23 +52,27 @@ class Requisition {
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
-      'requestedBy': requestedBy.toJson(),
+      'requestedBy': requestedBy?.toJson(),
       'title': title,
       'department': department,
       'jobMode': jobMode,
       'description': description,
-      'requiredSkills': List<dynamic>.from(requiredSkills.map((x) => x.toJson())),
+      'requiredSkills': List<dynamic>.from(requiredSkills?.map((x) => x.toJson()) ?? []),
       'budgetAllocation': budgetAllocation,
       'status': status,
-      'assignedRecruiters': List<dynamic>.from(assignedRecruiters.map((x) => x)),
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'assignedRecruiters': List<dynamic>.from(assignedRecruiters?.map((x) => x) ?? []),
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
       '__v': version,
     };
   }
 
-  static List<Requisition> fromJsonList(List<dynamic> jsonList) {
-    return jsonList.map((json) => Requisition.fromJson(json)).toList();
+  static List<Requisition> fromJsonList(jsonList) {
+    List<Requisition> tempList = [];
+    for (var list in jsonList) {
+      tempList.add(Requisition.fromJson(list));
+    }
+    return tempList;
   }
 
   static List<Map<String, dynamic>> toJsonList(List<Requisition> requisitions) {
