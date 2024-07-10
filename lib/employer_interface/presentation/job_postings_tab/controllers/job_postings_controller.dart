@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
+import 'package:hirevire_app/employer_interface/models/job_posting.dart';
 import 'package:hirevire_app/services/api_service.dart';
-import 'package:hirevire_app/user_interface/models/job_model.dart';
 import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/persistence_handler.dart';
 
 import '../../../../constants/error_constants.dart';
+import '../../../../services/api_endpoint_service.dart';
 import '../../../../utils/log_handler.dart';
 
 class JobPostingsController extends GetxController {
@@ -18,7 +19,7 @@ class JobPostingsController extends GetxController {
   RxBool isProfileComplete = false.obs;
   RxList<bool> isOpen = [true, false, false].obs;
 
-  RxList<JobModel> jobPostings = <JobModel>[].obs; //TODO: change this to requisitions model
+  RxList<JobPosting> jobPostings = <JobPosting>[].obs;
   var status = ''.obs; // Status text
   var statusColor = Colors.transparent.obs; // Status color
 
@@ -41,7 +42,24 @@ class JobPostingsController extends GetxController {
   }
 
   fetchJobPostings() async {
-    jobPostings.value = JobModel().fromJsonList(dummyJobs);
+
+    String endpoint = EndpointService.getJobPostings;
+
+    try {
+      Map<String, dynamic> response = await apiClient.get(endpoint);
+      LogHandler.debug(response);
+
+      if (response['success']) {
+        jobPostings.value = JobPosting.fromJsonList(response['body']['data']);
+      } else {
+        String errorMsg =
+            response['error']['message'] ?? Errors.somethingWentWrong;
+        LogHandler.error(errorMsg);
+      }
+    } catch (error) {
+      LogHandler.error(error);
+    }
+
   }
 
   String getPostTime(DateTime date) {

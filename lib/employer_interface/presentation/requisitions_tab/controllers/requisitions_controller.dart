@@ -3,8 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
 import 'package:hirevire_app/services/api_service.dart';
-import 'package:hirevire_app/user_interface/models/job_model.dart';
-import 'package:hirevire_app/user_interface/models/requisition.dart';
+import 'package:hirevire_app/employer_interface/models/requisition.dart';
 import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/persistence_handler.dart';
 
@@ -20,13 +19,12 @@ class RequisitionsController extends GetxController {
   RxBool isProfileComplete = false.obs;
   RxList<bool> isOpen = [true, false, false].obs;
 
-  RxList<Requisition> requisitions = <Requisition>[].obs; //TODO: change this to requisitions model
+  RxList<Requisition> requisitions = <Requisition>[].obs;
   var status = ''.obs; // Status text
   var statusColor = Colors.transparent.obs; // Status color
 
   TextEditingController nameController = TextEditingController();
   FocusNode nameFocusNode = FocusNode();
-
 
   RxList<Map<String, dynamic>> suggestedJobs = <Map<String, dynamic>>[].obs;
 
@@ -51,7 +49,7 @@ class RequisitionsController extends GetxController {
 
       if (response['success']) {
 
-        requisitions.value = Requisition.fromJsonList(response['data']);
+        requisitions.value = Requisition.fromJsonList(response['body']['data']);
       } else {
         String errorMsg =
             response['error']['message'] ?? Errors.somethingWentWrong;
@@ -67,14 +65,31 @@ class RequisitionsController extends GetxController {
     return DatetimeUtil.timeAgo(date);
   }
 
-  submitJobApplication() async {
+  createJobApplication(Requisition req) async {
 
-    String endpoint = ""; //Endpoints.submitJob; //TODO: add api endpoint
+    String endpoint = EndpointService.createJobPostings;
 
     Map<String, dynamic> body = {
-
+      'postedBy': "",
+      'requestedBy': req.requestedBy?.id,
+      'jobRequisition': req.id,
+      'title': req.title,
+      'location': {
+        'country': req.requestedBy?.company?.locations?[0].country,   //hardcoded index
+        'city': req.requestedBy?.company?.locations?[0].city, //hardcoded index
+      },
+      'jobMode': req.jobMode,
+      'description': req.description,
+      'questions': [],
+      'requiredSkills': req.skills?.map((skill) => skill.id).toList(),
+      'media': [],
+      'endsOn': req.createdAt, //data unknown
+      'savedApplications': [],
+      '_id': req.id,
+      'createdAt': req.createdAt,
+      'updatedAt': req.updatedAt,
+      '__v': req.version,
     };
-    LogHandler.debug(body);
 
     try {
       Map<String, dynamic> response = await apiClient.post(endpoint, body);
@@ -94,269 +109,3 @@ class RequisitionsController extends GetxController {
   }
 }
 
-String dummyJobs = '''
-  [
-    {
-      "id": "abcd123",
-      "company_logo_url": "https://banner2.cleanpng.com/20190417/sxw/kisspng-microsoft-windows-portable-network-graphics-logo-t-aevinel-reino-maldito-descarga-5cb6fb279ba648.3641279715554957196376.jpg",
-      "company_name": "Microsoft",
-      "postedOn": "2024-06-18",
-      "video_url": "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4",
-      "ref_id": "123asfasf",
-      "applicants": 103,
-      "recruiter": "Martha Franz",
-      "recruiter_designation": "Senior Product Designer",
-      "transaction_date": null,
-      "job_title": "Software Engineer",
-      "location": "Bengaluru, India",
-      "ctc": "24 - 30",
-      "skills": [
-        "ReactJs",
-        "NodeJs",
-        "MySQL",
-        "Docker",
-        "AWS EC2"
-      ],
-      "growth_plan": [
-        {
-          "title": "30 day Plan",
-          "description": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS"
-        },
-        {
-          "title": "60 day Plan",
-          "description": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS"
-        },
-        {
-          "title": "90 day Plan",
-          "description": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS"
-        }
-      ],
-      "perks": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS",
-      "social_handles": [
-        {
-          "platform": "Instagram",
-          "logoUrl": "",
-          "url": "https://instagram.com/abcd"
-        },
-        {
-          "platform": "LinkedIn",
-          "logoUrl": "",
-          "url": "https://instagram.com/abcd"
-        },
-        {
-          "platform": "X",
-          "logoUrl": "",
-          "url": "https://instagram.com/abcd"
-        }
-      ]
-    },
-    {
-      "id": "abcd1234",
-      "company_logo_url": "https://banner2.cleanpng.com/20190417/sxw/kisspng-microsoft-windows-portable-network-graphics-logo-t-aevinel-reino-maldito-descarga-5cb6fb279ba648.3641279715554957196376.jpg",
-      "company_name": "Google",
-      "postedOn": "2024-06-24",
-      "video_url": "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4",
-      "ref_id": "123asfasf",
-      "applicants": 26,
-      "recruiter": "Anne Franz",
-      "recruiter_designation": "Senior Product Designer",
-      "transaction_date": null,
-      "job_title": "Senior Product Designer",
-      "location": "Bengaluru, India",
-      "ctc": "20 - 30",
-      "skills": [
-        "Figma",
-        "UI/UX",
-        "Canva"
-      ],
-      "growth_plan": [
-        {
-          "title": "30 day Plan",
-          "description": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS"
-        },
-        {
-          "title": "60 day Plan",
-          "description": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS"
-        },
-        {
-          "title": "90 day Plan",
-          "description": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS"
-        }
-      ],
-      "perks": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS",
-      "social_handles": [
-        {
-          "platform": "Instagram",
-          "logoUrl": "",
-          "url": "https://instagram.com/abcd"
-        },
-        {
-          "platform": "LinkedIn",
-          "logoUrl": "",
-          "url": "https://instagram.com/abcd"
-        },
-        {
-          "platform": "X",
-          "logoUrl": "",
-          "url": "https://instagram.com/abcd"
-        }
-      ]
-    },
-    {
-      "id": "abcd1235",
-      "company_logo_url": "https://banner2.cleanpng.com/20190417/sxw/kisspng-microsoft-windows-portable-network-graphics-logo-t-aevinel-reino-maldito-descarga-5cb6fb279ba648.3641279715554957196376.jpg",
-      "company_name": "Meta",
-      "postedOn": "2024-06-24",
-      "video_url": "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4",
-      "ref_id": "123asfasf",
-      "applicants": 26,
-      "recruiter": "Pennie Franz",
-      "recruiter_designation": "Senior Product Designer",
-      "transaction_date": null,
-      "job_title": "Senior Product Designer",
-      "location": "Bengaluru, India",
-      "ctc": "20 - 30",
-      "skills": [
-        "Figma",
-        "UI/UX",
-        "Canva"
-      ],
-      "growth_plan": [
-        {
-          "title": "30 day Plan",
-          "description": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS"
-        },
-        {
-          "title": "60 day Plan",
-          "description": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS"
-        },
-        {
-          "title": "90 day Plan",
-          "description": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS"
-        }
-      ],
-      "perks": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS",
-      "social_handles": [
-        {
-          "platform": "Instagram",
-          "logoUrl": "",
-          "url": "https://instagram.com/abcd"
-        },
-        {
-          "platform": "LinkedIn",
-          "logoUrl": "",
-          "url": "https://instagram.com/abcd"
-        },
-        {
-          "platform": "X",
-          "logoUrl": "",
-          "url": "https://instagram.com/abcd"
-        }
-      ]
-    },
-    {
-      "id": "abcd1236",
-      "company_logo_url": "https://banner2.cleanpng.com/20190417/sxw/kisspng-microsoft-windows-portable-network-graphics-logo-t-aevinel-reino-maldito-descarga-5cb6fb279ba648.3641279715554957196376.jpg",
-      "company_name": "Microsoft",
-      "postedOn": "2024-06-24",
-      "video_url": "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4",
-      "ref_id": "123asfasf",
-      "applicants": 26,
-      "recruiter": "Maddie Franz",
-      "recruiter_designation": "Senior Product Designer",
-      "transaction_date": null,
-      "job_title": "Senior Product Designer",
-      "location": "Bengaluru, India",
-      "ctc": "20 - 30",
-      "skills": [
-        "Figma",
-        "UI/UX",
-        "Canva"
-      ],
-      "growth_plan": [
-        {
-          "title": "30 day Plan",
-          "description": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS"
-        },
-        {
-          "title": "60 day Plan",
-          "description": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS"
-        },
-        {
-          "title": "90 day Plan",
-          "description": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS"
-        }
-      ],
-      "perks": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS",
-      "social_handles": [
-        {
-          "platform": "Instagram",
-          "logoUrl": "",
-          "url": "https://instagram.com/abcd"
-        },
-        {
-          "platform": "LinkedIn",
-          "logoUrl": "",
-          "url": "https://instagram.com/abcd"
-        },
-        {
-          "platform": "X",
-          "logoUrl": "",
-          "url": "https://instagram.com/abcd"
-        }
-      ]
-    },
-        {
-      "id": "abcd1237",
-      "company_logo_url": "https://banner2.cleanpng.com/20190417/sxw/kisspng-microsoft-windows-portable-network-graphics-logo-t-aevinel-reino-maldito-descarga-5cb6fb279ba648.3641279715554957196376.jpg",
-      "company_name": "Microsoft",
-      "postedOn": "2024-06-24",
-      "video_url": "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4",
-      "ref_id": "123asfasf",
-      "applicants": 26,
-      "recruiter": "Maggie Franz",
-      "recruiter_designation": "Senior Product Designer",
-      "transaction_date": null,
-      "job_title": "Senior Product Designer",
-      "location": "Bengaluru, India",
-      "ctc": "20 - 30",
-      "skills": [
-        "Figma",
-        "UI/UX",
-        "Canva"
-      ],
-      "growth_plan": [
-        {
-          "title": "30 day Plan",
-          "description": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS"
-        },
-        {
-          "title": "60 day Plan",
-          "description": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS"
-        },
-        {
-          "title": "90 day Plan",
-          "description": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS"
-        }
-      ],
-      "perks": "Good to have experience & understanding cloud infrastructure like AWS. Good to have experience & understanding cloud infrastructure like AWS. \\n\\nGood to have experience & understanding cloud infrastructure like AWS",
-      "social_handles": [
-        {
-          "platform": "Instagram",
-          "logoUrl": "",
-          "url": "https://instagram.com/abcd"
-        },
-        {
-          "platform": "LinkedIn",
-          "logoUrl": "",
-          "url": "https://instagram.com/abcd"
-        },
-        {
-          "platform": "X",
-          "logoUrl": "",
-          "url": "https://instagram.com/abcd"
-        }
-      ]
-    }
-  ]
-  ''';

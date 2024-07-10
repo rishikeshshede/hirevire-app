@@ -2,23 +2,14 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hirevire_app/common/widgets/button_primary.dart';
-import 'package:hirevire_app/common/widgets/chip_widget.dart';
-import 'package:hirevire_app/common/widgets/custom_image_view.dart';
-import 'package:hirevire_app/common/widgets/green_dot.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
-import 'package:hirevire_app/constants/global_constants.dart';
-import 'package:hirevire_app/constants/image_constants.dart';
+import 'package:hirevire_app/employer_interface/presentation/requisitions_tab/components/create_job_posting_screen.dart';
 import 'package:hirevire_app/employer_interface/presentation/requisitions_tab/controllers/requisitions_controller.dart';
-import 'package:hirevire_app/routes/app_routes.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
-import 'package:hirevire_app/user_interface/models/job_model.dart';
-import 'package:hirevire_app/user_interface/models/requisition.dart';
-import 'package:hirevire_app/user_interface/presentation/jobs_tab/controllers/jobs_controller.dart';
-import 'package:hirevire_app/utils/responsive.dart';
+import 'package:hirevire_app/employer_interface/models/requisition.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 
-import '../../../../common/widgets/VideoPlayerWidget.dart';
 import '../../../../common/widgets/button_outline.dart';
 
 class RequisitionsCard extends StatelessWidget {
@@ -47,7 +38,7 @@ class RequisitionsCard extends StatelessWidget {
           jobTitle(context),
           const VerticalSpace(space: 4,),
           Text(
-            requisition.requestedBy?.company.name ?? '',
+            requisition.requestedBy?.company?.name ?? '',
             style: AppTextThemes.bodyTextStyle(context).copyWith(
               fontWeight: FontWeight.w300,
             ),
@@ -104,7 +95,8 @@ class RequisitionsCard extends StatelessWidget {
                   btnText: 'Create job Posting',
                   btnColor: AppColors.primaryDark,
                   onPressed: () {
-                    Get.toNamed(AppRoutes.createJobPosting);
+                    Get.to(CreateJobPostingScreen(requisitionsController: requisitionsController, requisition: requisition, index: index));
+                    //Get.toNamed(AppRoutes.createJobPosting);
                   },
                   textStyle: AppTextThemes.genericTextStyle(
                     context,

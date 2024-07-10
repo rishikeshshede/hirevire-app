@@ -1,4 +1,4 @@
-import 'dart:convert';
+
 
 class Requisition {
   String? id;
@@ -7,7 +7,7 @@ class Requisition {
   String? department;
   String? jobMode;
   String? description;
-  List<Skill>? requiredSkills;
+  List<Skill>? skills;
   int? budgetAllocation;
   String? status;
   List<String>? assignedRecruiters;
@@ -22,7 +22,7 @@ class Requisition {
     this.department,
     this.jobMode,
     this.description,
-    this.requiredSkills,
+    this.skills,
     this.budgetAllocation,
     this.status,
     this.assignedRecruiters,
@@ -34,15 +34,19 @@ class Requisition {
   factory Requisition.fromJson(Map<String, dynamic> json) {
     return Requisition(
       id: json['_id'],
-      requestedBy: RequestedBy.fromJson(json['requestedBy']),
+      requestedBy: RequestedBy.fromMap(json['requestedBy']),
       title: json['title'],
       department: json['department'],
       jobMode: json['jobMode'],
       description: json['description'],
-      requiredSkills: List<Skill>.from(json['requiredSkills'].map((x) => Skill.fromJson(x))),
+      skills: json['skills'] != null
+          ? List<Skill>.from(json['skills'].map((x) => Skill.fromMap(x)))
+          : [],
       budgetAllocation: json['budgetAllocation'],
       status: json['status'],
-      assignedRecruiters: List<String>.from(json['assignedRecruiters']),
+      assignedRecruiters: json['assignedRecruiters'] != null
+          ? List<String>.from(json['assignedRecruiters'])
+          : [],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       version: json['__v'],
@@ -57,54 +61,63 @@ class Requisition {
       'department': department,
       'jobMode': jobMode,
       'description': description,
-      'requiredSkills': List<dynamic>.from(requiredSkills?.map((x) => x.toJson()) ?? []),
+      'skills': List<String>.from(skills?.map((x) => x.toJson()) ?? []),
       'budgetAllocation': budgetAllocation,
       'status': status,
-      'assignedRecruiters': List<dynamic>.from(assignedRecruiters?.map((x) => x) ?? []),
+      'assignedRecruiters': List<String>.from(assignedRecruiters?.map((x) => x) ?? []),
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
       '__v': version,
     };
   }
 
-  static List<Requisition> fromJsonList(jsonList) {
-    List<Requisition> tempList = [];
-    for (var list in jsonList) {
-      tempList.add(Requisition.fromJson(list));
-    }
-    return tempList;
+  Map<String, dynamic> toMap() {
+    return toJson();
+  }
+
+  factory Requisition.fromMap(Map<String, dynamic> map) {
+    return Requisition.fromJson(map);
   }
 
   static List<Map<String, dynamic>> toJsonList(List<Requisition> requisitions) {
     return requisitions.map((requisition) => requisition.toJson()).toList();
   }
+
+  static List<Requisition> fromJsonList(jsonList) {
+    List<Requisition> tempList = [];
+    for (var list in jsonList) {
+      tempList.add(Requisition.fromMap(list));
+    }
+    return tempList;
+  }
+
 }
 
 class RequestedBy {
-  String id;
-  Company company;
-  String email;
-  String password;
-  String role;
-  DateTime createdAt;
-  DateTime updatedAt;
-  int version;
+  String? id;
+  Company? company;
+  String? email;
+  String? password;
+  String? role;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  int? version;
 
   RequestedBy({
-    required this.id,
-    required this.company,
-    required this.email,
-    required this.password,
-    required this.role,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.version,
+    this.id,
+    this.company,
+    this.email,
+    this.password,
+    this.role,
+    this.createdAt,
+    this.updatedAt,
+    this.version,
   });
 
   factory RequestedBy.fromJson(Map<String, dynamic> json) {
     return RequestedBy(
       id: json['_id'],
-      company: Company.fromJson(json['company']),
+      company: Company.fromMap(json['company']),
       email: json['email'],
       password: json['password'],
       role: json['role'],
@@ -117,54 +130,62 @@ class RequestedBy {
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
-      'company': company.toJson(),
+      'company': company?.toJson(),
       'email': email,
       'password': password,
       'role': role,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
       '__v': version,
     };
+  }
+
+  Map<String, dynamic> toMap() {
+    return toJson();
+  }
+
+  factory RequestedBy.fromMap(Map<String, dynamic> map) {
+    return RequestedBy.fromJson(map);
   }
 }
 
 class Company {
-  Size size;
-  Headquarters headquarters;
-  PeopleNCulture peopleNCulture;
-  String id;
-  String name;
-  String description;
-  String officialEmail;
-  String profilePicUrl;
-  String industry;
-  String websiteUrl;
-  int foundedYear;
-  List<String> specialties;
-  List<Location> locations;
-  List<dynamic> jobPosts;
-  DateTime createdAt;
-  DateTime updatedAt;
-  int version;
+  Size? size;
+  Headquarters? headquarters;
+  PeopleNCulture? peopleNCulture;
+  String? id;
+  String? name;
+  String? description;
+  String? officialEmail;
+  String? profilePicUrl;
+  String? industry;
+  String? websiteUrl;
+  int? foundedYear;
+  List<String>? specialties;
+  List<Location>? locations;
+  List<String>? jobPosts;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  int? version;
 
   Company({
-    required this.size,
-    required this.headquarters,
-    required this.peopleNCulture,
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.officialEmail,
-    required this.profilePicUrl,
-    required this.industry,
-    required this.websiteUrl,
-    required this.foundedYear,
-    required this.specialties,
-    required this.locations,
-    required this.jobPosts,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.version,
+    this.size,
+    this.headquarters,
+    this.peopleNCulture,
+    this.id,
+    this.name,
+    this.description,
+    this.officialEmail,
+    this.profilePicUrl,
+    this.industry,
+    this.websiteUrl,
+    this.foundedYear,
+    this.specialties,
+    this.locations,
+    this.jobPosts,
+    this.createdAt,
+    this.updatedAt,
+    this.version,
   });
 
   factory Company.fromJson(Map<String, dynamic> json) {
@@ -180,9 +201,15 @@ class Company {
       industry: json['industry'],
       websiteUrl: json['websiteUrl'],
       foundedYear: json['foundedYear'],
-      specialties: List<String>.from(json['specialties']),
-      locations: List<Location>.from(json['locations'].map((x) => Location.fromJson(x))),
-      jobPosts: List<dynamic>.from(json['jobPosts']),
+      specialties: json['specialties'] != null
+          ? List<String>.from(json['specialties'])
+          : [],
+      locations: json['locations'] != null
+          ? List<Location>.from(json['locations'].map((x) => Location.fromJson(x)))
+          : [],
+      jobPosts: json['jobPosts'] != null
+          ? List<String>.from(json['jobPosts'])
+          : [],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       version: json['__v'],
@@ -191,9 +218,9 @@ class Company {
 
   Map<String, dynamic> toJson() {
     return {
-      'size': size.toJson(),
-      'headquarters': headquarters.toJson(),
-      'peopleNCulture': peopleNCulture.toJson(),
+      'size': size?.toJson(),
+      'headquarters': headquarters?.toJson(),
+      'peopleNCulture': peopleNCulture?.toJson(),
       '_id': id,
       'name': name,
       'description': description,
@@ -202,23 +229,31 @@ class Company {
       'industry': industry,
       'websiteUrl': websiteUrl,
       'foundedYear': foundedYear,
-      'specialties': List<dynamic>.from(specialties.map((x) => x)),
-      'locations': List<dynamic>.from(locations.map((x) => x.toJson())),
-      'jobPosts': List<dynamic>.from(jobPosts.map((x) => x)),
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'specialties': List<String>.from(specialties?.map((x) => x) ?? []),
+      'locations': List<String>.from(locations?.map((x) => x.toJson()) ?? []),
+      'jobPosts': List<String>.from(jobPosts?.map((x) => x) ?? []),
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
       '__v': version,
     };
+  }
+
+  Map<String, dynamic> toMap() {
+    return toJson();
+  }
+
+  factory Company.fromMap(Map<String, dynamic> map) {
+    return Company.fromJson(map);
   }
 }
 
 class Size {
-  int min;
-  int max;
+  int? min;
+  int? max;
 
   Size({
-    required this.min,
-    required this.max,
+    this.min,
+    this.max,
   });
 
   factory Size.fromJson(Map<String, dynamic> json) {
@@ -234,19 +269,27 @@ class Size {
       'max': max,
     };
   }
+
+  Map<String, dynamic> toMap() {
+    return toJson();
+  }
+
+  factory Size.fromMap(Map<String, dynamic> map) {
+    return Size.fromJson(map);
+  }
 }
 
 class Headquarters {
-  Address address;
-  String country;
-  String state;
-  String city;
+  Address? address;
+  String? country;
+  String? state;
+  String? city;
 
   Headquarters({
-    required this.address,
-    required this.country,
-    required this.state,
-    required this.city,
+    this.address,
+    this.country,
+    this.state,
+    this.city,
   });
 
   factory Headquarters.fromJson(Map<String, dynamic> json) {
@@ -260,20 +303,28 @@ class Headquarters {
 
   Map<String, dynamic> toJson() {
     return {
-      'address': address.toJson(),
+      'address': address?.toJson(),
       'country': country,
       'state': state,
       'city': city,
     };
   }
+
+  Map<String, dynamic> toMap() {
+    return toJson();
+  }
+
+  factory Headquarters.fromMap(Map<String, dynamic> map) {
+    return Headquarters.fromJson(map);
+  }
 }
 
 class Address {
-  String line1;
+  String? line1;
   String? line2;
 
   Address({
-    required this.line1,
+    this.line1,
     this.line2,
   });
 
@@ -290,17 +341,25 @@ class Address {
       'line2': line2,
     };
   }
+
+  Map<String, dynamic> toMap() {
+    return toJson();
+  }
+
+  factory Address.fromMap(Map<String, dynamic> map) {
+    return Address.fromJson(map);
+  }
 }
 
 class PeopleNCulture {
-  String description;
-  List<String> videos;
-  List<String> images;
+  String? description;
+  List<String>? videos;
+  List<String>? images;
 
   PeopleNCulture({
-    required this.description,
-    required this.videos,
-    required this.images,
+    this.description,
+    this.videos,
+    this.images,
   });
 
   factory PeopleNCulture.fromJson(Map<String, dynamic> json) {
@@ -314,25 +373,33 @@ class PeopleNCulture {
   Map<String, dynamic> toJson() {
     return {
       'description': description,
-      'videos': List<dynamic>.from(videos.map((x) => x)),
-      'images': List<dynamic>.from(images.map((x) => x)),
+      'videos': List<String>.from(videos?.map((x) => x) ?? []),
+      'images': List<String>.from(images?.map((x) => x) ?? []),
     };
+  }
+
+  Map<String, dynamic> toMap() {
+    return toJson();
+  }
+
+  factory PeopleNCulture.fromMap(Map<String, dynamic> map) {
+    return PeopleNCulture.fromJson(map);
   }
 }
 
 class Location {
-  Address address;
-  String country;
-  String state;
-  String city;
-  String id;
+  Address? address;
+  String? country;
+  String? state;
+  String? city;
+  String? id;
 
   Location({
-    required this.address,
-    required this.country,
-    required this.state,
-    required this.city,
-    required this.id,
+    this.address,
+    this.country,
+    this.state,
+    this.city,
+    this.id,
   });
 
   factory Location.fromJson(Map<String, dynamic> json) {
@@ -347,30 +414,38 @@ class Location {
 
   Map<String, dynamic> toJson() {
     return {
-      'address': address.toJson(),
+      'address': address?.toJson(),
       'country': country,
-      'state': state,
+      'tate': state,
       'city': city,
       '_id': id,
     };
   }
+
+  Map<String, dynamic> toMap() {
+    return toJson();
+  }
+
+  factory Location.fromMap(Map<String, dynamic> map) {
+    return Location.fromJson(map);
+  }
 }
 
 class Skill {
-  String id;
-  String name;
-  String category;
-  String subcategory;
-  DateTime createdAt;
-  DateTime updatedAt;
+  String? id;
+  String? name;
+  String? category;
+  String? subcategory;
+  DateTime? createdAt;
+  DateTime? updatedAt;
 
   Skill({
-    required this.id,
-    required this.name,
-    required this.category,
-    required this.subcategory,
-    required this.createdAt,
-    required this.updatedAt,
+    this.id,
+    this.name,
+    this.category,
+    this.subcategory,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory Skill.fromJson(Map<String, dynamic> json) {
@@ -390,8 +465,18 @@ class Skill {
       'name': name,
       'category': category,
       'subcategory': subcategory,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
     };
   }
+
+  Map<String, dynamic> toMap() {
+    return toJson();
+  }
+
+  factory Skill.fromMap(Map<String, dynamic> map) {
+    return Skill.fromJson(map);
+  }
+
+
 }
