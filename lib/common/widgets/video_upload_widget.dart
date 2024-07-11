@@ -39,17 +39,19 @@ class _VideoUploadWidgetState extends State<VideoUploadWidget> {
       onTap: _pickVideo,
       child: Container(
         width: double.infinity,
-        height: 200,
+        height: _videoFile == null ? 200 : null,
         decoration: BoxDecoration(
           color: AppColors.background,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: CustomPaint(
+        child: _videoFile == null
+            ? CustomPaint(
           painter: DashedBorderPainter(),
           child: Center(
-            child: _videoFile == null ? _buildUploadContent() : _buildVideoPreview(),
+            child: _buildUploadContent(),
           ),
-        ),
+        )
+            : _buildVideoPreview(),
       ),
     );
   }
@@ -84,12 +86,18 @@ class _VideoUploadWidgetState extends State<VideoUploadWidget> {
   }
 
   Widget _buildVideoPreview() {
-    return _videoController!.value.isInitialized
-        ? AspectRatio(
-      aspectRatio: _videoController!.value.aspectRatio,
-      child: VideoPlayer(_videoController!),
-    )
-        : CircularProgressIndicator();
+    if (_videoController!.value.isInitialized) {
+      final isPortrait = _videoController!.value.size.height > _videoController!.value.size.width;
+      return AspectRatio(
+        aspectRatio: _videoController!.value.aspectRatio,
+        child: Container(
+          height: isPortrait ? 100 : null,
+          child: VideoPlayer(_videoController!),
+        ),
+      );
+    } else {
+      return CircularProgressIndicator();
+    }
   }
 }
 

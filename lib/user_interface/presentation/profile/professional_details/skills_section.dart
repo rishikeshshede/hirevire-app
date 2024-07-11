@@ -111,7 +111,7 @@ class SkillsSection extends GetWidget<CompleteProfileController> {
                                 value: controller.skillsRatings.value[skill['_id']] ?? 5.0,
                                 min: 1,
                                 max: 10,
-                                divisions: 9,
+                                //divisions: 9,
                                 label: (controller.skillsRatings.value[skill['_id']] ?? 5.0).round().toString(),
                                 onChanged: (value) {
                                   controller.updateSkillRating(skill['_id'], value);

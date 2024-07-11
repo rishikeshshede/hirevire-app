@@ -23,8 +23,33 @@ class RequisitionsController extends GetxController {
   var status = ''.obs; // Status text
   var statusColor = Colors.transparent.obs; // Status color
 
-  TextEditingController nameController = TextEditingController();
-  FocusNode nameFocusNode = FocusNode();
+  TextEditingController jobTitleController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+  TextEditingController jobModeController = TextEditingController();
+  TextEditingController descController = TextEditingController();
+  TextEditingController vidReqController = TextEditingController();
+  TextEditingController reqSkillsController = TextEditingController();
+
+  void setJobTitle(String? jobTitle) {
+    jobTitleController.text = jobTitle ?? '';
+  }
+  void setLocationTitle(String? loc) {
+    locationController.text = loc ?? '';
+  }
+  void setJobMode(String? job) {
+    jobModeController.text = job ?? '';
+  }
+  void setDescription(String? desc) {
+    descController.text = desc ?? '';
+  }
+  void setReqSkills(List<Skill>? skills) {
+    final skillsList = skills ?? [];
+    final skillsString = skillsList.map((skill) => skill.name).where((name) => name != null).join(', ');
+
+    reqSkillsController.text = skillsString ?? '';
+  }
+
+  FocusNode jobTitleFocusNode = FocusNode();
 
   RxList<Map<String, dynamic>> suggestedJobs = <Map<String, dynamic>>[].obs;
 

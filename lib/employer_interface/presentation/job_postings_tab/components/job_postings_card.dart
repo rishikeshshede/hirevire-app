@@ -52,37 +52,39 @@ class JobPostingsCard extends StatelessWidget {
               ),
             ],
           ),
+          const VerticalSpace(),
 
           jobTitle(context),
-          const VerticalSpace(space: 4,),
-          Row(
-            children: [
-              Text(
-                jobPostings.title ?? '',
-                style: AppTextThemes.bodyTextStyle(context).copyWith(
-                  fontWeight: FontWeight.w300,
-                ),
-              ),
-              const HorizontalSpace(space: 12),
-
-              Text(
-                '${jobPostings.postedBy?.name ?? ''}',
-                style: AppTextThemes.bodyTextStyle(context),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     Text(
+          //       jobPostings.title ?? '',
+          //       style: AppTextThemes.bodyTextStyle(context).copyWith(
+          //         fontWeight: FontWeight.w300,
+          //       ),
+          //     ),
+          //     const HorizontalSpace(space: 12),
+          //
+          //     Text(
+          //       '${jobPostings.postedBy?.name ?? ''}',
+          //       style: AppTextThemes.bodyTextStyle(context),
+          //     ),
+          //   ],
+          // ),
 
           const VerticalSpace(),
           Row(
             children: [
               Text(
-                'Recruiter',
+                'Hiring Manager',
                 style: AppTextThemes.secondaryTextStyle(context),
               ),
               const HorizontalSpace(),
               Text(
                 '${jobPostings.postedBy?.name ?? ''}',
-                style: AppTextThemes.bodyTextStyle(context),
+                style: AppTextThemes.bodyTextStyle(context).copyWith(
+                      fontWeight: FontWeight.w300,
+                ),
               ),
             ],
           ),
@@ -144,10 +146,10 @@ class JobPostingsCard extends StatelessWidget {
   Text jobTitle(BuildContext context) {
     return Text(
       jobPostings.title ?? 'Unknown job title',
-      style: AppTextThemes.titleStyle(context).copyWith(
+      style: AppTextThemes.subtitleStyle(context).copyWith(
         fontWeight: FontWeight.w500,
-        fontSize: 22.w(context),
       ),
+
     );
   }
 

@@ -11,7 +11,7 @@ class JobPosting {
   List<RequiredSkill>? requiredSkills;
   List<Media>? media;
   DateTime? endsOn;
-  List<dynamic>? savedApplications;
+  List<String>? savedApplications;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? version;
@@ -49,7 +49,7 @@ class JobPosting {
       requiredSkills: map['requiredSkills'] != null ? List<RequiredSkill>.from(map['requiredSkills'].map((x) => RequiredSkill.fromMap(x))) : null,
       media: map['media'] != null ? List<Media>.from(map['media'].map((x) => Media.fromMap(x))) : null,
       endsOn: map['endsOn'] != null ? DateTime.parse(map['endsOn']) : null,
-      savedApplications: map['savedApplications'] != null ? List<dynamic>.from(map['savedApplications']) : null,
+      savedApplications: map['savedApplications'] != null ? List<String>.from(map['savedApplications']) : null,
       createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
       updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
       version: map['__v'],

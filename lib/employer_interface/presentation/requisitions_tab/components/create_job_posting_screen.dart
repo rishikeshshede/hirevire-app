@@ -4,6 +4,7 @@ import 'package:hirevire_app/employer_interface/models/requisition.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 import 'package:get/get.dart';
 import '../../../../common/widgets/button_primary.dart';
+import '../../../../common/widgets/text_field.dart';
 import '../../../../common/widgets/title_textbox.dart';
 import '../../../../common/widgets/video_upload_widget.dart';
 import '../../../../constants/color_constants.dart';
@@ -24,6 +25,12 @@ class CreateJobPostingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    requisitionsController.setJobTitle(requisition.title);
+    requisitionsController.setLocationTitle(requisition.requestedBy?.company?.locations?[0].country);
+    requisitionsController.setJobMode(requisition.jobMode);
+    requisitionsController.setDescription(requisition.description ?? '');
+    requisitionsController.setReqSkills(requisition.skills ?? []);
+
     return Scaffold(
       appBar: AppBar(
         leading: InkWell(
@@ -43,64 +50,100 @@ class CreateJobPostingScreen extends StatelessWidget {
         actions: [
         ],
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  VideoUploadWidget(),
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    VideoUploadWidget(),
 
-                  SizedBox(height: 40.h(context)),
-                  Row(
-                    children: [
-                      const TextboxTitle(title: "Job Title"),
-                      SizedBox(width: 4.h(context)),
-                      TextboxTitle(title: requisition.title ?? ''),
-                    ],
-                  ),
-                  SizedBox(height: 8.h(context)),
+                    SizedBox(height: 40.h(context)),
+                    CustomTextField(
+                      titleText: 'Job Title',
+                      textInputType: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      controller: requisitionsController.jobTitleController,
+                      onChanged: (String value) {
 
-                  Row(
-                    children: [
-                      const TextboxTitle(title: "Location"),
-                      SizedBox(width: 4.h(context)),
-                      TextboxTitle(title: requisition.requestedBy?.company?.locations?[0].country ?? ''),
-                    ],
-                  ),
-                  SizedBox(height: 8.h(context)),
+                      },
+                      readOnly: true,
+                    ),
+                    SizedBox(height: 8.h(context)),
 
-                  Row(
-                    children: [
-                      const TextboxTitle(title: "Job mode"),
-                      SizedBox(width: 4.h(context)),
-                      TextboxTitle(title: requisition.jobMode ?? ''),
-                    ],
-                  ),
-                  SizedBox(height: 8.h(context)),
+                    CustomTextField(
+                      titleText: 'Location',
+                      textInputType: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      controller: requisitionsController.locationController,
+                      onChanged: (String value) {
 
-                  Row(
-                    children: [
-                      const TextboxTitle(title: "Description"),
-                      SizedBox(width: 4.h(context)),
-                      TextboxTitle(title: requisition.description ?? ''),
-                    ],
-                  ),
-                ],
+                      },
+                    ),
+                    SizedBox(height: 8.h(context)),
+
+                    CustomTextField(
+                      titleText: 'Job Mode',
+                      textInputType: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      controller: requisitionsController.jobModeController,
+                      onChanged: (String value) {
+
+                      },
+                    ),
+                    SizedBox(height: 8.h(context)),
+
+                    CustomTextField(
+                      titleText: 'Description',
+                      textInputType: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      controller: requisitionsController.descController,
+                      onChanged: (String value) {
+
+                      },
+                    ),
+                    SizedBox(height: 8.h(context)),
+
+                    CustomTextField(
+                      titleText: 'Video Requirement',
+                      textInputType: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      controller: requisitionsController.vidReqController,
+                      onChanged: (String value) {
+
+                      },
+                    ),
+                    SizedBox(height: 8.h(context)),
+
+                    CustomTextField(
+                      titleText: 'Required Skills',
+                      textInputType: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      controller: requisitionsController.reqSkillsController,
+                      onChanged: (String value) {
+
+                      },
+                    ),
+                    SizedBox(height: 8.h(context)),
+
+
+                  ],
+                ),
               ),
-            ),
 
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ButtonPrimary(
-                btnText: 'Submit',
-                onPressed: () {
-                  requisitionsController.createJobApplication(requisition);
-                },
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ButtonPrimary(
+                  btnText: 'Submit',
+                  onPressed: () {
+                    requisitionsController.createJobApplication(requisition);
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

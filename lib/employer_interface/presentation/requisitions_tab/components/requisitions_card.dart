@@ -36,13 +36,13 @@ class RequisitionsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           jobTitle(context),
-          const VerticalSpace(space: 4,),
-          Text(
-            requisition.requestedBy?.company?.name ?? '',
-            style: AppTextThemes.bodyTextStyle(context).copyWith(
-              fontWeight: FontWeight.w300,
-            ),
-          ),
+          // const VerticalSpace(space: 4,),
+          // Text(
+          //   requisition.requestedBy?.company?.name ?? '',
+          //   style: AppTextThemes.bodyTextStyle(context).copyWith(
+          //     fontWeight: FontWeight.w300,
+          //   ),
+          // ),
           const VerticalSpace(),
           Row(
             children: [
@@ -127,9 +127,8 @@ class RequisitionsCard extends StatelessWidget {
   Text jobTitle(BuildContext context) {
     return Text(
       requisition.title ?? 'Unknown job title',
-      style: AppTextThemes.titleStyle(context).copyWith(
+      style: AppTextThemes.subtitleStyle(context).copyWith(
         fontWeight: FontWeight.w500,
-        fontSize: 22.w(context),
       ),
     );
   }
