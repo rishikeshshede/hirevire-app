@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+// import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 
@@ -17,29 +17,29 @@ class ToastWidgit {
     );
   }
 
-  static void styledToast(String msg, BuildContext context, bool isSuccess) {
-    final widget = isSuccess
-        ? CustomSuccessToastWidget(message: msg)
-        : CustomFailToastWidget(message: msg);
+  // static void styledToast(String msg, BuildContext context, bool isSuccess) {
+  //   final widget = isSuccess
+  //       ? CustomSuccessToastWidget(message: msg)
+  //       : CustomFailToastWidget(message: msg);
 
-    showToastWidget(
-      widget,
-      context: context,
-      animation: StyledToastAnimation.fade,
-      reverseAnimation: StyledToastAnimation.fade,
-      position: StyledToastPosition.bottom,
-      animDuration: Duration(seconds: 1),
-      duration: Duration(seconds: 4),
-      dismissOtherToast: true,
-    );
-  }
+  //   showToastWidget(
+  //     widget,
+  //     context: context,
+  //     animation: StyledToastAnimation.fade,
+  //     reverseAnimation: StyledToastAnimation.fade,
+  //     position: StyledToastPosition.bottom,
+  //     animDuration: Duration(seconds: 1),
+  //     duration: Duration(seconds: 4),
+  //     dismissOtherToast: true,
+  //   );
+  // }
 }
-
 
 class CustomSuccessToastWidget extends StatelessWidget {
   final String message;
 
-  const CustomSuccessToastWidget({Key? key, required this.message}) : super(key: key);
+  const CustomSuccessToastWidget({Key? key, required this.message})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,8 @@ class CustomSuccessToastWidget extends StatelessWidget {
 class CustomFailToastWidget extends StatelessWidget {
   final String message;
 
-  const CustomFailToastWidget({Key? key, required this.message}) : super(key: key);
+  const CustomFailToastWidget({Key? key, required this.message})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

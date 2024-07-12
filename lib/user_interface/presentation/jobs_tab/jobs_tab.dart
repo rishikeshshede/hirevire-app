@@ -61,74 +61,75 @@ class JobsTab extends StatelessWidget {
           ),
         ],
       ),
-      body: Obx(() {
-          return
-            jobsController.jobs.value.isEmpty
-          ?
-            const Center(
-                    child: Text('No jobs available'),
-            )
-          :
-            Column(
-            children: [
-              Expanded(
-                child: Center(
-                  child: CardSwiper(
-                    cardsCount: jobsController.jobs.length,
-                    cardBuilder: (context, index, percentThresholdX, percentThresholdY) {
-                      final job = jobsController.jobs[index];
-                      return JobCard(
-                        jobsController: jobsController,
-                        job: job,
-                        index: index,
-                      );
-                    },
-                    onSwipe: (index, percentThresholdX, direction) {
-                      if (direction == CardSwiperDirection.right) {
-                        jobsController.applyJob(jobsController.jobs[index]);
+      body: Obx(
+        () {
+          return jobsController.jobs.value.isEmpty
+              ? const Center(
+                  child: Text('No jobs available'),
+                )
+              : Column(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: CardSwiper(
+                          cardsCount: jobsController.jobs.length,
+                          cardBuilder: (context, index, percentThresholdX,
+                              percentThresholdY) {
+                            final job = jobsController.jobs[index];
+                            return JobCard(
+                              jobsController: jobsController,
+                              job: job,
+                              index: index,
+                            );
+                          },
+                          onSwipe: (index, percentThresholdX, direction) {
+                            if (direction == CardSwiperDirection.right) {
+                              jobsController
+                                  .applyJob(jobsController.jobs[index]);
 
-                        ToastWidgit.styledToast(
-                            "Accepted",
-                            context,
-                            true
-                        );
+                              ToastWidgit.bottomToast("Accepted");
 
-                        if (jobsController.isProfileComplete.value == false) {
-                          Get.toNamed(AppRoutes.completeProfile);
-                        }
-                        else {
-                          final job = jobsController.jobs[index];
-                          Get.toNamed(
-                            AppRoutes.jobApplicationForm,
-                            arguments: {
-                              'jobsController': jobsController,
-                              'job': job,
-                              'index': index,
-                            },
-                          );
-                        }
+                              // ToastWidgit.styledToast(
+                              //     "Accepted",
+                              //     context,
+                              //     true
+                              // );
 
-                      } else if (direction == CardSwiperDirection.left) {
-                        jobsController.rejectJob(jobsController.jobs[index]);
-                        ToastWidgit.styledToast(
-                          "Rejected",
-                          context,
-                          false
-                        );
-                      }
-                      debugPrint(jobsController.jobs.length.toString());
-                      return true;
-                    },
-                    //allowedSwipeDirection: AllowedSwipeDirection.horizontal,
-                    scale: 0.9,
-                    maxAngle: 30.0,
-                    padding: EdgeInsets.zero,
-                    isLoop: false,
-                  ),
-                ),
-              ),
-            ],
-          );
+                              if (jobsController.isProfileComplete.value ==
+                                  false) {
+                                Get.toNamed(AppRoutes.completeProfile);
+                              } else {
+                                final job = jobsController.jobs[index];
+                                Get.toNamed(
+                                  AppRoutes.jobApplicationForm,
+                                  arguments: {
+                                    'jobsController': jobsController,
+                                    'job': job,
+                                    'index': index,
+                                  },
+                                );
+                              }
+                            } else if (direction == CardSwiperDirection.left) {
+                              jobsController
+                                  .rejectJob(jobsController.jobs[index]);
+
+                              ToastWidgit.bottomToast("Rejected");
+                              // ToastWidgit.styledToast(
+                              //     "Rejected", context, false);
+                            }
+                            debugPrint(jobsController.jobs.length.toString());
+                            return true;
+                          },
+                          //allowedSwipeDirection: AllowedSwipeDirection.horizontal,
+                          scale: 0.9,
+                          maxAngle: 30.0,
+                          padding: EdgeInsets.zero,
+                          isLoop: false,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
         },
       ),
     );

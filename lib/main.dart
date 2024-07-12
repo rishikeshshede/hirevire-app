@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+// import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:get/get.dart';
 import 'package:hirevire_app/common/screens/unknown_route_screen.dart';
 import 'package:hirevire_app/themes/app_theme.dart';
@@ -14,12 +14,7 @@ void main() {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) async {
-    runApp(
-      const StyledToast(
-          locale: Locale('en', 'US'),
-          child: MainApp(),
-        ),
-    );
+    runApp(const MainApp());
   });
 }
 
@@ -46,7 +41,7 @@ class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host,
-          int port) => true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
