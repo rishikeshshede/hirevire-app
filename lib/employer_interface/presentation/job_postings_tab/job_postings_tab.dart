@@ -4,14 +4,14 @@ import 'package:hirevire_app/common/widgets/custom_image_view.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/global_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
+import 'package:hirevire_app/employer_interface/presentation/job_postings_tab/components/job_postings_card.dart';
+import 'package:hirevire_app/employer_interface/presentation/job_postings_tab/controllers/job_postings_controller.dart';
 import 'package:hirevire_app/employer_interface/presentation/requisitions_tab/components/requisitions_card.dart';
 
-import 'controllers/requisitions_controller.dart';
 
-
-class RequisitionsTab extends StatelessWidget {
-  const RequisitionsTab({super.key});
-  static final RequisitionsController requisitionsController = Get.find(tag: 'requisitionsController');
+class JobPostingsTab extends StatelessWidget {
+  const JobPostingsTab({super.key});
+  static final JobPostingsController jobPostingsController = Get.find(tag: 'jobPostingsController');
 
   @override
   Widget build(BuildContext context) {
@@ -28,19 +28,6 @@ class RequisitionsTab extends StatelessWidget {
             showLoader: false,
           ),
         actions: [
-          // GestureDetector(
-          //   onTap: () {},
-          //   child: Container(
-          //     margin: EdgeInsets.only(
-          //         right: GlobalConstants.screenHorizontalPadding),
-          //     padding: const EdgeInsets.all(3),
-          //     height: 35,
-          //     width: 35,
-          //     child: CustomImageView(
-          //       imagePath: ImageConstant.settingsIcon,
-          //     ),
-          //   ),
-          // ),
           GestureDetector(
             onTap: () {},
             child: Container(
@@ -58,10 +45,10 @@ class RequisitionsTab extends StatelessWidget {
       ),
       body: Obx(() {
           return
-            requisitionsController.requisitions.value.isEmpty
+            jobPostingsController.jobPostings.value.isEmpty
           ?
             const Center(
-                    child: Text('No requisitions available'),
+                    child: Text('No job postings available'),
             )
           :
             SingleChildScrollView(
@@ -69,10 +56,10 @@ class RequisitionsTab extends StatelessWidget {
                 color: AppColors.disabled,
                 child: Column(
                   children: List.generate(
-                    requisitionsController.requisitions.length,
-                        (index) => RequisitionsCard(
-                      index: index, requisitionsController: requisitionsController,
-                      requisition: requisitionsController.requisitions[index],
+                    jobPostingsController.jobPostings.length,
+                        (index) => JobPostingsCard(
+                      index: index, jobPostingsController: jobPostingsController,
+                      jobPostings: jobPostingsController.jobPostings[index],
                     ),
                   ),
                 ),

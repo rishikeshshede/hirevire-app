@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hirevire_app/common/widgets/custom_image_view.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
+import 'package:hirevire_app/employer_interface/presentation/job_postings_tab/bindings/job_postings_binding.dart';
 import 'package:hirevire_app/employer_interface/presentation/requisitions_tab/bindings/requisitions_binding.dart';
 import 'package:hirevire_app/employer_interface/presentation/requisitions_tab/requisitions_tab.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
@@ -9,6 +10,7 @@ import 'package:hirevire_app/user_interface/presentation/third_tab_screen.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 
 import '../controllers/emp_navigation_controller.dart';
+import 'job_postings_tab/job_postings_tab.dart';
 
 class EmployerBaseNavigator extends StatefulWidget {
   const EmployerBaseNavigator({super.key});
@@ -30,8 +32,8 @@ class _EmployerBaseNavigatorState extends State<EmployerBaseNavigator> {
   }
 
   Widget postingsTab() {
-    // ThirdTabBinding().dependencies();
-    return const ThirdTabScreen();
+    JobPostingsBinding().dependencies();
+    return const JobPostingsTab();
   }
 
   Widget chatTab() {

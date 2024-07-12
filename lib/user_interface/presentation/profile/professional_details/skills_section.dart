@@ -31,7 +31,7 @@ class SkillsSection extends GetWidget<CompleteProfileController> {
                 SizedBox(height: 10.h(context)),
                 const BodyTextWidget(
                   text:
-                      "Your skills will help us suggest the best job matches to you.",
+                  "Your skills will help us suggest the best job matches to you.",
                 ),
                 SizedBox(height: 30.h(context)),
                 CustomTextField(
@@ -44,12 +44,10 @@ class SkillsSection extends GetWidget<CompleteProfileController> {
                     controller.skillsSearchQuery.value = value;
                   },
                   onEditingComplete: () {
-                    if (controller
-                        .skillsSearchController.value.text.isNotEmpty) {
+                    if (controller.skillsSearchController.value.text.isNotEmpty) {
                       controller.addSkill({
                         "_id": controller.defaultItemId,
-                        "name":
-                            controller.skillsSearchController.value.text.trim(),
+                        "name": controller.skillsSearchController.value.text.trim(),
                       });
                       controller.skillsSearchQuery.value = '';
                     }
@@ -64,8 +62,7 @@ class SkillsSection extends GetWidget<CompleteProfileController> {
                     child: Container(
                       margin: const EdgeInsets.only(top: 6),
                       decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(8)),
+                        borderRadius: const BorderRadius.all(Radius.circular(8)),
                         border: Border.all(color: Colors.grey[350]!),
                         color: AppColors.disabled.withOpacity(.6),
                       ),
@@ -75,13 +72,13 @@ class SkillsSection extends GetWidget<CompleteProfileController> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: controller.filteredSkillsSuggestions
                               .map((suggestion) => ListTile(
-                                    dense: true,
-                                    title: Text(suggestion['name'] ?? ''),
-                                    onTap: () {
-                                      controller.addSkill(suggestion);
-                                      controller.skillsSearchQuery.value = '';
-                                    },
-                                  ))
+                            dense: true,
+                            title: Text(suggestion['name'] ?? ''),
+                            onTap: () {
+                              controller.addSkill(suggestion);
+                              controller.skillsSearchQuery.value = '';
+                            },
+                          ))
                               .toList(),
                         ),
                       ),
@@ -89,22 +86,41 @@ class SkillsSection extends GetWidget<CompleteProfileController> {
                   );
                 }),
                 Obx(
-                  () => ErrorTextWidget(text: controller.errorMsg.value),
+                      () => ErrorTextWidget(text: controller.errorMsg.value),
                 ),
                 SizedBox(height: 15.h(context)),
                 Obx(
-                  () => Wrap(
+                      () => Wrap(
                     spacing: 8,
                     runSpacing: 8,
                     children: List.generate(
                       controller.selectedSkills.length,
-                      (index) => CustomChip(
-                        text: controller.selectedSkills[index]['name'],
-                        onRemove: () {
-                          controller
-                              .removeSkill(controller.selectedSkills[index]);
-                        },
-                      ),
+                          (index) {
+                        var skill = controller.selectedSkills[index];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomChip(
+                              text: skill['name'],
+                              onRemove: () {
+                                controller.removeSkill(skill);
+                              },
+                            ),
+                            Obx(
+                                  () => Slider(
+                                value: controller.skillsRatings.value[skill['_id']] ?? 5.0,
+                                min: 1,
+                                max: 10,
+                                //divisions: 9,
+                                label: (controller.skillsRatings.value[skill['_id']] ?? 5.0).round().toString(),
+                                onChanged: (value) {
+                                  controller.updateSkillRating(skill['_id'], value);
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -116,18 +132,18 @@ class SkillsSection extends GetWidget<CompleteProfileController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Obx(
-              () => controller.selectedSkills.isEmpty
+                  () => controller.selectedSkills.isEmpty
                   ? ButtonFlat(
-                      onTap: () {
-                        controller.moveToNextStep();
-                        controller.searchFocusNode.unfocus();
-                      },
-                      btnText: "Skip",
-                    )
+                onTap: () {
+                  controller.moveToNextStep();
+                  controller.searchFocusNode.unfocus();
+                },
+                btnText: "Skip",
+              )
                   : const HorizontalSpace(),
             ),
             Obx(
-              () => ButtonCircular(
+                  () => ButtonCircular(
                 icon: ImageConstant.arrowNext,
                 onPressed: () {
                   controller.searchFocusNode.unfocus();
