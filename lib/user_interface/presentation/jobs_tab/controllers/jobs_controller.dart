@@ -27,7 +27,6 @@ class JobsController extends GetxController {
   TextEditingController nameController = TextEditingController();
   FocusNode nameFocusNode = FocusNode();
 
-
   RxList<Map<String, dynamic>> suggestedJobs = <Map<String, dynamic>>[].obs;
 
   @override
@@ -40,7 +39,9 @@ class JobsController extends GetxController {
 
   fetchLocalData() async {
     name.value = await PersistenceHandler.getString(PersistenceKeys.name);
-    isProfileComplete.value = await PersistenceHandler.getBool(PersistenceKeys.isProfileComplete);
+    isProfileComplete.value =
+        await PersistenceHandler.getBool(PersistenceKeys.isProfileComplete) ??
+            false;
   }
 
   fetchJobs() async {
@@ -70,12 +71,9 @@ class JobsController extends GetxController {
   }
 
   submitJobApplication() async {
-
     String endpoint = ""; //Endpoints.submitJob; //TODO: add api endpoint
 
-    Map<String, dynamic> body = {
-
-    };
+    Map<String, dynamic> body = {};
     LogHandler.debug(body);
 
     try {
@@ -83,7 +81,6 @@ class JobsController extends GetxController {
       LogHandler.debug(response);
 
       if (response['success']) {
-
         Get.back();
       } else {
         String errorMsg =
