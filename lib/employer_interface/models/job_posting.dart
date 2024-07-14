@@ -1,15 +1,21 @@
 class JobPosting {
   Location? location;
+  String? status;
   String? id;
   PostedBy? postedBy;
   String? requestedBy;
   String? jobRequisition;
   String? title;
+  String? department;
+  String? project;
   List<String>? jobMode;
   String? description;
+  String? ctc;
+  String? perks;
   List<Question>? questions;
   List<RequiredSkill>? requiredSkills;
   List<Media>? media;
+  List<GrowthPlan>? growthPlan;
   DateTime? endsOn;
   List<String>? savedApplications;
   DateTime? createdAt;
@@ -18,16 +24,22 @@ class JobPosting {
 
   JobPosting({
     this.location,
+    this.status,
     this.id,
     this.postedBy,
     this.requestedBy,
     this.jobRequisition,
     this.title,
+    this.department,
+    this.project,
     this.jobMode,
     this.description,
+    this.ctc,
+    this.perks,
     this.questions,
     this.requiredSkills,
     this.media,
+    this.growthPlan,
     this.endsOn,
     this.savedApplications,
     this.createdAt,
@@ -38,16 +50,22 @@ class JobPosting {
   factory JobPosting.fromMap(Map<String, dynamic> map) {
     return JobPosting(
       location: map['location'] != null ? Location.fromMap(map['location']) : null,
+      status: map['status'],
       id: map['_id'],
       postedBy: map['postedBy'] != null ? PostedBy.fromMap(map['postedBy']) : null,
       requestedBy: map['requestedBy'],
       jobRequisition: map['jobRequisition'],
       title: map['title'],
+      department: map['department'],
+      project: map['project'],
       jobMode: map['jobMode'] != null ? List<String>.from(map['jobMode']) : null,
       description: map['description'],
+      ctc: map['ctc'],
+      perks: map['perks'],
       questions: map['questions'] != null ? List<Question>.from(map['questions'].map((x) => Question.fromMap(x))) : null,
       requiredSkills: map['requiredSkills'] != null ? List<RequiredSkill>.from(map['requiredSkills'].map((x) => RequiredSkill.fromMap(x))) : null,
       media: map['media'] != null ? List<Media>.from(map['media'].map((x) => Media.fromMap(x))) : null,
+      growthPlan: map['growthPlan'] != null ? List<GrowthPlan>.from(map['growthPlan'].map((x) => GrowthPlan.fromMap(x))) : null,
       endsOn: map['endsOn'] != null ? DateTime.parse(map['endsOn']) : null,
       savedApplications: map['savedApplications'] != null ? List<String>.from(map['savedApplications']) : null,
       createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
@@ -59,16 +77,22 @@ class JobPosting {
   Map<String, dynamic> toMap() {
     return {
       'location': location?.toMap(),
+      'status': status,
       '_id': id,
       'postedBy': postedBy?.toMap(),
       'requestedBy': requestedBy,
       'jobRequisition': jobRequisition,
       'title': title,
+      'department': department,
+      'project': project,
       'jobMode': jobMode != null ? List<dynamic>.from(jobMode!.map((x) => x)) : null,
       'description': description,
+      'ctc': ctc,
+      'perks': perks,
       'questions': questions != null ? List<dynamic>.from(questions!.map((x) => x.toMap())) : null,
       'requiredSkills': requiredSkills != null ? List<dynamic>.from(requiredSkills!.map((x) => x.toMap())) : null,
       'media': media != null ? List<dynamic>.from(media!.map((x) => x.toMap())) : null,
+      'growthPlan': growthPlan != null ? List<dynamic>.from(growthPlan!.map((x) => x.toMap())) : null,
       'endsOn': endsOn?.toIso8601String(),
       'savedApplications': savedApplications != null ? List<dynamic>.from(savedApplications!.map((x) => x)) : null,
       'createdAt': createdAt?.toIso8601String(),
@@ -367,6 +391,34 @@ class RequiredSkill {
       'subcategory': subcategory,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
+    };
+  }
+}
+
+class GrowthPlan {
+  String? title;
+  String? description;
+  String? id;
+
+  GrowthPlan({
+    this.title,
+    this.description,
+    this.id,
+  });
+
+  factory GrowthPlan.fromMap(Map<String, dynamic> map) {
+    return GrowthPlan(
+      title: map['title'],
+      description: map['description'],
+      id: map['_id'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'description': description,
+      '_id': id,
     };
   }
 }

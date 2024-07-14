@@ -45,7 +45,7 @@ class JobPostingsCard extends StatelessWidget {
                   const GreenDot(),
                   const HorizontalSpace(),
                   Text(
-                    'in-progress', //TODO: application status hardcoded
+                    jobPostings.status ?? '',
                     style: AppTextThemes.bodyTextStyle(context),
                   ),
                 ],
