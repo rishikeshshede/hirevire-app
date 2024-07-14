@@ -83,43 +83,31 @@ class JobsTab extends StatelessWidget {
                             );
                           },
                           onSwipe: (index, percentThresholdX, direction) {
-                            if (direction == CardSwiperDirection.right) {
-
-                              // ToastWidgit.styledToast(
-                              //     "Accepted",
-                              //     context,
-                              //     true
-                              // );
-
-                              if (jobsController.isProfileComplete.value ==
-                                  false) {
-                                Get.toNamed(AppRoutes.completeProfile);
-                              } else {
-
-                                jobsController
-                                    .applyJob(jobsController.jobs[index]);
-                                ToastWidgit.bottomToast("Accepted");
-
-                                final job = jobsController.jobs[index];
-                                Get.toNamed(
-                                  AppRoutes.jobApplicationForm,
-                                  arguments: {
-                                    'jobsController': jobsController,
-                                    'job': job,
-                                    'index': index,
-                                  },
-                                );
-                              }
-                            } else if (direction == CardSwiperDirection.left) {
-                              jobsController
-                                  .rejectJob(jobsController.jobs[index]);
-
-                              ToastWidgit.bottomToast("Rejected");
-                              // ToastWidgit.styledToast(
-                              //     "Rejected", context, false);
+                            if (jobsController.isProfileComplete.value == false) {
+                              Get.toNamed(AppRoutes.completeProfile);
+                              return false; // Prevent the card from being swiped away
                             }
+
+                            if (direction == CardSwiperDirection.right) {
+                              jobsController.applyJob(jobsController.jobs[index]);
+                              ToastWidgit.bottomToast("Accepted");
+
+                              final job = jobsController.jobs[index];
+                              Get.toNamed(
+                                AppRoutes.jobApplicationForm,
+                                arguments: {
+                                  'jobsController': jobsController,
+                                  'job': job,
+                                  'index': index,
+                                },
+                              );
+                            } else if (direction == CardSwiperDirection.left) {
+                              jobsController.rejectJob(jobsController.jobs[index]);
+                              ToastWidgit.bottomToast("Rejected");
+                            }
+
                             debugPrint(jobsController.jobs.length.toString());
-                            return true;
+                            return true; // Allow the swipe
                           },
                           //allowedSwipeDirection: AllowedSwipeDirection.horizontal,
                           scale: 0.9,

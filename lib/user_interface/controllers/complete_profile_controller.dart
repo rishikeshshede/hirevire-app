@@ -24,6 +24,10 @@ import '../../utils/persistence_handler.dart';
 
 class CompleteProfileController extends GetxController {
   late ApiClient apiClient;
+
+  RxString name = ''.obs;
+  RxString email = ''.obs;
+
   String country = "IN";
   String countryCode = "+91";
   String defaultItemId = "Other";
@@ -99,7 +103,7 @@ class CompleteProfileController extends GetxController {
   var skillsRatings = <String, double>{}.obs; // Map to store ratings for skills
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     apiClient = ApiClient();
     // Bind the filteredSuggestions to changes in searchQuery
@@ -109,9 +113,16 @@ class CompleteProfileController extends GetxController {
         time: const Duration(milliseconds: 300));
     debounce(companySearchQuery, (_) => suggestCompany(),
         time: const Duration(milliseconds: 300));
+
+    await fetchLocalData();
   }
 
   // ----------------- Methods -----------------
+
+  fetchLocalData() async {
+    name.value = await PersistenceHandler.getString(PersistenceKeys.name);
+    email.value = await PersistenceHandler.getString(PersistenceKeys.email);
+  }
 
   showBottomToast(String message) {
     ToastWidgit.bottomToast(message);
@@ -513,10 +524,31 @@ class CompleteProfileController extends GetxController {
     }
   }
 
-  signup() async {
+  List<Map<String, dynamic>> getSkillsData() {
+    return selectedSkills.map((skill) {
+      // Get the name of the skill
+      String skillName = skill['name'];
+
+      // Get the rating for the skill from the skillsRatings map
+      double skillRating = skillsRatings[skillName] ?? 0.0;
+
+      // Return the formatted skill data
+      return {
+        "data": skill['data'],
+        "name": skillName,
+        "rating": skillRating,
+      };
+    }).toList();
+  }
+
+  List<String> preferredJobModesList() {
+    return [preferredJobMode.value];
+  }
+
+  updateProfile() async {
     isSigningUp.value = true;
 
-    String endpoint = Endpoints.signup;
+    String endpoint = Endpoints.updateProfile;
     String? number;
 
     if (numberController.value.text.trim().length == 10) {
@@ -524,25 +556,31 @@ class CompleteProfileController extends GetxController {
     }
 
     Map<String, dynamic> body = {
-      "phone": number,
-      "profilePicUrl": null,
-      "headline": headlineObj,
+      "name": name.value,
+      "email": email.value,
+      "phone": numberController.value.text.trim(),
+      "headline": headlineController.value.text.trim(),
       "bio": bioController.value.text.trim(),
-      "skills": selectedSkills,
-      "experience": addedExp,
-      "socialUrls": socialProfiles,
+      "socialUrls": {
+        "GitHub": socialUrlController.value.text.trim(),
+        "LinkedIn": socialUrlController.value.text.trim(),
+        "Twitter": socialUrlController.value.text.trim()
+      },
+      "skills": getSkillsData(),
       "location": {
         "country": locationController.value.text.trim(),
-        "state": "",
-        "city": "",
-        "address": {"line1": "", "line2": ""}
+        "state": locationController.value.text.trim(),
+        "city": locationController.value.text.trim(),
+        "address": {
+          "line1": companyLocationController.value.text.trim(),
+          "line2": ''
+        }
       },
-      "preferredJobModes": [preferredJobMode.value],
+      "preferredJobModes": preferredJobModesList(),
     };
-    LogHandler.debug(body);
 
     try {
-      Map<String, dynamic> response = await apiClient.post(endpoint, body);
+      Map<String, dynamic> response = await apiClient.put(endpoint, body);
 
       if (response['success']) {
         // TODO: save user data to user model

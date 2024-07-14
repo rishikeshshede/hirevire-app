@@ -14,6 +14,7 @@ class Endpoints {
   static const String uploadVideoWithThumbnail = 'jobPosting/media';
 
   // UPDATE Endpoints
+  static const String updateProfile = 'jobSeeker/updateProfile';
 
   // DELETE Endpoints
 

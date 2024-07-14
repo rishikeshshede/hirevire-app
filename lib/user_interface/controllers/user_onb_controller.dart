@@ -280,6 +280,7 @@ class UserOnbController extends GetxController {
     Map<String, dynamic> body = {
       "name": nameController.value.text.trim(),
       "email": email,
+      "phone": '',
       "birthDate": dob,
     };
     LogHandler.debug(body);

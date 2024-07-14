@@ -70,7 +70,7 @@ class LocationSection extends GetWidget<CompleteProfileController> {
                   : ButtonCircular(
                       icon: ImageConstant.tickIcon,
                       onPressed: () {
-                        controller.signup();
+                        controller.updateProfile();
                       },
                       isActive: true,
                     ),

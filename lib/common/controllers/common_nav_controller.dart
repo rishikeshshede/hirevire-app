@@ -92,7 +92,7 @@ class CommonNavController extends GetxController {
   }
 
   void toUserBaseNav() {
-    Get.toNamed(AppRoutes.userBaseNavigator);
+    Get.offAllNamed(AppRoutes.userBaseNavigator);
   }
 
   navigate(VoidCallback toScreen) {
