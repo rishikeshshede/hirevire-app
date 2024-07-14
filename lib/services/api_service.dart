@@ -154,6 +154,46 @@ class ApiClient {
     };
   }
 
+  Future<Map<String, dynamic>> uploadVideoWithThumbnail(String endpoint, File videoFile, File thumbnailFile) async {
+    final Uri url = Uri.parse(_baseUrl + endpoint);
+    var request = http.MultipartRequest('POST', url);
+
+    LogHandler.info('Upload Video with Thumbnail: $url');
+    try {
+      // Adding the video file
+      request.files.add(await http.MultipartFile.fromPath(
+        'media',
+        videoFile.path,
+        contentType: MediaType.parse(lookupMimeType(videoFile.path) ?? 'video/mp4'),
+      ));
+
+      // Adding the thumbnail image
+      request.files.add(await http.MultipartFile.fromPath(
+        'thumbnail',
+        thumbnailFile.path,
+        contentType: MediaType.parse(lookupMimeType(thumbnailFile.path) ?? 'image/jpeg'),
+      ));
+
+      var response = await request.send();
+      var statusCode = response.statusCode;
+
+      var responseString = await response.stream.bytesToString();
+      var responseBody = jsonDecode(responseString);
+      return {
+        'success': true,
+        'statusCode': statusCode,
+        'url': url,
+        'body': responseBody,
+      };
+    } catch (error) {
+      handleError(url, error);
+      return {
+        'success': false,
+        'error': error.toString(),
+      };
+    }
+  }
+
   dynamic uploadImageOrVideo(String endpoint, File imageFile) async {
     final Uri url = Uri.parse(endpoint);
     var request = http.MultipartRequest('POST', url);

@@ -11,6 +11,7 @@ class Endpoints {
   static const String verifyOTP = 'auth/verifyOTP';
   static const String signup = 'auth/signup';
   static const String uploadProfilePicture = 'auth/profilePicture';
+  static const String uploadVideoWithThumbnail = 'jobPosting/media';
 
   // UPDATE Endpoints
 

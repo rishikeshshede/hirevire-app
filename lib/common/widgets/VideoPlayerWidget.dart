@@ -55,7 +55,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           children: <Widget>[
             VideoPlayer(_controller),
             if (!_controller.value.isPlaying)
-              Icon(
+              const Icon(
                 Icons.play_arrow,
                 size: 50.0,
                 color: Colors.white,

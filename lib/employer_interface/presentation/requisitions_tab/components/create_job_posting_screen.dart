@@ -1,11 +1,10 @@
-import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:hirevire_app/employer_interface/models/requisition.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 import 'package:get/get.dart';
 import '../../../../common/widgets/button_primary.dart';
 import '../../../../common/widgets/text_field.dart';
-import '../../../../common/widgets/title_textbox.dart';
 import '../../../../common/widgets/video_upload_widget.dart';
 import '../../../../constants/color_constants.dart';
 import '../controllers/requisitions_controller.dart';
@@ -25,11 +24,12 @@ class CreateJobPostingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     requisitionsController.setJobTitle(requisition.title);
-    requisitionsController.setLocationTitle(requisition.requestedBy?.company?.locations?[0].country);
     requisitionsController.setJobMode(requisition.jobMode);
     requisitionsController.setDescription(requisition.description ?? '');
-    requisitionsController.setReqSkills(requisition.skills ?? []);
+    requisitionsController.setReqSkills(requisition.requiredSkills ?? []);
+    requisitionsController.setOpeningCount(requisition.openingsCount ?? 0);
 
     return Scaffold(
       appBar: AppBar(
@@ -58,7 +58,7 @@ class CreateJobPostingScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    VideoUploadWidget(),
+                    VideoUploadWidget(onFilesSelected: requisitionsController.onFilesSelected),
 
                     SizedBox(height: 40.h(context)),
                     CustomTextField(
@@ -122,6 +122,39 @@ class CreateJobPostingScreen extends StatelessWidget {
                       textInputType: TextInputType.text,
                       textInputAction: TextInputAction.done,
                       controller: requisitionsController.reqSkillsController,
+                      onChanged: (String value) {
+
+                      },
+                    ),
+                    SizedBox(height: 8.h(context)),
+
+                    CustomTextField(
+                      titleText: 'Opening Count',
+                      textInputType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      controller: requisitionsController.openingCountController,
+                      onChanged: (String value) {
+
+                      },
+                    ),
+                    SizedBox(height: 8.h(context)),
+
+                    CustomTextField(
+                      titleText: 'Perks',
+                      textInputType: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      controller: requisitionsController.perksController,
+                      onChanged: (String value) {
+
+                      },
+                    ),
+                    SizedBox(height: 8.h(context)),
+
+                    CustomTextField(
+                      titleText: 'CTC',
+                      textInputType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      controller: requisitionsController.ctcController,
                       onChanged: (String value) {
 
                       },

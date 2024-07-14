@@ -36,13 +36,30 @@ class RequisitionsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           jobTitle(context),
-          // const VerticalSpace(space: 4,),
-          // Text(
-          //   requisition.requestedBy?.company?.name ?? '',
-          //   style: AppTextThemes.bodyTextStyle(context).copyWith(
-          //     fontWeight: FontWeight.w300,
-          //   ),
-          // ),
+          const VerticalSpace(space: 4,),
+          Row(
+            children: [
+              Text(
+                requisition.department ?? '',
+                style: AppTextThemes.bodyTextStyle(context).copyWith(
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+              Text(
+                ',',
+                style: AppTextThemes.bodyTextStyle(context).copyWith(
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+              const HorizontalSpace(),
+              Text(
+                requisition.jobMode?[0].toUpperCase() ?? '',
+                style: AppTextThemes.bodyTextStyle(context).copyWith(
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
           const VerticalSpace(),
           Row(
             children: [
@@ -52,7 +69,7 @@ class RequisitionsCard extends StatelessWidget {
               ),
               const HorizontalSpace(),
               Text(
-                '${requisition.requestedBy?.version ?? '0'}',
+                '${requisition.openingsCount ?? '0'}',
                 style: AppTextThemes.bodyTextStyle(context),
               ),
             ],
@@ -61,12 +78,12 @@ class RequisitionsCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                'Hiring Manager',
+                'Job Budget',
                 style: AppTextThemes.secondaryTextStyle(context),
               ),
               const HorizontalSpace(),
               Text(
-                '${requisition.requestedBy?.role ?? ''}',
+                '${requisition.budgetAllocation ?? '0'}',
                 style: AppTextThemes.bodyTextStyle(context),
               ),
             ],

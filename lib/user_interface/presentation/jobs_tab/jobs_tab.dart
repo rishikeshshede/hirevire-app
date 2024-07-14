@@ -84,10 +84,6 @@ class JobsTab extends StatelessWidget {
                           },
                           onSwipe: (index, percentThresholdX, direction) {
                             if (direction == CardSwiperDirection.right) {
-                              jobsController
-                                  .applyJob(jobsController.jobs[index]);
-
-                              ToastWidgit.bottomToast("Accepted");
 
                               // ToastWidgit.styledToast(
                               //     "Accepted",
@@ -99,6 +95,11 @@ class JobsTab extends StatelessWidget {
                                   false) {
                                 Get.toNamed(AppRoutes.completeProfile);
                               } else {
+
+                                jobsController
+                                    .applyJob(jobsController.jobs[index]);
+                                ToastWidgit.bottomToast("Accepted");
+
                                 final job = jobsController.jobs[index];
                                 Get.toNamed(
                                   AppRoutes.jobApplicationForm,
