@@ -9,7 +9,8 @@ import 'package:mime/mime.dart';
 
 class ApiClient {
   // Live
-  static const String _baseUrl = 'https://sea-turtle-app-cpepq.ondigitalocean.app/api/v1/';
+  static const String _baseUrl =
+      'https://sea-turtle-app-cpepq.ondigitalocean.app/api/v1/';
 
   // Wifi
   //static const String _baseUrl = 'http://10.0.2.16:5000/api/v1/';
@@ -28,7 +29,10 @@ class ApiClient {
   }
 
   Future<String?> getToken() async {
-    return await PersistenceHandler.getString(PersistenceKeys.authToken);
+    String? token =
+        await PersistenceHandler.getString(PersistenceKeys.authToken);
+    // LogHandler.debug("Token: $token");
+    return token;
   }
 
   Map<String, String> setHeaders(String? authToken) {
@@ -154,7 +158,8 @@ class ApiClient {
     };
   }
 
-  Future<Map<String, dynamic>> uploadVideoWithThumbnail(String endpoint, File videoFile, File thumbnailFile) async {
+  Future<Map<String, dynamic>> uploadVideoWithThumbnail(
+      String endpoint, File videoFile, File thumbnailFile) async {
     final Uri url = Uri.parse(_baseUrl + endpoint);
     var request = http.MultipartRequest('POST', url);
 
@@ -164,14 +169,16 @@ class ApiClient {
       request.files.add(await http.MultipartFile.fromPath(
         'media',
         videoFile.path,
-        contentType: MediaType.parse(lookupMimeType(videoFile.path) ?? 'video/mp4'),
+        contentType:
+            MediaType.parse(lookupMimeType(videoFile.path) ?? 'video/mp4'),
       ));
 
       // Adding the thumbnail image
       request.files.add(await http.MultipartFile.fromPath(
         'thumbnail',
         thumbnailFile.path,
-        contentType: MediaType.parse(lookupMimeType(thumbnailFile.path) ?? 'image/jpeg'),
+        contentType:
+            MediaType.parse(lookupMimeType(thumbnailFile.path) ?? 'image/jpeg'),
       ));
 
       var response = await request.send();
