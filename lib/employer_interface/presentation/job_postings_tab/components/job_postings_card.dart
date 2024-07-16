@@ -25,10 +25,11 @@ class JobPostingsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(12.w(context)),
-      padding: EdgeInsets.all(8.w(context)),
+      //margin: EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6.w(context)),
+      margin: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(16.w(context)),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: AppColors.disabled,
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(

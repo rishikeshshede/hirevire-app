@@ -12,6 +12,7 @@ import 'package:hirevire_app/utils/show_toast_util.dart';
 
 import '../../../routes/app_routes.dart';
 import '../profile/sliding_base.dart';
+import 'components/JobApplicationForm.dart';
 
 class JobsTab extends StatelessWidget {
   const JobsTab({super.key});
@@ -83,23 +84,49 @@ class JobsTab extends StatelessWidget {
                             );
                           },
                           onSwipe: (index, percentThresholdX, direction) {
-                            if (jobsController.isProfileComplete.value == false) {
-                              Get.toNamed(AppRoutes.completeProfile);
-                              return false; // Prevent the card from being swiped away
-                            }
-
                             if (direction == CardSwiperDirection.right) {
+                              if (jobsController.isProfileComplete.value == false) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Please complete your profile',
+                                        style: AppTextThemes.subtitleStyle(context).copyWith(
+                                        fontWeight: FontWeight.w500),
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: Text('Yes'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(); // Close the dialog
+                                            Get.toNamed(AppRoutes.completeProfile);
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: Text('Not Now'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(); // Close the dialog
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                                return false; // Prevent the card from being swiped away
+                              }
+
                               jobsController.applyJob(jobsController.jobs[index]);
                               ToastWidgit.bottomToast("Accepted");
 
                               final job = jobsController.jobs[index];
-                              Get.toNamed(
-                                AppRoutes.jobApplicationForm,
-                                arguments: {
-                                  'jobsController': jobsController,
-                                  'job': job,
-                                  'index': index,
-                                },
+
+
+                              Get.to(
+                                  JobApplicationForm(
+                                    jobsController: jobsController,
+                                    job: job,
+                                    index: index,
+                                  )
                               );
                             } else if (direction == CardSwiperDirection.left) {
                               jobsController.rejectJob(jobsController.jobs[index]);
@@ -109,8 +136,10 @@ class JobsTab extends StatelessWidget {
                             debugPrint(jobsController.jobs.length.toString());
                             return true; // Allow the swipe
                           },
+
                           //allowedSwipeDirection: AllowedSwipeDirection.horizontal,
-                          scale: 0.9,
+                          scale: 1,
+                          numberOfCardsDisplayed: 1,
                           maxAngle: 30.0,
                           padding: EdgeInsets.zero,
                           isLoop: false,

@@ -58,13 +58,13 @@ class _VideoUploadWidgetState extends State<VideoUploadWidget> {
         margin: EdgeInsets.only(top: 16),
         padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
+          border: Border.all(color: AppColors.disabled),
           borderRadius: BorderRadius.circular(8),
         ),
         child: _thumbnailFile == null
             ? const Column(
           children: [
-            Icon(Icons.image, size: 50, color: Colors.grey),
+            Icon(Icons.image, size: 50, color: AppColors.disabled),
             SizedBox(height: 8),
             Text('Pick Thumbnail')
           ],
@@ -87,7 +87,7 @@ class _VideoUploadWidgetState extends State<VideoUploadWidget> {
             width: double.infinity,
             height: _videoFile == null ? 200 : null,
             decoration: BoxDecoration(
-              color: Colors.grey[200],
+              color: Colors.transparent,
               borderRadius: BorderRadius.circular(8),
             ),
             child: _videoFile == null
@@ -160,8 +160,8 @@ class DashedBorderPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.grey
-      ..strokeWidth = 2
+      ..color = AppColors.disabled
+      ..strokeWidth = 1
       ..style = PaintingStyle.stroke;
 
     const dashWidth = 8.0;

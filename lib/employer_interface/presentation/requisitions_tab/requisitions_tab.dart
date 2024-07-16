@@ -65,8 +65,8 @@ class RequisitionsTab extends StatelessWidget {
             )
           :
             SingleChildScrollView(
-              child: Container(
-                color: AppColors.disabled,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: List.generate(
                     requisitionsController.requisitions.length,

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:hirevire_app/common/widgets/padded_container.dart';
 import 'package:hirevire_app/employer_interface/models/requisition.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 import 'package:get/get.dart';
@@ -31,26 +32,9 @@ class CreateJobPostingScreen extends StatelessWidget {
     requisitionsController.setReqSkills(requisition.requiredSkills ?? []);
     requisitionsController.setOpeningCount(requisition.openingsCount ?? 0);
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: InkWell(
-          onTap: () {
-            Get.back();
-          },
-          child: const Icon(
-            Icons.arrow_back_ios,
-            color: AppColors.primaryDark,
-          ),
-        ),
-        automaticallyImplyLeading: false,
-        elevation: 0,
-        backgroundColor: AppColors.background,
-        centerTitle: false,
-        title: const Text('Create job Posting'),
-        actions: [
-        ],
-      ),
-      body: SingleChildScrollView(
+    return PaddedContainer(
+      screenTitle: "Create Job Posting",
+      child: SingleChildScrollView(
         child: Container(
           child: Column(
             children: [

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
@@ -10,6 +12,7 @@ import 'package:hirevire_app/utils/persistence_handler.dart';
 import '../../../../constants/endpoint_constants.dart';
 import '../../../../constants/error_constants.dart';
 import '../../../../routes/app_routes.dart';
+import '../../../../services/api_endpoint_service.dart';
 import '../../../../utils/log_handler.dart';
 
 class JobsController extends GetxController {
@@ -20,14 +23,29 @@ class JobsController extends GetxController {
   RxBool isProfileComplete = false.obs;
   RxList<bool> isOpen = [true, false, false].obs;
 
+  String defaultItemId = "Other";
+
   RxList<JobModel> jobs = <JobModel>[].obs;
   var status = ''.obs; // Status text
   var statusColor = Colors.transparent.obs; // Status color
 
   TextEditingController nameController = TextEditingController();
+  TextEditingController skillsSearchController = TextEditingController();
+
   FocusNode nameFocusNode = FocusNode();
+  final FocusNode searchFocusNode = FocusNode();
 
   RxList<Map<String, dynamic>> suggestedJobs = <Map<String, dynamic>>[].obs;
+
+  File? selectedVideoFile;
+  File? selectedThumbnailFile = File('');
+
+  RxList<Map<String, dynamic>> selectedSkills = <Map<String, dynamic>>[].obs;
+  var skillsRatings = <String, double>{}.obs; // Map to store ratings for skills
+
+  RxString skillsSearchQuery = ''.obs;
+  RxList<Map<String, dynamic>> filteredSkillsSuggestions =
+      <Map<String, dynamic>>[].obs;
 
   @override
   void onInit() {
@@ -35,10 +53,82 @@ class JobsController extends GetxController {
     apiClient = ApiClient();
     fetchLocalData();
     fetchJobs();
+    debounce(skillsSearchQuery, (_) => suggestSkills(),
+        time: const Duration(milliseconds: 300));
+    fetchUserProfile();
+  }
+
+  void addSkill(Map<String, dynamic> selectedSkill) {
+    Map<String, dynamic> skillMap = {
+      '_id': selectedSkill['_id'],
+      'name': selectedSkill['name'],
+    };
+
+    bool skillExists = false;
+
+    if (selectedSkills.isEmpty) {
+      selectedSkills.add(skillMap);
+      skillsRatings[selectedSkill['_id']] = 5.0; // Default rating
+    } else {
+      for (var skill in selectedSkills) {
+        if (skill['name'].toString().toLowerCase() ==
+            selectedSkill['name'].toString().toLowerCase()) {
+          skillExists = true;
+          return;
+        }
+      }
+      if (!skillExists) {
+        selectedSkills.add(skillMap);
+        skillsRatings[selectedSkill['_id']] = 5.0; // Default rating
+      }
+    }
+    skillsSearchController.clear();
+  }
+
+  void updateSkillRating(String skillId, double rating) {
+    skillsRatings[skillId] = rating;
+  }
+
+  void removeSkill(Map<String, dynamic> skill) {
+    selectedSkills.remove(skill);
+    skillsRatings.remove(skill['data']);
+  }
+
+
+
+  Future<void> suggestSkills() async {
+    if (skillsSearchQuery.isEmpty) {
+      filteredSkillsSuggestions.value = [];
+    } else {
+      String endpoint = Endpoints.searchSkills;
+      String searchQuery = "$endpoint/${skillsSearchQuery.value}";
+
+      try {
+        Map<String, dynamic> response = await apiClient.get(searchQuery);
+
+        if (response['success']) {
+          List<Map<String, dynamic>> convertedList =
+          List<Map<String, dynamic>>.from(response['body']['data']);
+          filteredSkillsSuggestions.value = convertedList;
+        } else {
+          String errorMsg =
+              response['error']['message'] ?? Errors.somethingWentWrong;
+          LogHandler.error(errorMsg);
+        }
+      } catch (error) {
+        LogHandler.error(error);
+      }
+    }
+  }
+
+
+  void onFilesSelected(File? videoFile, File? thumbnailFile) {
+    selectedVideoFile = videoFile;
+    selectedThumbnailFile = thumbnailFile;
   }
 
   fetchLocalData() async {
-    name.value = await PersistenceHandler.getString(PersistenceKeys.name);
+    name.value = await PersistenceHandler.getString(PersistenceKeys.name ?? '');
     isProfileComplete.value =
         await PersistenceHandler.getBool(PersistenceKeys.isProfileComplete) ??
             false;
@@ -69,6 +159,29 @@ class JobsController extends GetxController {
     statusColor.value = Colors.red;
     // Handle job rejection logic
   }
+
+  fetchUserProfile() async {
+    String endpoint = EndpointService.getRequisitions;
+
+    try {
+      Map<String, dynamic> response = await apiClient.get(endpoint);
+      LogHandler.debug(response);
+
+      if (response['success']) {
+
+        //TODO: get user profile response here
+
+      } else {
+        String errorMsg =
+            response['error']['message'] ?? Errors.somethingWentWrong;
+        LogHandler.error(errorMsg);
+      }
+    } catch (error) {
+      LogHandler.error(error);
+    }
+
+  }
+
 
   submitJobApplication() async {
     String endpoint = ""; //Endpoints.submitJob; //TODO: add api endpoint

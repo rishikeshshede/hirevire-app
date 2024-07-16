@@ -79,7 +79,7 @@ class RequisitionsController extends GetxController {
   }
 
   fetchLocalData() async {
-    name.value = await PersistenceHandler.getString(PersistenceKeys.name);
+    name.value = await PersistenceHandler.getString(PersistenceKeys.name ?? '');
   }
 
   fetchRequisitions() async {

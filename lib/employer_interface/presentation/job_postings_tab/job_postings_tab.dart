@@ -6,7 +6,6 @@ import 'package:hirevire_app/constants/global_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/employer_interface/presentation/job_postings_tab/components/job_postings_card.dart';
 import 'package:hirevire_app/employer_interface/presentation/job_postings_tab/controllers/job_postings_controller.dart';
-import 'package:hirevire_app/employer_interface/presentation/requisitions_tab/components/requisitions_card.dart';
 
 
 class JobPostingsTab extends StatelessWidget {
@@ -52,8 +51,8 @@ class JobPostingsTab extends StatelessWidget {
             )
           :
             SingleChildScrollView(
-              child: Container(
-                color: AppColors.disabled,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 6.0),
                 child: Column(
                   children: List.generate(
                     jobPostingsController.jobPostings.length,

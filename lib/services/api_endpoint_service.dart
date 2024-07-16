@@ -4,6 +4,7 @@ class EndpointService {
   // -------------------- USER ENDPOINTS --------------------
 
   // GET Endpoint
+  static const String getUserProfile = 'jobSeeker';
 
   // POST Endpoints
 

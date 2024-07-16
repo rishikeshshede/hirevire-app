@@ -29,113 +29,116 @@ class RequisitionsCard extends StatelessWidget {
       margin: EdgeInsets.all(12.w(context)),
       padding: EdgeInsets.all(8.w(context)),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: AppColors.disabled,
         borderRadius: BorderRadius.circular(12.0),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          jobTitle(context),
-          const VerticalSpace(space: 4,),
-          Row(
-            children: [
-              Text(
-                requisition.department ?? '',
-                style: AppTextThemes.bodyTextStyle(context).copyWith(
-                  fontWeight: FontWeight.w300,
-                ),
-              ),
-              Text(
-                ',',
-                style: AppTextThemes.bodyTextStyle(context).copyWith(
-                  fontWeight: FontWeight.w300,
-                ),
-              ),
-              const HorizontalSpace(),
-              Text(
-                requisition.jobMode?[0].toUpperCase() ?? '',
-                style: AppTextThemes.bodyTextStyle(context).copyWith(
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ],
-          ),
-          const VerticalSpace(),
-          Row(
-            children: [
-              Text(
-                'Openings',
-                style: AppTextThemes.secondaryTextStyle(context),
-              ),
-              const HorizontalSpace(),
-              Text(
-                '${requisition.openingsCount ?? '0'}',
-                style: AppTextThemes.bodyTextStyle(context),
-              ),
-            ],
-          ),
-          const VerticalSpace(),
-          Row(
-            children: [
-              Text(
-                'Job Budget',
-                style: AppTextThemes.secondaryTextStyle(context),
-              ),
-              const HorizontalSpace(),
-              Text(
-                '${requisition.budgetAllocation ?? '0'}',
-                style: AppTextThemes.bodyTextStyle(context),
-              ),
-            ],
-          ),
-
-          const VerticalSpace(),
-          // Row(
-          //   children: [
-          //     Text(
-          //       'Recruiter',
-          //       style: AppTextThemes.secondaryTextStyle(context),
-          //     ),
-          //     const HorizontalSpace(),
-          //     Text(
-          //       '${requisition.recruiter ?? ''}',
-          //       style: AppTextThemes.bodyTextStyle(context),
-          //     ),
-          //   ],
-          // ),
-          // const VerticalSpace(),
-
-          Row(
-            children: [
-              Flexible(
-                child: ButtonPrimary(
-                  btnText: 'Create job Posting',
-                  btnColor: AppColors.primaryDark,
-                  onPressed: () {
-                    Get.to(CreateJobPostingScreen(requisitionsController: requisitionsController, requisition: requisition, index: index));
-                    //Get.toNamed(AppRoutes.createJobPosting);
-                  },
-                  textStyle: AppTextThemes.genericTextStyle(
-                    context,
-                    color: AppColors.background,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            jobTitle(context),
+            const VerticalSpace(space: 4,),
+            Row(
+              children: [
+                Text(
+                  requisition.department ?? '',
+                  style: AppTextThemes.bodyTextStyle(context).copyWith(
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
-              ),
-              const HorizontalSpace(space: 8),
-              Flexible(
-                child:  ButtonOutline(
-                  btnText: 'View job Posting',
-                  onPressed: () {},
-                  textStyle: AppTextThemes.genericTextStyle(
-                    context,
-                    customFontSize: 14.0,
-                    color: AppColors.primaryDark,
+                Text(
+                  ',',
+                  style: AppTextThemes.bodyTextStyle(context).copyWith(
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+                const HorizontalSpace(),
+                Text(
+                  requisition.jobMode?[0].toUpperCase() ?? '',
+                  style: AppTextThemes.bodyTextStyle(context).copyWith(
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+            const VerticalSpace(),
+            Row(
+              children: [
+                Text(
+                  'Openings',
+                  style: AppTextThemes.secondaryTextStyle(context),
+                ),
+                const HorizontalSpace(),
+                Text(
+                  '${requisition.openingsCount ?? '0'}',
+                  style: AppTextThemes.bodyTextStyle(context),
+                ),
+              ],
+            ),
+            const VerticalSpace(),
+            Row(
+              children: [
+                Text(
+                  'Job Budget',
+                  style: AppTextThemes.secondaryTextStyle(context),
+                ),
+                const HorizontalSpace(),
+                Text(
+                  '${requisition.budgetAllocation ?? '0'}',
+                  style: AppTextThemes.bodyTextStyle(context),
+                ),
+              ],
+            ),
+
+            const VerticalSpace(),
+            // Row(
+            //   children: [
+            //     Text(
+            //       'Recruiter',
+            //       style: AppTextThemes.secondaryTextStyle(context),
+            //     ),
+            //     const HorizontalSpace(),
+            //     Text(
+            //       '${requisition.recruiter ?? ''}',
+            //       style: AppTextThemes.bodyTextStyle(context),
+            //     ),
+            //   ],
+            // ),
+            // const VerticalSpace(),
+
+            Row(
+              children: [
+                Flexible(
+                  child: ButtonPrimary(
+                    btnText: 'Create Job Posting',
+                    btnColor: AppColors.primaryDark,
+                    onPressed: () {
+                      Get.to(CreateJobPostingScreen(requisitionsController: requisitionsController, requisition: requisition, index: index));
+                      //Get.toNamed(AppRoutes.createJobPosting);
+                    },
+                    textStyle: AppTextThemes.genericTextStyle(
+                      context,
+                      color: AppColors.background,
+                    ),
+                  ),
+                ),
+                const HorizontalSpace(space: 8),
+                Flexible(
+                  child:  ButtonOutline(
+                    btnText: 'View Job Posting',
+                    onPressed: () {},
+                    textStyle: AppTextThemes.genericTextStyle(
+                      context,
+                      customFontSize: 14.0,
+                      color: AppColors.primaryDark,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

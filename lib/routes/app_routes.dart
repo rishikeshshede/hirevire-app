@@ -27,7 +27,6 @@ class AppRoutes {
   static const String nameScreen = '/nameScreen';
   static const String completeProfile = '/completeProfile';
   static const String userBaseNavigator = '/userBaseNavigator';
-  static const String jobApplicationForm = '/jobApplicationForm';
 
 
   // Employer Routes
@@ -68,10 +67,6 @@ class AppRoutes {
       name: completeProfile,
       page: () => const SlidingBase(),
       binding: UserProfileBinding(),
-    ),
-    GetPage(
-      name: jobApplicationForm,
-      page: () => const JobApplicationForm(),
     ),
     GetPage(
       name: userBaseNavigator,
