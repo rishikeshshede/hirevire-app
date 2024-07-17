@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hirevire_app/common/widgets/chip_widget.dart';
 import 'package:hirevire_app/common/widgets/green_dot.dart';
@@ -8,6 +7,7 @@ import 'package:hirevire_app/employer_interface/models/job_posting.dart';
 import 'package:hirevire_app/employer_interface/presentation/job_postings_tab/controllers/job_postings_controller.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
 import 'package:hirevire_app/utils/size_util.dart';
+import 'package:hirevire_app/utils/string_handler.dart';
 
 import '../../../../common/widgets/button_outline.dart';
 
@@ -25,28 +25,31 @@ class JobPostingsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      //margin: EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6.w(context)),
-      margin: const EdgeInsets.all(12),
+      margin: EdgeInsets.symmetric(vertical: 6.w(context)),
       padding: EdgeInsets.all(16.w(context)),
       decoration: BoxDecoration(
-        color: AppColors.disabled,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: AppColors.disabled),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SkillChip(skill:'${jobPostings.savedApplications?.length ?? '0'} right swipes'),
-
+              SkillChip(
+                  text:
+                      '${jobPostings.savedApplications?.length ?? '0'} right swipes'),
               Row(
                 children: [
                   const GreenDot(),
                   const HorizontalSpace(),
                   Text(
-                    jobPostings.status ?? '',
+                    jobPostings.status == null
+                        ? ''
+                        : StringHandler.capitalizeFirstLetterOfWord(
+                            jobPostings.status!),
                     style: AppTextThemes.bodyTextStyle(context),
                   ),
                 ],
@@ -54,7 +57,6 @@ class JobPostingsCard extends StatelessWidget {
             ],
           ),
           const VerticalSpace(),
-
           jobTitle(context),
           // Row(
           //   children: [
@@ -77,14 +79,14 @@ class JobPostingsCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                'Hiring Manager',
+                'Hiring Manager:',
                 style: AppTextThemes.secondaryTextStyle(context),
               ),
               const HorizontalSpace(),
               Text(
-                '${jobPostings.postedBy?.name ?? ''}',
+                jobPostings.postedBy?.name ?? '',
                 style: AppTextThemes.bodyTextStyle(context).copyWith(
-                      fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
             ],
@@ -127,7 +129,7 @@ class JobPostingsCard extends StatelessWidget {
           Row(
             children: [
               Flexible(
-                child:  ButtonOutline(
+                child: ButtonOutline(
                   btnText: 'View applicants',
                   onPressed: () {},
                   textStyle: AppTextThemes.genericTextStyle(
@@ -150,8 +152,6 @@ class JobPostingsCard extends StatelessWidget {
       style: AppTextThemes.subtitleStyle(context).copyWith(
         fontWeight: FontWeight.w500,
       ),
-
     );
   }
-
 }

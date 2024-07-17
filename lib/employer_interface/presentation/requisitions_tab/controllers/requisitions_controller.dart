@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:hirevire_app/constants/endpoint_constants.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
 import 'package:hirevire_app/services/api_service.dart';
@@ -37,14 +35,18 @@ class RequisitionsController extends GetxController {
   }
 
   TextEditingController jobTitleController = TextEditingController();
+  TextEditingController descController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController jobModeController = TextEditingController();
-  TextEditingController descController = TextEditingController();
   TextEditingController vidReqController = TextEditingController();
   TextEditingController reqSkillsController = TextEditingController();
   TextEditingController perksController = TextEditingController();
   TextEditingController openingCountController = TextEditingController();
   TextEditingController ctcController = TextEditingController();
+
+  // Focus nodes
+  FocusNode jobTitleFocusNode = FocusNode();
+  FocusNode descFocusNode = FocusNode();
 
   void setJobTitle(String? jobTitle) {
     jobTitleController.text = jobTitle ?? '';
@@ -53,20 +55,24 @@ class RequisitionsController extends GetxController {
   void setJobMode(List<String>? job) {
     jobModeController.text = job?.join(', ') ?? '';
   }
+
   void setOpeningCount(int openingCount) {
     openingCountController.text = openingCount.toString();
   }
+
   void setDescription(String? desc) {
     descController.text = desc ?? '';
   }
+
   void setReqSkills(List<RequiredSkill>? skills) {
     final skillsList = skills ?? [];
-    final skillsString = skillsList.map((skill) => skill.skill?.name).where((name) => name != null).join(', ');
+    final skillsString = skillsList
+        .map((skill) => skill.skill?.name)
+        .where((name) => name != null)
+        .join(', ');
 
-    reqSkillsController.text = skillsString ?? '';
+    reqSkillsController.text = skillsString;
   }
-
-  FocusNode jobTitleFocusNode = FocusNode();
 
   RxList<Map<String, dynamic>> suggestedJobs = <Map<String, dynamic>>[].obs;
 
@@ -79,10 +85,11 @@ class RequisitionsController extends GetxController {
   }
 
   fetchLocalData() async {
-    name.value = await PersistenceHandler.getString(PersistenceKeys.name ?? '');
+    name.value = await PersistenceHandler.getString(PersistenceKeys.name) ?? '';
   }
 
   fetchRequisitions() async {
+    isLoading.value = true;
     String endpoint = EndpointService.getRequisitions;
 
     try {
@@ -90,17 +97,20 @@ class RequisitionsController extends GetxController {
       LogHandler.debug(response);
 
       if (response['success']) {
-
         requisitions.value = Requisition.fromJsonList(response['body']['data']);
       } else {
         String errorMsg =
             response['error']['message'] ?? Errors.somethingWentWrong;
+        ToastWidgit.bottomToast(errorMsg);
         LogHandler.error(errorMsg);
       }
     } catch (error) {
+      ToastWidgit.bottomToast(
+          'Unknown error occured while getting Job requisitions');
       LogHandler.error(error);
+    } finally {
+      isLoading.value = false;
     }
-
   }
 
   String getPostTime(DateTime date) {
@@ -113,11 +123,13 @@ class RequisitionsController extends GetxController {
     }
 
     try {
-      await apiClient.uploadVideoWithThumbnail(
+      await apiClient
+          .uploadVideoWithThumbnail(
         Endpoints.uploadVideoWithThumbnail,
         selectedVideoFile!,
         selectedThumbnailFile!,
-      ).then((response) {
+      )
+          .then((response) {
         if (response['success']) {
           // Handle success
           debugPrint('Upload successful: ${response['body']}');
@@ -136,7 +148,6 @@ class RequisitionsController extends GetxController {
   }
 
   createJobApplication(Requisition req) async {
-
     if (vidReqController.text.isEmpty) {
       ToastWidgit.bottomToast('video requirement is required');
       return;
@@ -160,7 +171,6 @@ class RequisitionsController extends GetxController {
     String vidUrl = videoThumbRes?['videoURL'] ?? '';
     String thumbnailURL = videoThumbRes?['thumbnailURL'] ?? '';
 
-
     Map<String, dynamic> body = {
       'jobRequisitionId': req.id,
       'postedBy': req.requestedBy?.id ?? "",
@@ -173,22 +183,23 @@ class RequisitionsController extends GetxController {
         'city': cityLocation,
       },
       'jobMode': req.jobMode ?? [],
-      'description': descController.text.isEmpty ? req.description : descController.text.trim(),
+      'description': descController.text.isEmpty
+          ? req.description
+          : descController.text.trim(),
       'videoRequirement': vidReqController.text.trim(),
       'ctc': ctcController.text.trim(),
       'questions': [],
       'growth_plan': [],
       'perks': perksController.text.trim(),
-      'requiredSkills': req.requiredSkills?.map((skill) => {
-        'data': skill.id,
-        'name': skill.skill?.name ?? '',
-        'rating': skill.rating
-      }).toList() ?? [],
-      'media': {
-        'url': vidUrl,
-        'type': "video",
-        'thumbnail': thumbnailURL
-      },
+      'requiredSkills': req.requiredSkills
+              ?.map((skill) => {
+                    'data': skill.id,
+                    'name': skill.skill?.name ?? '',
+                    'rating': skill.rating
+                  })
+              .toList() ??
+          [],
+      'media': {'url': vidUrl, 'type': "video", 'thumbnail': thumbnailURL},
       'endsOn': '',
     };
 
@@ -197,7 +208,6 @@ class RequisitionsController extends GetxController {
       LogHandler.debug(response);
 
       if (response['success']) {
-
         Get.back();
       } else {
         String errorMsg =
@@ -209,4 +219,3 @@ class RequisitionsController extends GetxController {
     }
   }
 }
-

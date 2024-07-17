@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
 import 'package:hirevire_app/employer_interface/models/job_posting.dart';
 import 'package:hirevire_app/services/api_service.dart';
 import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/persistence_handler.dart';
+import 'package:hirevire_app/utils/show_toast_util.dart';
 
 import '../../../../constants/error_constants.dart';
 import '../../../../services/api_endpoint_service.dart';
@@ -26,7 +26,6 @@ class JobPostingsController extends GetxController {
   TextEditingController nameController = TextEditingController();
   FocusNode nameFocusNode = FocusNode();
 
-
   RxList<Map<String, dynamic>> suggestedJobs = <Map<String, dynamic>>[].obs;
 
   @override
@@ -38,11 +37,11 @@ class JobPostingsController extends GetxController {
   }
 
   fetchLocalData() async {
-    name.value = await PersistenceHandler.getString(PersistenceKeys.name);
+    name.value = await PersistenceHandler.getString(PersistenceKeys.name) ?? '';
   }
 
   fetchJobPostings() async {
-
+    isLoading.value = true;
     String endpoint = EndpointService.getJobPostings;
 
     try {
@@ -54,12 +53,16 @@ class JobPostingsController extends GetxController {
       } else {
         String errorMsg =
             response['error']['message'] ?? Errors.somethingWentWrong;
+        ToastWidgit.bottomToast(errorMsg);
         LogHandler.error(errorMsg);
       }
     } catch (error) {
+      ToastWidgit.bottomToast(
+          'Unknown error occured while getting Job postings');
       LogHandler.error(error);
+    } finally {
+      isLoading.value = false;
     }
-
   }
 
   String getPostTime(DateTime date) {
@@ -67,12 +70,9 @@ class JobPostingsController extends GetxController {
   }
 
   submitJobApplication() async {
-
     String endpoint = ""; //Endpoints.submitJob; //TODO: add api endpoint
 
-    Map<String, dynamic> body = {
-
-    };
+    Map<String, dynamic> body = {};
     LogHandler.debug(body);
 
     try {
@@ -80,7 +80,6 @@ class JobPostingsController extends GetxController {
       LogHandler.debug(response);
 
       if (response['success']) {
-
         Get.back();
       } else {
         String errorMsg =

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 
-class LoaderCircular extends StatelessWidget {
-  const LoaderCircular({super.key});
+class LoaderCircularWithBg extends StatelessWidget {
+  const LoaderCircularWithBg({super.key});
 
   @override
   Widget build(BuildContext context) {

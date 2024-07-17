@@ -44,7 +44,7 @@ class ButtonPrimary extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          backgroundColor: btnColor ?? AppColors.primary,
+          backgroundColor: btnColor ?? AppColors.primaryDark,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
@@ -52,7 +52,7 @@ class ButtonPrimary extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: (iconPosition == IconPosition.left ||
-              iconPosition == IconPosition.right)
+                  iconPosition == IconPosition.right)
               ? MainAxisAlignment.spaceBetween
               : MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -63,7 +63,8 @@ class ButtonPrimary extends StatelessWidget {
                 height: iconHeight?.h(context) ?? 32.h(context),
                 padding: iconPadding,
               )
-            else if (iconPosition != IconPosition.center) const HorizontalSpace(space: 8),
+            else if (iconPosition != IconPosition.center)
+              const HorizontalSpace(space: 8),
             if (iconPosition == IconPosition.center && iconPath != null)
               CustomImageView(
                 imagePath: iconPath,
@@ -76,7 +77,8 @@ class ButtonPrimary extends StatelessWidget {
               child: Text(
                 btnText,
                 style: textStyle ??
-                    AppTextThemes.buttonTextStyle(context).copyWith(color: textColor),
+                    AppTextThemes.buttonTextStyle(context)
+                        .copyWith(color: textColor),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -86,7 +88,8 @@ class ButtonPrimary extends StatelessWidget {
                 height: iconHeight?.h(context) ?? 32.h(context),
                 padding: iconPadding,
               )
-            else if (iconPosition != IconPosition.center) const HorizontalSpace(space: 8),
+            else if (iconPosition != IconPosition.center)
+              const HorizontalSpace(space: 8),
           ],
         ),
       ),

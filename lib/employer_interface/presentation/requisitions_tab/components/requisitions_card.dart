@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hirevire_app/common/widgets/button_primary.dart';
@@ -26,123 +25,97 @@ class RequisitionsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(12.w(context)),
-      padding: EdgeInsets.all(8.w(context)),
+      margin: EdgeInsets.symmetric(vertical: 6.w(context)),
+      padding: EdgeInsets.all(16.w(context)),
       decoration: BoxDecoration(
-        color: AppColors.disabled,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: AppColors.disabled),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            jobTitle(context),
-            const VerticalSpace(space: 4,),
-            Row(
-              children: [
-                Text(
-                  requisition.department ?? '',
-                  style: AppTextThemes.bodyTextStyle(context).copyWith(
-                    fontWeight: FontWeight.w300,
-                  ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          jobTitle(context),
+          const VerticalSpace(space: 3),
+          Row(
+            children: [
+              Text(
+                requisition.department == null
+                    ? ''
+                    : '${requisition.department},',
+                style: AppTextThemes.bodyTextStyle(context).copyWith(
+                  fontWeight: FontWeight.w300,
                 ),
-                Text(
-                  ',',
-                  style: AppTextThemes.bodyTextStyle(context).copyWith(
-                    fontWeight: FontWeight.w300,
-                  ),
+              ),
+              const HorizontalSpace(),
+              Text(
+                requisition.jobMode?[0].toUpperCase() ?? '',
+                style: AppTextThemes.bodyTextStyle(context).copyWith(
+                  fontWeight: FontWeight.w300,
                 ),
-                const HorizontalSpace(),
-                Text(
-                  requisition.jobMode?[0].toUpperCase() ?? '',
-                  style: AppTextThemes.bodyTextStyle(context).copyWith(
-                    fontWeight: FontWeight.w400,
-                  ),
+              ),
+            ],
+          ),
+          const VerticalSpace(),
+          Row(
+            children: [
+              Text(
+                'Openings:',
+                style: AppTextThemes.secondaryTextStyle(context),
+              ),
+              const HorizontalSpace(),
+              Text(
+                '${requisition.openingsCount ?? 'Not specified'}',
+                style: AppTextThemes.bodyTextStyle(context),
+              ),
+            ],
+          ),
+          const VerticalSpace(),
+          Row(
+            children: [
+              Text(
+                'Job Budget:',
+                style: AppTextThemes.secondaryTextStyle(context),
+              ),
+              const HorizontalSpace(),
+              Text(
+                '${requisition.budgetAllocation ?? 'Not specified'}',
+                style: AppTextThemes.bodyTextStyle(context),
+              ),
+            ],
+          ),
+          const VerticalSpace(),
+          Row(
+            children: [
+              Flexible(
+                child: ButtonPrimary(
+                  btnText: 'Create Job Posting',
+                  btnColor: AppColors.primaryDark,
+                  onPressed: () {
+                    Get.to(
+                      CreateJobPostingScreen(
+                        requisitionsController: requisitionsController,
+                        requisition: requisition,
+                        index: index,
+                      ),
+                    );
+                  },
+                  textStyle: AppTextThemes.buttonTextStyle(context),
                 ),
-              ],
-            ),
-            const VerticalSpace(),
-            Row(
-              children: [
-                Text(
-                  'Openings',
-                  style: AppTextThemes.secondaryTextStyle(context),
+              ),
+              const HorizontalSpace(),
+              Flexible(
+                child: ButtonOutline(
+                  btnText: 'View Job Posting',
+                  onPressed: () {},
                 ),
-                const HorizontalSpace(),
-                Text(
-                  '${requisition.openingsCount ?? '0'}',
-                  style: AppTextThemes.bodyTextStyle(context),
-                ),
-              ],
-            ),
-            const VerticalSpace(),
-            Row(
-              children: [
-                Text(
-                  'Job Budget',
-                  style: AppTextThemes.secondaryTextStyle(context),
-                ),
-                const HorizontalSpace(),
-                Text(
-                  '${requisition.budgetAllocation ?? '0'}',
-                  style: AppTextThemes.bodyTextStyle(context),
-                ),
-              ],
-            ),
-
-            const VerticalSpace(),
-            // Row(
-            //   children: [
-            //     Text(
-            //       'Recruiter',
-            //       style: AppTextThemes.secondaryTextStyle(context),
-            //     ),
-            //     const HorizontalSpace(),
-            //     Text(
-            //       '${requisition.recruiter ?? ''}',
-            //       style: AppTextThemes.bodyTextStyle(context),
-            //     ),
-            //   ],
-            // ),
-            // const VerticalSpace(),
-
-            Row(
-              children: [
-                Flexible(
-                  child: ButtonPrimary(
-                    btnText: 'Create Job Posting',
-                    btnColor: AppColors.primaryDark,
-                    onPressed: () {
-                      Get.to(CreateJobPostingScreen(requisitionsController: requisitionsController, requisition: requisition, index: index));
-                      //Get.toNamed(AppRoutes.createJobPosting);
-                    },
-                    textStyle: AppTextThemes.genericTextStyle(
-                      context,
-                      color: AppColors.background,
-                    ),
-                  ),
-                ),
-                const HorizontalSpace(space: 8),
-                Flexible(
-                  child:  ButtonOutline(
-                    btnText: 'View Job Posting',
-                    onPressed: () {},
-                    textStyle: AppTextThemes.genericTextStyle(
-                      context,
-                      customFontSize: 14.0,
-                      color: AppColors.primaryDark,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
-
 
   Text jobTitle(BuildContext context) {
     return Text(
@@ -152,7 +125,4 @@ class RequisitionsCard extends StatelessWidget {
       ),
     );
   }
-
-
 }
-

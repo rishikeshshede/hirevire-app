@@ -62,7 +62,7 @@ class AppTextThemes {
 
   static TextStyle buttonTextStyle(BuildContext context) {
     return TextStyle(
-      fontSize: _getResponsiveFontSize(context, 14.0.adaptSize(context)),
+      fontSize: _getResponsiveFontSize(context, 12.0.adaptSize(context)),
       fontWeight: FontWeight.w500,
       color: Colors.white,
     );
@@ -85,9 +85,11 @@ class AppTextThemes {
   }
 
   //specially made for the global/common components
-  static TextStyle genericTextStyle(BuildContext context, {Color? color, FontWeight? fontWeight, double? customFontSize}) {
+  static TextStyle genericTextStyle(BuildContext context,
+      {Color? color, FontWeight? fontWeight, double? customFontSize}) {
     return TextStyle(
-      fontSize: _getResponsiveFontSize(context, customFontSize ?? 12.0.adaptSize(context)),
+      fontSize: _getResponsiveFontSize(
+          context, customFontSize ?? 12.0.adaptSize(context)),
       fontWeight: fontWeight ?? FontWeight.w400,
       color: color ?? AppColors.textPrimary,
     );

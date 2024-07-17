@@ -42,7 +42,7 @@ class ButtonOutline extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           side: BorderSide(
-            color: btnColor ?? AppColors.primary,
+            color: btnColor ?? AppColors.primaryDark,
           ),
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         ),
@@ -61,9 +61,9 @@ class ButtonOutline extends StatelessWidget {
               child: Text(
                 btnText,
                 style: textStyle ??
-                      AppTextThemes.buttonTextStyle(context).copyWith(
-                        color: btnColor ?? AppColors.primary,
-                      ),
+                    AppTextThemes.buttonTextStyle(context).copyWith(
+                      color: btnColor ?? AppColors.primaryDark,
+                    ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),

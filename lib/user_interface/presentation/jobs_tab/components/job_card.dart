@@ -116,11 +116,11 @@ class JobCard extends StatelessWidget {
           maxHeight: Responsive.height(context, .64),
           minWidth: Responsive.width(context, 1),
         ),
-        child: job.videoUrl == null ?
-        const Center(
-          child: Text('No video available'),
-        ) :
-        VideoPlayerWidget(videoUrl: job.videoUrl!),
+        child: job.videoUrl == null
+            ? const Center(
+                child: Text('No video available'),
+              )
+            : VideoPlayerWidget(videoUrl: job.videoUrl!),
         // CustomImageView(
         //   imagePath: job.videoUrl,
         //   fit: BoxFit.fitWidth,
@@ -230,7 +230,7 @@ class JobCard extends StatelessWidget {
       runSpacing: 8,
       children: List.generate(
         job.skills!.length,
-        (index) => SkillChip(skill: job.skills![index]),
+        (index) => SkillChip(text: job.skills![index]),
       ),
     );
   }

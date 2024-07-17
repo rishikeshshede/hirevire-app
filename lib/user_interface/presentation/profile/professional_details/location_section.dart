@@ -4,7 +4,7 @@ import 'package:hirevire_app/common/widgets/body_text_widget.dart';
 import 'package:hirevire_app/common/widgets/button_circular.dart';
 import 'package:hirevire_app/common/widgets/dropdown_widget.dart';
 import 'package:hirevire_app/common/widgets/heading_large.dart';
-import 'package:hirevire_app/common/widgets/loader_circular.dart';
+import 'package:hirevire_app/common/widgets/loader_circular_with_bg.dart';
 import 'package:hirevire_app/common/widgets/text_field.dart';
 import 'package:hirevire_app/constants/global_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
@@ -66,7 +66,7 @@ class LocationSection extends GetWidget<CompleteProfileController> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               controller.isSigningUp.value
-                  ? const LoaderCircular()
+                  ? const LoaderCircularWithBg()
                   : ButtonCircular(
                       icon: ImageConstant.tickIcon,
                       onPressed: () {

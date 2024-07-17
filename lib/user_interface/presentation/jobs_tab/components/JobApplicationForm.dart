@@ -11,7 +11,7 @@ import '../../../../common/widgets/button_primary.dart';
 import '../../../../common/widgets/custom_chip.dart';
 import '../../../../common/widgets/error_text_widget.dart';
 import '../../../../common/widgets/heading_large.dart';
-import '../../../../common/widgets/loader_circular.dart';
+import '../../../../common/widgets/loader_circular_with_bg.dart';
 import '../../../../common/widgets/text_field.dart';
 import '../../../../common/widgets/title_textbox.dart';
 import '../../../../common/widgets/video_upload_widget.dart';
@@ -34,7 +34,6 @@ class JobApplicationForm extends StatelessWidget {
   final JobModel job;
   final int index;
 
-
   @override
   Widget build(BuildContext context) {
     // final args = Get.arguments as Map<String, dynamic>;
@@ -52,17 +51,24 @@ class JobApplicationForm extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text("Upload you video resume", style: AppTextThemes.bodyTextStyle(context).copyWith(
-                fontWeight: FontWeight.w400,
-              ),),
+              Text(
+                "Upload you video resume",
+                style: AppTextThemes.bodyTextStyle(context).copyWith(
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
               SizedBox(height: 10.h(context)),
-              VideoUploadWidget(onFilesSelected: jobsController.onFilesSelected),
+              VideoUploadWidget(
+                  onFilesSelected: jobsController.onFilesSelected),
 
               SizedBox(height: 40.h(context)),
 
-              Text("Your strength(%)", style: AppTextThemes.bodyTextStyle(context).copyWith(
-                fontWeight: FontWeight.w400,
-              ),),
+              Text(
+                "Your strength(%)",
+                style: AppTextThemes.bodyTextStyle(context).copyWith(
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
               SizedBox(height: 10.h(context)),
 
               // CustomTextField(
@@ -110,7 +116,9 @@ class JobApplicationForm extends StatelessWidget {
                     min: 1,
                     max: 10,
                     //divisions: 9,
-                    label: (jobsController.skillsRatings.value[1.0] ?? 1.0).round().toString(),
+                    label: (jobsController.skillsRatings.value[1.0] ?? 1.0)
+                        .round()
+                        .toString(),
                     onChanged: (value) {
                       //jobsController.updateSkillRating(5.0, value);
                     },
@@ -132,7 +140,9 @@ class JobApplicationForm extends StatelessWidget {
                     min: 1,
                     max: 10,
                     //divisions: 9,
-                    label: (jobsController.skillsRatings.value[1.0] ?? 1.0).round().toString(),
+                    label: (jobsController.skillsRatings.value[1.0] ?? 1.0)
+                        .round()
+                        .toString(),
                     onChanged: (value) {
                       //jobsController.updateSkillRating(5.0, value);
                     },
@@ -154,7 +164,9 @@ class JobApplicationForm extends StatelessWidget {
                     min: 1,
                     max: 10,
                     //divisions: 9,
-                    label: (jobsController.skillsRatings.value[1.0] ?? 1.0).round().toString(),
+                    label: (jobsController.skillsRatings.value[1.0] ?? 1.0)
+                        .round()
+                        .toString(),
                     onChanged: (value) {
                       //jobsController.updateSkillRating(5.0, value);
                     },
@@ -265,7 +277,6 @@ class JobApplicationForm extends StatelessWidget {
               //   ],
               // ),
 
-
               SizedBox(height: 40.h(context)),
 
               Padding(
@@ -277,12 +288,10 @@ class JobApplicationForm extends StatelessWidget {
                   },
                 ),
               ),
-
             ],
-                ),
+          ),
         ),
       ),
     );
   }
-
 }
