@@ -55,7 +55,7 @@ class CreateJobPostingScreen extends StatelessWidget {
             CustomTextField(
               titleText: 'Description',
               textInputType: TextInputType.text,
-              textInputAction: TextInputAction.done,
+              textInputAction: TextInputAction.next,
               maxLength: 2000,
               maxLines: 5,
               focusNode: requisitionsController.descFocusNode,
@@ -71,7 +71,7 @@ class CreateJobPostingScreen extends StatelessWidget {
             CustomTextField(
               titleText: 'Required Skills',
               textInputType: TextInputType.text,
-              textInputAction: TextInputAction.done,
+              textInputAction: TextInputAction.next,
               focusNode: requisitionsController.reqSkillsFocusNode,
               controller: requisitionsController.reqSkillsController,
               onChanged: (String value) {},

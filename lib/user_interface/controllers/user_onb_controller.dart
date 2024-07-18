@@ -12,6 +12,8 @@ import 'package:hirevire_app/utils/persistence_handler.dart';
 import 'package:hirevire_app/utils/show_toast_util.dart';
 import 'package:hirevire_app/utils/validation_util.dart';
 
+import '../../utils/profile_complete_validator.dart';
+
 class UserOnbController extends GetxController {
   late ApiClient apiClient;
 
@@ -105,6 +107,17 @@ class UserOnbController extends GetxController {
 
       if (response['success']) {
         PersistenceHandler.setBool(PersistenceKeys.isNew, false);
+
+        String token = response['body']['token'];
+        String name = response['body']['data']['name'];
+
+        PersistenceHandler.setString(PersistenceKeys.authToken, token);
+        PersistenceHandler.setString(PersistenceKeys.name, name);
+        PersistenceHandler.setBool(PersistenceKeys.isSignedIn, true);
+
+        if (ProfileCompleteValidator().validate(response['body']['data'])) {
+          PersistenceHandler.setBool(PersistenceKeys.isProfileComplete, true);
+        }
 
         bool accountExist = response['body']['accountExist'];
         if (accountExist) {

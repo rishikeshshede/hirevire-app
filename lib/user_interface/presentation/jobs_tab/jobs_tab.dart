@@ -20,6 +20,9 @@ class JobsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    jobsController.fetchLocalData();
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -96,14 +99,14 @@ class JobsTab extends StatelessWidget {
                                       ),
                                       actions: <Widget>[
                                         TextButton(
-                                          child: Text('Yes'),
+                                          child: const Text('Yes'),
                                           onPressed: () {
                                             Navigator.of(context).pop(); // Close the dialog
                                             Get.toNamed(AppRoutes.completeProfile);
                                           },
                                         ),
                                         TextButton(
-                                          child: Text('Not Now'),
+                                          child: const Text('Not Now'),
                                           onPressed: () {
                                             Navigator.of(context).pop(); // Close the dialog
                                           },

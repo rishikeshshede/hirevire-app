@@ -624,6 +624,6 @@ class CompleteProfileController extends GetxController {
   }
 
   navigateToBaseNav() {
-    Get.toNamed(AppRoutes.userBaseNavigator);
+    Get.offAllNamed(AppRoutes.userBaseNavigator);
   }
 }

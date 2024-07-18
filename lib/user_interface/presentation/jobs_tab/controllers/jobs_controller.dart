@@ -14,6 +14,7 @@ import '../../../../constants/error_constants.dart';
 import '../../../../routes/app_routes.dart';
 import '../../../../services/api_endpoint_service.dart';
 import '../../../../utils/log_handler.dart';
+import '../../../../utils/show_toast_util.dart';
 
 class JobsController extends GetxController {
   late ApiClient apiClient;
@@ -55,7 +56,7 @@ class JobsController extends GetxController {
     fetchJobs();
     debounce(skillsSearchQuery, (_) => suggestSkills(),
         time: const Duration(milliseconds: 300));
-    fetchUserProfile();
+    fetchRecommendedJobs();
   }
 
   void addSkill(Map<String, dynamic> selectedSkill) {
@@ -128,7 +129,7 @@ class JobsController extends GetxController {
   }
 
   fetchLocalData() async {
-    name.value = await PersistenceHandler.getString(PersistenceKeys.name ?? '');
+    name.value = await PersistenceHandler.getString(PersistenceKeys.name) ?? '';
     isProfileComplete.value =
         await PersistenceHandler.getBool(PersistenceKeys.isProfileComplete) ??
             false;
@@ -160,8 +161,9 @@ class JobsController extends GetxController {
     // Handle job rejection logic
   }
 
-  fetchUserProfile() async {
-    String endpoint = EndpointService.getRequisitions;
+  fetchRecommendedJobs() async {
+    isLoading.value = true;
+    String endpoint = EndpointService.getRecommendedJobs;
 
     try {
       Map<String, dynamic> response = await apiClient.get(endpoint);
@@ -169,18 +171,42 @@ class JobsController extends GetxController {
 
       if (response['success']) {
 
-        //TODO: get user profile response here
-
       } else {
         String errorMsg =
             response['error']['message'] ?? Errors.somethingWentWrong;
+        ToastWidgit.bottomToast(errorMsg);
         LogHandler.error(errorMsg);
       }
     } catch (error) {
+      ToastWidgit.bottomToast(
+          'Unknown error occurred while getting Job recommendations');
       LogHandler.error(error);
+    } finally {
+      isLoading.value = false;
     }
-
   }
+
+  // fetchUserProfile() async {
+  //   String endpoint = EndpointService.getRequisitions;
+  //
+  //   try {
+  //     Map<String, dynamic> response = await apiClient.get(endpoint);
+  //     LogHandler.debug(response);
+  //
+  //     if (response['success']) {
+  //
+  //       //TODO: get user profile response here
+  //
+  //     } else {
+  //       String errorMsg =
+  //           response['error']['message'] ?? Errors.somethingWentWrong;
+  //       LogHandler.error(errorMsg);
+  //     }
+  //   } catch (error) {
+  //     LogHandler.error(error);
+  //   }
+  //
+  // }
 
 
   submitJobApplication() async {
