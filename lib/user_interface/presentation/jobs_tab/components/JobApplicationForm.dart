@@ -52,8 +52,8 @@ class JobApplicationForm extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                "Upload you video resume",
-                style: AppTextThemes.bodyTextStyle(context).copyWith(
+                "Upload your video resume",
+                style: AppTextThemes.subtitleStyle(context).copyWith(
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -61,7 +61,7 @@ class JobApplicationForm extends StatelessWidget {
               VideoUploadWidget(
                   onFilesSelected: jobsController.onFilesSelected),
 
-              SizedBox(height: 40.h(context)),
+              VerticalSpace(space: 40.h(context)),
 
               Text(
                 "Your strength(%)",
@@ -69,7 +69,7 @@ class JobApplicationForm extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                 ),
               ),
-              SizedBox(height: 10.h(context)),
+              VerticalSpace(space: 10.h(context)),
 
               // CustomTextField(
               //   titleText: "Provide Ratings for Skills",
@@ -101,7 +101,7 @@ class JobApplicationForm extends StatelessWidget {
                       .copyWith(fontSize: 12.5.adaptSize(context)),
                 ),
               ),
-              SizedBox(height: 10.h(context)),
+              VerticalSpace(space: 10.h(context)),
 
               Row(
                 children: [
@@ -125,7 +125,7 @@ class JobApplicationForm extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10.h(context)),
+              VerticalSpace(space: 10.h(context)),
 
               Row(
                 children: [
@@ -149,7 +149,7 @@ class JobApplicationForm extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10.h(context)),
+              VerticalSpace(space: 10.h(context)),
 
               Row(
                 children: [
@@ -277,7 +277,7 @@ class JobApplicationForm extends StatelessWidget {
               //   ],
               // ),
 
-              SizedBox(height: 40.h(context)),
+              VerticalSpace(space: 40.h(context)),
 
               Padding(
                 padding: const EdgeInsets.all(16.0),
