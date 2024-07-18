@@ -12,6 +12,14 @@ class DatetimeUtil {
     return date;
   }
 
+  // FORMAT: 1993-01-26 00:00:00.000
+  static DateTime getCurrentDateTime() {
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+    final formatted = formatter.format(now);
+    return DateTime.parse(formatted);
+  }
+
   static String timeAgo(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);

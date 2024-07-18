@@ -43,6 +43,11 @@ class RequisitionsController extends GetxController {
   TextEditingController perksController = TextEditingController();
   TextEditingController openingCountController = TextEditingController();
   TextEditingController ctcController = TextEditingController();
+  TextEditingController tDaysPlanController = TextEditingController();
+  TextEditingController sDaysPlanController = TextEditingController();
+  TextEditingController nDaysPlanController = TextEditingController();
+  TextEditingController qOneController = TextEditingController();
+  TextEditingController qTwoController = TextEditingController();
 
   // Focus nodes
   FocusNode jobTitleFocusNode = FocusNode();
@@ -53,6 +58,11 @@ class RequisitionsController extends GetxController {
   FocusNode openingCountFocusNode = FocusNode();
   FocusNode perksFocusNode = FocusNode();
   FocusNode ctcFocusNode = FocusNode();
+  FocusNode tDaysFocusNode = FocusNode();
+  FocusNode sDaysFocusNode = FocusNode();
+  FocusNode nDaysFocusNode = FocusNode();
+  FocusNode qOneFocusNode = FocusNode();
+  FocusNode qTwoFocusNode = FocusNode();
 
   void setJobTitle(String? jobTitle) {
     jobTitleController.text = jobTitle ?? '';
@@ -153,7 +163,37 @@ class RequisitionsController extends GetxController {
     return null;
   }
 
+  List<Map<String, dynamic>> prepareSkillsForPosting(List<RequiredSkill>? existingSkills, TextEditingController reqSkillsController) {
+    List<String> newSkillNames = reqSkillsController.text.split(',').map((s) => s.trim()).toList();
+    Map<String, RequiredSkill> existingSkillsMap = {for (var skill in existingSkills ?? []) skill.skill?.name ?? '': skill};
+
+    List<Map<String, dynamic>> skillsToPost = [];
+
+    for (var skillName in newSkillNames) {
+      if (existingSkills != null && existingSkillsMap.containsKey(skillName)) {
+        skillsToPost.add({
+          'data': existingSkillsMap[skillName]!.id,
+          'name': skillName,
+          'rating': existingSkillsMap[skillName]!.rating,
+        });
+      } else {
+        skillsToPost.add({
+          'data': 'other',
+          'name': skillName,
+          'rating': 5,
+        });
+      }
+    }
+
+    return skillsToPost;
+  }
+
+
   createJobApplication(Requisition req) async {
+    if (selectedVideoFile == null) {
+      ToastWidgit.bottomToast('please upload video, it is required');
+      return;
+    }
     if (jobTitleController.text.isEmpty) {
       ToastWidgit.bottomToast('job title is required');
       return;
@@ -176,6 +216,26 @@ class RequisitionsController extends GetxController {
     }
     if (ctcController.text.isEmpty) {
       ToastWidgit.bottomToast('CTC is required');
+      return;
+    }
+    if (tDaysPlanController.text.isEmpty) {
+      ToastWidgit.bottomToast('30 days growth plan is required');
+      return;
+    }
+    if (sDaysPlanController.text.isEmpty) {
+      ToastWidgit.bottomToast('60 days growth plan is required');
+      return;
+    }
+    if (nDaysPlanController.text.isEmpty) {
+      ToastWidgit.bottomToast('90 days growth plan is required');
+      return;
+    }
+    if (qOneController.text.isEmpty) {
+      ToastWidgit.bottomToast('Question 1 is required');
+      return;
+    }
+    if (qTwoController.text.isEmpty) {
+      ToastWidgit.bottomToast('Question 2 is required');
       return;
     }
 
@@ -204,21 +264,37 @@ class RequisitionsController extends GetxController {
       'description': descController.text.isEmpty
           ? req.description
           : descController.text.trim(),
-      'videoRequirement': vidReqController.text.trim(),
+      'videoRequirement': '',
       'ctc': ctcController.text.trim(),
-      'questions': [],
-      'growth_plan': [],
+      'questions': [
+        {
+          "content": qOneController.text.trim(),
+          "type":"text"
+        },
+        {
+          "content": qTwoController.text.trim(),
+          "type":"text"
+        }
+      ],
+      'growth_plan': [
+        {
+          "title": "30 Days",
+          "description": tDaysPlanController.text.trim(),
+        },
+        {
+          "title": "60 Days",
+          "description": sDaysPlanController.text.trim(),
+        },
+        {
+          "title": "3 Months",
+          "description": nDaysPlanController.text.trim(),
+        }
+      ],
       'perks': perksController.text.trim(),
-      'requiredSkills': req.requiredSkills
-              ?.map((skill) => {
-                    'data': skill.id,
-                    'name': skill.skill?.name ?? '',
-                    'rating': skill.rating
-                  })
-              .toList() ??
+      'requiredSkills': prepareSkillsForPosting(req.requiredSkills, reqSkillsController) ??
           [],
       'media': {'url': vidUrl, 'type': "video", 'thumbnail': thumbnailURL},
-      'endsOn': '',
+      'endsOn': DatetimeUtil.getCurrentDateTime().toIso8601String(),
     };
 
     try {
