@@ -47,6 +47,12 @@ class RequisitionsController extends GetxController {
   // Focus nodes
   FocusNode jobTitleFocusNode = FocusNode();
   FocusNode descFocusNode = FocusNode();
+  FocusNode reqSkillsFocusNode = FocusNode();
+  FocusNode locationFocusNode = FocusNode();
+  FocusNode jobModelFocusNode = FocusNode();
+  FocusNode openingCountFocusNode = FocusNode();
+  FocusNode perksFocusNode = FocusNode();
+  FocusNode ctcFocusNode = FocusNode();
 
   void setJobTitle(String? jobTitle) {
     jobTitleController.text = jobTitle ?? '';
@@ -148,16 +154,28 @@ class RequisitionsController extends GetxController {
   }
 
   createJobApplication(Requisition req) async {
-    if (vidReqController.text.isEmpty) {
-      ToastWidgit.bottomToast('video requirement is required');
+    if (jobTitleController.text.isEmpty) {
+      ToastWidgit.bottomToast('job title is required');
+      return;
+    }
+    if (descController.text.isEmpty) {
+      ToastWidgit.bottomToast('job description is required');
+      return;
+    }
+    if (reqSkillsController.text.isEmpty) {
+      ToastWidgit.bottomToast('skills are required');
+      return;
+    }
+    if (locationController.text.isEmpty) {
+      ToastWidgit.bottomToast('location is required');
+      return;
+    }
+    if (perksController.text.isEmpty) {
+      ToastWidgit.bottomToast('perks are required');
       return;
     }
     if (ctcController.text.isEmpty) {
       ToastWidgit.bottomToast('CTC is required');
-      return;
-    }
-    if (perksController.text.isEmpty) {
-      ToastWidgit.bottomToast('perks is required');
       return;
     }
 

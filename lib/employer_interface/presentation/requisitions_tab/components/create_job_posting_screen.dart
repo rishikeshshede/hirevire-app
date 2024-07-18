@@ -37,23 +37,19 @@ class CreateJobPostingScreen extends StatelessWidget {
                 onFilesSelected: requisitionsController.onFilesSelected),
             VerticalSpace(space: 40.h(context)),
 
-            // TODO: Add focus nodes in all text fields
+
             CustomTextField(
               titleText: 'Job Title',
               textInputType: TextInputType.text,
               textInputAction: TextInputAction.next,
               focusNode: requisitionsController.jobTitleFocusNode,
               controller: requisitionsController.jobTitleController,
-              onChanged: (String value) {
-                // TODO: Add null check validation method in controller for all text fields
-              },
+              onChanged: (String value) {},
               onEditingComplete: () {
                 requisitionsController.jobTitleFocusNode.unfocus();
                 FocusScope.of(context)
                     .requestFocus(requisitionsController.descFocusNode);
-
-                // TODO: add such onEditingComplete everywhere (to handle focus of NON readOnly fields)
-              },
+                },
             ),
             const VerticalSpace(),
             CustomTextField(
@@ -62,38 +58,54 @@ class CreateJobPostingScreen extends StatelessWidget {
               textInputAction: TextInputAction.done,
               maxLength: 2000,
               maxLines: 5,
+              focusNode: requisitionsController.descFocusNode,
               controller: requisitionsController.descController,
               onChanged: (String value) {},
+              onEditingComplete: () {
+                requisitionsController.descFocusNode.unfocus();
+                FocusScope.of(context)
+                    .requestFocus(requisitionsController.reqSkillsFocusNode);
+                },
             ),
-            SizedBox(height: 8.h(context)),
+            VerticalSpace(space: 8.h(context)),
             CustomTextField(
               titleText: 'Required Skills',
               textInputType: TextInputType.text,
               textInputAction: TextInputAction.done,
+              focusNode: requisitionsController.reqSkillsFocusNode,
               controller: requisitionsController.reqSkillsController,
               onChanged: (String value) {},
+              onEditingComplete: () {
+                requisitionsController.reqSkillsFocusNode.unfocus();
+                FocusScope.of(context)
+                    .requestFocus(requisitionsController.locationFocusNode);
+              },
             ),
             const VerticalSpace(),
             CustomTextField(
               titleText: 'Location',
               textInputType: TextInputType.text,
-              textInputAction: TextInputAction.next,
+              textInputAction: TextInputAction.done,
+              focusNode: requisitionsController.locationFocusNode,
               controller: requisitionsController.locationController,
               onChanged: (String value) {},
+              onEditingComplete: () {
+                requisitionsController.locationFocusNode.unfocus();
+                FocusScope.of(context)
+                    .requestFocus(requisitionsController.perksFocusNode);
+              },
             ),
             const VerticalSpace(),
             CustomTextField(
               titleText: 'Job Mode',
               textInputType: TextInputType.text,
               textInputAction: TextInputAction
-                  .done, // TODO: use correct textInputAction (next / done)
+                  .done,
               controller: requisitionsController.jobModeController,
               onChanged: (String value) {},
               readOnly: true,
             ),
-            SizedBox(
-                height: 8.h(
-                    context)), // TODO: use already existing widgets like (VerticalSpace()) or create new, dont't repeat code
+            VerticalSpace(space: 8.h(context)),
             // CustomTextField(
             //   titleText: 'Video Requirement',
             //   textInputType: TextInputType.text,
@@ -110,22 +122,33 @@ class CreateJobPostingScreen extends StatelessWidget {
               onChanged: (String value) {},
               readOnly: true,
             ),
-            SizedBox(height: 8.h(context)),
+            VerticalSpace(space: 8.h(context)), // CustomTextField(
             CustomTextField(
               titleText: 'Perks',
               textInputType: TextInputType.text,
-              textInputAction: TextInputAction.done,
+              textInputAction: TextInputAction.next,
               maxLines: 4,
+              focusNode: requisitionsController.perksFocusNode,
               controller: requisitionsController.perksController,
               onChanged: (String value) {},
+              onEditingComplete: () {
+                requisitionsController.perksFocusNode.unfocus();
+                FocusScope.of(context)
+                    .requestFocus(requisitionsController.ctcFocusNode);
+              },
             ),
-            SizedBox(height: 8.h(context)),
+            VerticalSpace(space: 8.h(context)), // CustomTextField(
             CustomTextField(
               titleText: 'CTC',
               textInputType: TextInputType.number,
               textInputAction: TextInputAction.done,
+              focusNode: requisitionsController.ctcFocusNode,
               controller: requisitionsController.ctcController,
               onChanged: (String value) {},
+              onEditingComplete: () {
+                requisitionsController.ctcFocusNode.unfocus();
+                requisitionsController.createJobApplication(requisition);
+              },
               // readOnly: true,
             ),
             const VerticalSpace(space: 15),
