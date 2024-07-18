@@ -46,241 +46,128 @@ class JobApplicationForm extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(16.w(context)),
         color: AppColors.background,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                "Upload your video resume",
-                style: AppTextThemes.subtitleStyle(context).copyWith(
-                  fontWeight: FontWeight.w400,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    VideoUploadWidget(
+                        onFilesSelected: jobsController.onFilesSelected,
+                        titleText: 'Upload Video Resume'
+                    ),
+              
+                    VerticalSpace(space: 40.h(context)),
+              
+                    Text(
+                      "Your strength(%)",
+                      style: AppTextThemes.bodyTextStyle(context).copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    VerticalSpace(space: 4.h(context)),
+
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: Text(
+                        textAlign: TextAlign.start,
+                        'Provide Ratings for Skills',
+                        style: AppTextThemes.smallText(context)
+                            .copyWith(fontWeight: FontWeight.w400, fontSize: 12.5.adaptSize(context)),
+                      ),
+                    ),
+                    VerticalSpace(space: 12.h(context)),
+              
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Java',
+                          style: AppTextThemes.bodyTextStyle(context)
+                              .copyWith(fontSize: 14.adaptSize(context)),
+                        ),
+                        const HorizontalSpace(),
+                        Obx(
+                              () => Slider(
+                            value: jobsController.skillsRatings['Java'] ?? 1.0,
+                            min: 1,
+                            max: 10,
+                            divisions: 9,
+                            label: (jobsController.skillsRatings['Java'] ?? 1.0)
+                                .round()
+                                .toString(),
+                            onChanged: (value) {
+                              jobsController.skillsRatings['Java'] = value;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    VerticalSpace(space: 10.h(context)),
+              
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Python',
+                          style: AppTextThemes.bodyTextStyle(context)
+                              .copyWith(fontSize: 14.adaptSize(context)),
+                        ),
+                        const HorizontalSpace(),
+                        Obx(
+                              () => Slider(
+                            value: jobsController.skillsRatings['Python'] ?? 1.0,
+                            min: 1,
+                            max: 10,
+                            divisions: 9,
+                            label: (jobsController.skillsRatings['Python'] ?? 1.0)
+                                .round()
+                                .toString(),
+                            onChanged: (value) {
+                              jobsController.skillsRatings['Python'] = value;
+                            },
+                          ),
+                        ),
+              
+                      ],
+                    ),
+                    VerticalSpace(space: 10.h(context)),
+              
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Flutter',
+                          style: AppTextThemes.bodyTextStyle(context)
+                              .copyWith(fontSize: 14.adaptSize(context)),
+                        ),
+                        const HorizontalSpace(),
+                        Obx(
+                              () => Slider(
+                            value: jobsController.skillsRatings['Flutter'] ?? 1.0,
+                            min: 1,
+                            max: 10,
+                            divisions: 9,
+                            label: (jobsController.skillsRatings['Flutter'] ?? 1.0)
+                                .round()
+                                .toString(),
+                            onChanged: (value) {
+                              jobsController.skillsRatings['Flutter'] = value;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 10.h(context)),
-              VideoUploadWidget(
-                  onFilesSelected: jobsController.onFilesSelected),
-
-              VerticalSpace(space: 40.h(context)),
-
-              Text(
-                "Your strength(%)",
-                style: AppTextThemes.bodyTextStyle(context).copyWith(
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              VerticalSpace(space: 10.h(context)),
-
-              // CustomTextField(
-              //   titleText: "Provide Ratings for Skills",
-              //   textInputType: TextInputType.text,
-              //   textInputAction: TextInputAction.done,
-              //   controller: jobsController.skillsSearchController,
-              //   focusNode: jobsController.searchFocusNode,
-              //   maxLines: 3,
-              //   onChanged: (value) {
-              //     jobsController.skillsSearchQuery.value = value;
-              //   },
-              //   onEditingComplete: () {
-              //     if (jobsController.skillsSearchController.value.text.isNotEmpty) {
-              //       jobsController.addSkill({
-              //         "_id": jobsController.defaultItemId,
-              //         "name": jobsController.skillsSearchController.value.text.trim(),
-              //       });
-              //       jobsController.skillsSearchQuery.value = '';
-              //     }
-              //   },
-              // ),
-
-              Padding(
-                padding: const EdgeInsets.only(left: 5.0),
-                child: Text(
-                  textAlign: TextAlign.start,
-                  'Provide Ratings for Skills',
-                  style: AppTextThemes.smallText(context)
-                      .copyWith(fontSize: 12.5.adaptSize(context)),
-                ),
-              ),
-              VerticalSpace(space: 10.h(context)),
-
-              Row(
-                children: [
-                  Text(
-                    'Java',
-                    style: AppTextThemes.bodyTextStyle(context)
-                        .copyWith(fontSize: 14.adaptSize(context)),
-                  ),
-                  const HorizontalSpace(),
-                  Slider(
-                    value: jobsController.skillsRatings.value[1.0] ?? 1.0,
-                    min: 1,
-                    max: 10,
-                    //divisions: 9,
-                    label: (jobsController.skillsRatings.value[1.0] ?? 1.0)
-                        .round()
-                        .toString(),
-                    onChanged: (value) {
-                      //jobsController.updateSkillRating(5.0, value);
-                    },
-                  ),
-                ],
-              ),
-              VerticalSpace(space: 10.h(context)),
-
-              Row(
-                children: [
-                  Text(
-                    'Python',
-                    style: AppTextThemes.bodyTextStyle(context)
-                        .copyWith(fontSize: 14.adaptSize(context)),
-                  ),
-                  const HorizontalSpace(),
-                  Slider(
-                    value: jobsController.skillsRatings.value[1.0] ?? 1.0,
-                    min: 1,
-                    max: 10,
-                    //divisions: 9,
-                    label: (jobsController.skillsRatings.value[1.0] ?? 1.0)
-                        .round()
-                        .toString(),
-                    onChanged: (value) {
-                      //jobsController.updateSkillRating(5.0, value);
-                    },
-                  ),
-                ],
-              ),
-              VerticalSpace(space: 10.h(context)),
-
-              Row(
-                children: [
-                  Text(
-                    'Flutter',
-                    style: AppTextThemes.bodyTextStyle(context)
-                        .copyWith(fontSize: 14.adaptSize(context)),
-                  ),
-                  const HorizontalSpace(),
-                  Slider(
-                    value: jobsController.skillsRatings.value[1.0] ?? 1.0,
-                    min: 1,
-                    max: 10,
-                    //divisions: 9,
-                    label: (jobsController.skillsRatings.value[1.0] ?? 1.0)
-                        .round()
-                        .toString(),
-                    onChanged: (value) {
-                      //jobsController.updateSkillRating(5.0, value);
-                    },
-                  ),
-                ],
-              ),
-
-              // Column(
-              //   crossAxisAlignment: CrossAxisAlignment.start,
-              //   children: [
-              //     const HeadingLarge(heading: "Add skills"),
-              //     SizedBox(height: 10.h(context)),
-              //     const BodyTextWidget(
-              //       text:
-              //       "Your skills will help us suggest the best job matches to you.",
-              //     ),
-              //     SizedBox(height: 30.h(context)),
-              //     CustomTextField(
-              //       titleText: "Skills",
-              //       textInputType: TextInputType.text,
-              //       textInputAction: TextInputAction.done,
-              //       controller: jobsController.skillsSearchController,
-              //       focusNode: jobsController.searchFocusNode,
-              //       onChanged: (value) {
-              //         jobsController.skillsSearchQuery.value = value;
-              //       },
-              //       onEditingComplete: () {
-              //         if (jobsController.skillsSearchController.value.text.isNotEmpty) {
-              //           jobsController.addSkill({
-              //             "_id": jobsController.defaultItemId,
-              //             "name": jobsController.skillsSearchController.value.text.trim(),
-              //           });
-              //           jobsController.skillsSearchQuery.value = '';
-              //         }
-              //       },
-              //     ),
-              //     Obx(() {
-              //       if (jobsController.filteredSkillsSuggestions.isEmpty) {
-              //         return Container();
-              //       }
-              //       return ConstrainedBox(
-              //         constraints: BoxConstraints(maxHeight: 180.h(context)),
-              //         child: Container(
-              //           margin: const EdgeInsets.only(top: 6),
-              //           decoration: BoxDecoration(
-              //             borderRadius: const BorderRadius.all(Radius.circular(8)),
-              //             border: Border.all(color: Colors.grey[350]!),
-              //             color: AppColors.disabled.withOpacity(.6),
-              //           ),
-              //           child: SingleChildScrollView(
-              //             child: Column(
-              //               mainAxisSize: MainAxisSize.min,
-              //               crossAxisAlignment: CrossAxisAlignment.start,
-              //               children: jobsController.filteredSkillsSuggestions
-              //                   .map((suggestion) => ListTile(
-              //                 dense: true,
-              //                 title: Text(suggestion['name'] ?? ''),
-              //                 onTap: () {
-              //                   jobsController.addSkill(suggestion);
-              //                   jobsController.skillsSearchQuery.value = '';
-              //                 },
-              //               ))
-              //                   .toList(),
-              //             ),
-              //           ),
-              //         ),
-              //       );
-              //     }),
-              //     Obx(
-              //           () => ErrorTextWidget(text: jobsController.errorMsg.value),
-              //     ),
-              //     SizedBox(height: 15.h(context)),
-              //     Obx(
-              //           () => Wrap(
-              //         spacing: 8,
-              //         runSpacing: 8,
-              //         children: List.generate(
-              //           jobsController.selectedSkills.length,
-              //               (index) {
-              //             var skill = jobsController.selectedSkills[index];
-              //             return Column(
-              //               crossAxisAlignment: CrossAxisAlignment.start,
-              //               children: [
-              //                 CustomChip(
-              //                   text: skill['name'],
-              //                   onRemove: () {
-              //                     jobsController.removeSkill(skill);
-              //                   },
-              //                 ),
-              //                 Obx(
-              //                       () => Slider(
-              //                     value: jobsController.skillsRatings.value[skill['_id']] ?? 5.0,
-              //                     min: 1,
-              //                     max: 10,
-              //                     //divisions: 9,
-              //                     label: (jobsController.skillsRatings.value[skill['_id']] ?? 5.0).round().toString(),
-              //                     onChanged: (value) {
-              //                       jobsController.updateSkillRating(skill['_id'], value);
-              //                     },
-              //                   ),
-              //                 ),
-              //               ],
-              //             );
-              //           },
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
-
-              VerticalSpace(space: 40.h(context)),
-
-              Padding(
-                padding: const EdgeInsets.all(16.0),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 30),
                 child: ButtonPrimary(
                   btnText: 'Apply',
                   onPressed: () {
@@ -288,8 +175,8 @@ class JobApplicationForm extends StatelessWidget {
                   },
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
