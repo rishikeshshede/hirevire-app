@@ -12,7 +12,7 @@ class VideoPlayerWidget extends StatefulWidget {
 
 class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   late VideoPlayerController _controller;
-  late bool _isPlaying = false;
+  bool _isPlaying = false;
 
   @override
   void initState() {
@@ -20,10 +20,10 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     Uri videoUri = Uri.parse(widget.videoUrl);
     _controller = VideoPlayerController.networkUrl(videoUri)
       ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized
         setState(() {});
       });
     _controller.setLooping(true); // Loop the video
+    _controller.play();
   }
 
   @override
@@ -46,10 +46,25 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final aspectRatio = _controller.value.aspectRatio;
+    final isPortrait = aspectRatio < 1; // Checking if the video is portrait
+
+    double height = size.height;
+    double width = size.width;
+
+    if (isPortrait) {
+      height = size.height;
+      width = height / aspectRatio;
+    } else {
+      height = width / aspectRatio;
+    }
+
     return GestureDetector(
       onTap: _togglePlayPause,
-      child: AspectRatio(
-        aspectRatio: _controller.value.aspectRatio,
+      child: Container(
+        width: width,
+        height: height,
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[

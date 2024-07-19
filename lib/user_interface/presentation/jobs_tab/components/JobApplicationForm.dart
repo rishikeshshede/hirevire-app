@@ -3,23 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hirevire_app/common/widgets/padded_container.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
+import 'package:hirevire_app/user_interface/models/job_recommendations.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 
-import '../../../../common/widgets/body_text_widget.dart';
-import '../../../../common/widgets/button_circular.dart';
 import '../../../../common/widgets/button_primary.dart';
-import '../../../../common/widgets/custom_chip.dart';
-import '../../../../common/widgets/error_text_widget.dart';
-import '../../../../common/widgets/heading_large.dart';
-import '../../../../common/widgets/loader_circular_with_bg.dart';
-import '../../../../common/widgets/text_field.dart';
-import '../../../../common/widgets/title_textbox.dart';
 import '../../../../common/widgets/video_upload_widget.dart';
 import '../../../../constants/color_constants.dart';
-import '../../../../constants/image_constants.dart';
 import '../../../../themes/text_theme.dart';
-import '../../../models/job_model.dart';
-import '../../profile/professional_details/skills_section.dart';
 import '../controllers/jobs_controller.dart';
 
 class JobApplicationForm extends StatelessWidget {
@@ -31,15 +21,11 @@ class JobApplicationForm extends StatelessWidget {
   });
 
   final JobsController jobsController;
-  final JobModel job;
+  final JobRecommendations job;
   final int index;
 
   @override
   Widget build(BuildContext context) {
-    // final args = Get.arguments as Map<String, dynamic>;
-    // final jobsController = args['jobsController'];
-    // final job = args['job'];
-    // final index = args['index'];
 
     return PaddedContainer(
       screenTitle: 'Job Application Form',
@@ -67,7 +53,7 @@ class JobApplicationForm extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    VerticalSpace(space: 4.h(context)),
+                    VerticalSpace(space: 12.h(context)),
 
                     Padding(
                       padding: const EdgeInsets.only(left: 5.0),
@@ -78,88 +64,40 @@ class JobApplicationForm extends StatelessWidget {
                             .copyWith(fontWeight: FontWeight.w400, fontSize: 12.5.adaptSize(context)),
                       ),
                     ),
-                    VerticalSpace(space: 12.h(context)),
-              
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Java',
-                          style: AppTextThemes.bodyTextStyle(context)
-                              .copyWith(fontSize: 14.adaptSize(context)),
-                        ),
-                        const HorizontalSpace(),
-                        Obx(
-                              () => Slider(
-                            value: jobsController.skillsRatings['Java'] ?? 1.0,
-                            min: 1,
-                            max: 10,
-                            divisions: 9,
-                            label: (jobsController.skillsRatings['Java'] ?? 1.0)
-                                .round()
-                                .toString(),
-                            onChanged: (value) {
-                              jobsController.skillsRatings['Java'] = value;
-                            },
+                    VerticalSpace(space: 24.h(context)),
+
+                    ...(job.requiredSkills?.map((skill) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            textAlign: TextAlign.start,
+                            skill.skill ?? 'other', // Display skill name or a default if missing
+                            style: AppTextThemes.bodyTextStyle(context)
+                                .copyWith(fontSize: 14.adaptSize(context)),
                           ),
-                        ),
-                      ],
-                    ),
-                    VerticalSpace(space: 10.h(context)),
-              
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Python',
-                          style: AppTextThemes.bodyTextStyle(context)
-                              .copyWith(fontSize: 14.adaptSize(context)),
-                        ),
-                        const HorizontalSpace(),
-                        Obx(
-                              () => Slider(
-                            value: jobsController.skillsRatings['Python'] ?? 1.0,
-                            min: 1,
-                            max: 10,
-                            divisions: 9,
-                            label: (jobsController.skillsRatings['Python'] ?? 1.0)
-                                .round()
-                                .toString(),
-                            onChanged: (value) {
-                              jobsController.skillsRatings['Python'] = value;
-                            },
+                          const VerticalSpace(space: 2,),
+                          Obx(
+                                () => Padding(
+                                  padding: const EdgeInsets.only(left: 12.0),
+                                  child: Slider(
+                                                                value: jobsController.skillsRatings[skill.skill] ?? 1.0,
+                                                                min: 1,
+                                                                max: 10,
+                                                                divisions: 9,
+                                                                label: (jobsController.skillsRatings[skill.skill] ?? 1.0)
+                                    .round()
+                                    .toString(),
+                                                                onChanged: (value) {
+                                  jobsController.skillsRatings[skill.skill ?? 'other'] = value;
+                                                                },
+                                                              ),
+                                ),
                           ),
-                        ),
-              
-                      ],
-                    ),
-                    VerticalSpace(space: 10.h(context)),
-              
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Flutter',
-                          style: AppTextThemes.bodyTextStyle(context)
-                              .copyWith(fontSize: 14.adaptSize(context)),
-                        ),
-                        const HorizontalSpace(),
-                        Obx(
-                              () => Slider(
-                            value: jobsController.skillsRatings['Flutter'] ?? 1.0,
-                            min: 1,
-                            max: 10,
-                            divisions: 9,
-                            label: (jobsController.skillsRatings['Flutter'] ?? 1.0)
-                                .round()
-                                .toString(),
-                            onChanged: (value) {
-                              jobsController.skillsRatings['Flutter'] = value;
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                          const VerticalSpace(),
+                        ],
+                      );
+                    }) ?? []),
 
                     VerticalSpace(space: 20.h(context)),
                     Padding(

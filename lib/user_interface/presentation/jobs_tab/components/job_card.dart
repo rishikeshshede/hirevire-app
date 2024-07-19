@@ -6,10 +6,9 @@ import 'package:hirevire_app/common/widgets/custom_image_view.dart';
 import 'package:hirevire_app/common/widgets/green_dot.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
-import 'package:hirevire_app/constants/global_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
-import 'package:hirevire_app/user_interface/models/job_model.dart';
+import 'package:hirevire_app/user_interface/models/job_recommendations.dart';
 import 'package:hirevire_app/user_interface/presentation/jobs_tab/controllers/jobs_controller.dart';
 import 'package:hirevire_app/utils/responsive.dart';
 import 'package:hirevire_app/utils/size_util.dart';
@@ -24,7 +23,7 @@ class JobCard extends StatelessWidget {
     required this.index,
   });
   final JobsController jobsController;
-  final JobModel job;
+  final JobRecommendations job;
   final int index;
 
   @override
@@ -60,19 +59,19 @@ class JobCard extends StatelessWidget {
               ],
             ),
             const VerticalSpace(),
-            if (job.skills!.isNotEmpty)
+            if (job.requiredSkills != null && job.requiredSkills!.isNotEmpty)
               const SectionTitle(title: 'Required Skills'),
-            if (job.skills!.isNotEmpty) requiredSkills(),
+            if (job.requiredSkills != null && job.requiredSkills!.isNotEmpty) requiredSkills(),
             const VerticalSpace(),
-            if (job.growthPlan!.isNotEmpty)
+            if (job.growthPlan != null && job.growthPlan!.isNotEmpty)
               const SectionTitle(title: 'Growth Plan'),
-            if (job.growthPlan!.isNotEmpty) growthPlans(context),
+            if (job.growthPlan != null && job.growthPlan!.isNotEmpty) growthPlans(context),
             const VerticalSpace(),
             const SectionTitle(title: 'Perks'),
             perks(context),
-            const VerticalSpace(),
-            const SectionTitle(title: 'Social Handles'),
-            socialHandles(context),
+            //const VerticalSpace(),
+            //const SectionTitle(title: 'Social Handles'),
+            //socialHandles(context),
             const VerticalSpace(space: 20),
           ],
         ),
@@ -85,14 +84,14 @@ class JobCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         CustomImageView(
-          imagePath: job.companyLogoUrl,
+          imagePath: job.postedBy?.profilePicUrl,
           height: 24,
           imageType: ImageType.network,
           showLoader: false,
         ),
         const HorizontalSpace(),
         Text(
-          job.companyName ?? '',
+          job.postedBy?.name ?? '',
           style: AppTextThemes.bodyTextStyle(context).copyWith(
             fontWeight: FontWeight.w500,
           ),
@@ -103,7 +102,7 @@ class JobCard extends StatelessWidget {
 
   Text jobPostingDate(BuildContext context) {
     return Text(
-      jobsController.getPostTime(job.postedOn ?? DateTime.now()),
+      jobsController.getPostTime(job.postedBy?.createdAt ?? DateTime.now()),
       style: AppTextThemes.smallText(context),
     );
   }
@@ -116,11 +115,11 @@ class JobCard extends StatelessWidget {
           maxHeight: Responsive.height(context, .64),
           minWidth: Responsive.width(context, 1),
         ),
-        child: job.videoUrl == null
+        child: job.media == null
             ? const Center(
                 child: Text('No video available'),
               )
-            : VideoPlayerWidget(videoUrl: job.videoUrl!),
+            : VideoPlayerWidget(videoUrl: job.media![0].url ?? ''),
         // CustomImageView(
         //   imagePath: job.videoUrl,
         //   fit: BoxFit.fitWidth,
@@ -141,7 +140,7 @@ class JobCard extends StatelessWidget {
           const GreenDot(),
           const HorizontalSpace(),
           Text(
-            '${job.applicants} applicants',
+            '${job.jobRequisition?.openingsCount ?? '0'} openings', //showing openings, as no applicants field available
             style: AppTextThemes.buttonTextStyle(context),
           ),
         ],
@@ -169,13 +168,13 @@ class JobCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      job.recruiter ?? 'Unknown',
+                      job.jobRequisition != null && job.jobRequisition!.assignedRecruiters != null && job.jobRequisition!.assignedRecruiters!.isNotEmpty ? job.jobRequisition!.assignedRecruiters![0] : 'Unknown',
                       style: AppTextThemes.screenTitleStyle(context).copyWith(
                         color: AppColors.background,
                       ),
                     ),
                     Text(
-                      job.recruiterDesignation ?? 'Recruiter',
+                      job.jobRequisition != null && job.jobRequisition!.assignedRecruiters != null && job.jobRequisition!.assignedRecruiters!.isNotEmpty ? job.jobRequisition!.assignedRecruiters![0] : 'Recruiter',
                       style: AppTextThemes.smallText(context).copyWith(
                         color: AppColors.background,
                       ),
@@ -201,7 +200,7 @@ class JobCard extends StatelessWidget {
 
   Text jobTitle(BuildContext context) {
     return Text(
-      job.jobTitle ?? 'Unknown job title',
+      job.title ?? 'Unknown job title',
       style: AppTextThemes.titleStyle(context).copyWith(
         fontWeight: FontWeight.w500,
         fontSize: 22.w(context),
@@ -211,7 +210,7 @@ class JobCard extends StatelessWidget {
 
   Text jobLocation(BuildContext context) {
     return Text(
-      job.location ?? '',
+      job.location != null ? '${job.location!.country ?? ''},${job.location!.city ?? ''}' : 'No location',
       style: AppTextThemes.secondaryTextStyle(context),
     );
   }
@@ -229,8 +228,8 @@ class JobCard extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: List.generate(
-        job.skills!.length,
-        (index) => SkillChip(text: job.skills![index]),
+        job.requiredSkills!.length,
+        (index) => SkillChip(text: job.requiredSkills![index].skill ?? ''),
       ),
     );
   }
@@ -284,31 +283,31 @@ class JobCard extends StatelessWidget {
     );
   }
 
-  Row socialHandles(BuildContext context) {
-    return Row(
-      children: List.generate(
-        job.socialHandles!.length,
-        (index) => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          margin: const EdgeInsets.only(right: 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CustomImageView(
-                imagePath: GlobalConstants
-                    .socialProfileTypesMap[job.socialHandles![index].platform],
-                height: 30.w(context),
-              ),
-              Text(
-                job.socialHandles![index].platform ?? 'Other',
-                style: AppTextThemes.extraSmallText(context),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  // Row socialHandles(BuildContext context) {
+  //   return Row(
+  //     children: List.generate(
+  //       job.socialHandles!.length,
+  //       (index) => Container(
+  //         padding: const EdgeInsets.symmetric(horizontal: 4),
+  //         margin: const EdgeInsets.only(right: 20),
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             CustomImageView(
+  //               imagePath: GlobalConstants
+  //                   .socialProfileTypesMap[job.socialHandles![index].platform],
+  //               height: 30.w(context),
+  //             ),
+  //             Text(
+  //               job.socialHandles![index].platform ?? 'Other',
+  //               style: AppTextThemes.extraSmallText(context),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  //}
 }
 
 class SectionTitle extends StatelessWidget {

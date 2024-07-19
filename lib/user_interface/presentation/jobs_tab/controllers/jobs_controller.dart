@@ -15,6 +15,7 @@ import '../../../../routes/app_routes.dart';
 import '../../../../services/api_endpoint_service.dart';
 import '../../../../utils/log_handler.dart';
 import '../../../../utils/show_toast_util.dart';
+import '../../../models/job_recommendations.dart';
 
 class JobsController extends GetxController {
   late ApiClient apiClient;
@@ -26,7 +27,8 @@ class JobsController extends GetxController {
 
   String defaultItemId = "Other";
 
-  RxList<JobModel> jobs = <JobModel>[].obs;
+  //RxList<JobModel> jobs = <JobModel>[].obs;
+  RxList<JobRecommendations> jobs = <JobRecommendations>[].obs;
   var status = ''.obs; // Status text
   var statusColor = Colors.transparent.obs; // Status color
 
@@ -53,7 +55,7 @@ class JobsController extends GetxController {
     super.onInit();
     apiClient = ApiClient();
     fetchLocalData();
-    fetchJobs();
+    //fetchJobs();
     debounce(skillsSearchQuery, (_) => suggestSkills(),
         time: const Duration(milliseconds: 300));
     fetchRecommendedJobs();
@@ -135,10 +137,6 @@ class JobsController extends GetxController {
             false;
   }
 
-  fetchJobs() async {
-    jobs.value = JobModel().fromJsonList(dummyJobs);
-  }
-
   toggleGrowthPlan(int index, bool value) {
     isOpen[index] = value;
   }
@@ -147,14 +145,14 @@ class JobsController extends GetxController {
     return DatetimeUtil.timeAgo(date);
   }
 
-  void applyJob(JobModel job) {
+  void applyJob(JobRecommendations job) {
     jobs.remove(job);
     status.value = 'Applied';
     statusColor.value = Colors.green;
     // Handle job application logic
   }
 
-  void rejectJob(JobModel job) {
+  void rejectJob(JobRecommendations job) {
     jobs.remove(job);
     status.value = 'Rejected';
     statusColor.value = Colors.red;
@@ -170,7 +168,7 @@ class JobsController extends GetxController {
       LogHandler.debug(response);
 
       if (response['success']) {
-
+        jobs.value = JobRecommendations.fromJsonList(response['body']['data']);
       } else {
         String errorMsg =
             response['error']['message'] ?? Errors.somethingWentWrong;

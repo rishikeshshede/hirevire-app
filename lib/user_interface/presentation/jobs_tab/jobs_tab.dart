@@ -10,8 +10,9 @@ import 'package:hirevire_app/user_interface/presentation/jobs_tab/controllers/jo
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:hirevire_app/utils/show_toast_util.dart';
 
+import '../../../common/widgets/loader_circular_with_bg.dart';
 import '../../../routes/app_routes.dart';
-import '../profile/sliding_base.dart';
+import '../../../utils/responsive.dart';
 import 'components/JobApplicationForm.dart';
 
 class JobsTab extends StatelessWidget {
@@ -67,7 +68,14 @@ class JobsTab extends StatelessWidget {
       ),
       body: Obx(
         () {
-          return jobsController.jobs.value.isEmpty
+          return jobsController.isLoading.value
+              ? Container(
+            alignment: Alignment.center,
+            height: Responsive.height(context, 1),
+            child: const LoaderCircularWithBg(),
+          )
+              :
+            jobsController.jobs.isEmpty
               ? const Center(
                   child: Text('No jobs available'),
                 )
