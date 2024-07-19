@@ -160,19 +160,18 @@ class JobApplicationForm extends StatelessWidget {
                         ),
                       ],
                     ),
+
+                    VerticalSpace(space: 20.h(context)),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 30),
+                      child: ButtonPrimary(
+                        btnText: 'Apply',
+                        onPressed: () {
+                          jobsController.submitJobApplication();
+                        },
+                      ),
+                    ),
                   ],
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 30),
-                child: ButtonPrimary(
-                  btnText: 'Apply',
-                  onPressed: () {
-                    jobsController.submitJobApplication();
-                  },
                 ),
               ),
             ),

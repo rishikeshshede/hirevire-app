@@ -312,7 +312,7 @@ class CompleteProfileController extends GetxController {
 
   void removeSkill(Map<String, dynamic> skill) {
     selectedSkills.remove(skill);
-    skillsRatings.remove(skill['data']);
+    skillsRatings.remove(skill['_id']);
   }
 
   // void removeSkill(Map<String, dynamic> titleObj) {
@@ -535,7 +535,7 @@ class CompleteProfileController extends GetxController {
 
       // Return the formatted skill data
       return {
-        "data": skill['data'],
+        "data": skill['_id'] ?? 'other',
         "name": skillName,
         "rating": skillRating,
       };
