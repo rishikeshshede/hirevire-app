@@ -102,7 +102,7 @@ class JobCard extends StatelessWidget {
 
   Text jobPostingDate(BuildContext context) {
     return Text(
-      jobsController.getPostTime(job.postedBy?.createdAt ?? DateTime.now()),
+      jobsController.getPostTime(job.createdAt ?? DateTime.now()),
       style: AppTextThemes.smallText(context),
     );
   }
@@ -140,7 +140,7 @@ class JobCard extends StatelessWidget {
           const GreenDot(),
           const HorizontalSpace(),
           Text(
-            '${job.jobRequisition?.openingsCount ?? '0'} openings', //showing openings, as no applicants field available
+            '${job.savedApplications?.length ?? '0'} applicants',
             style: AppTextThemes.buttonTextStyle(context),
           ),
         ],
@@ -168,13 +168,13 @@ class JobCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      job.jobRequisition != null && job.jobRequisition!.assignedRecruiters != null && job.jobRequisition!.assignedRecruiters!.isNotEmpty ? job.jobRequisition!.assignedRecruiters![0] : 'Unknown',
+                      job.requestedBy != null && job.requestedBy!.name != null ? job.requestedBy!.name ?? 'Unknown' : 'Unknown',
                       style: AppTextThemes.screenTitleStyle(context).copyWith(
                         color: AppColors.background,
                       ),
                     ),
                     Text(
-                      job.jobRequisition != null && job.jobRequisition!.assignedRecruiters != null && job.jobRequisition!.assignedRecruiters!.isNotEmpty ? job.jobRequisition!.assignedRecruiters![0] : 'Recruiter',
+                      'Recruiter',
                       style: AppTextThemes.smallText(context).copyWith(
                         color: AppColors.background,
                       ),
@@ -229,7 +229,7 @@ class JobCard extends StatelessWidget {
       runSpacing: 8,
       children: List.generate(
         job.requiredSkills!.length,
-        (index) => SkillChip(text: job.requiredSkills![index].skill ?? ''),
+        (index) => SkillChip(text: job.requiredSkills![index].skill?.name ?? ''),
       ),
     );
   }

@@ -8,6 +8,9 @@ class EndpointService {
   static const String getUserProfile = 'jobSeeker';
 
   // POST Endpoints
+  static const String userLeftSwipe = 'jobApplication/user/leftSwipe';
+  static const String userUploadVideoWithThumbnail = 'jobPosting/media';
+  static const String userJobApply = 'jobApplication/user/rightSwipe';
 
   // UPDATE Endpoints
 

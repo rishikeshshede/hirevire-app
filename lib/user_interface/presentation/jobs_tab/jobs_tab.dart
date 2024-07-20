@@ -131,7 +131,6 @@ class JobsTab extends StatelessWidget {
 
                               final job = jobsController.jobs[index];
 
-
                               Get.to(
                                   JobApplicationForm(
                                     jobsController: jobsController,

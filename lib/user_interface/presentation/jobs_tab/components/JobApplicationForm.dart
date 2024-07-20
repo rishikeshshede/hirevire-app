@@ -72,7 +72,7 @@ class JobApplicationForm extends StatelessWidget {
                         children: [
                           Text(
                             textAlign: TextAlign.start,
-                            skill.skill ?? 'other', // Display skill name or a default if missing
+                            skill.skill?.name ?? 'other', // Display skill name or a default if missing
                             style: AppTextThemes.bodyTextStyle(context)
                                 .copyWith(fontSize: 14.adaptSize(context)),
                           ),
@@ -89,7 +89,7 @@ class JobApplicationForm extends StatelessWidget {
                                     .round()
                                     .toString(),
                                                                 onChanged: (value) {
-                                  jobsController.skillsRatings[skill.skill ?? 'other'] = value;
+                                  jobsController.skillsRatings[skill.skill?.name ?? 'other'] = value;
                                                                 },
                                                               ),
                                 ),
@@ -105,7 +105,7 @@ class JobApplicationForm extends StatelessWidget {
                       child: ButtonPrimary(
                         btnText: 'Apply',
                         onPressed: () {
-                          jobsController.submitJobApplication();
+                          jobsController.submitJobApplication(job);
                         },
                       ),
                     ),
