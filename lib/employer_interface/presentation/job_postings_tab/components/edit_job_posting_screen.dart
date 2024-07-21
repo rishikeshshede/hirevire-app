@@ -229,7 +229,7 @@ class EditJobPostingScreen extends StatelessWidget {
       runSpacing: 8,
       children: List.generate(
         jobPostings.requiredSkills!.length,
-            (index) => SkillChip(text: jobPostings.requiredSkills![index].name ?? ''),
+            (index) => SkillChip(text: jobPostings.requiredSkills![index].name ?? 'No skill'),
       ),
     );
   }
