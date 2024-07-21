@@ -10,6 +10,9 @@ import 'package:hirevire_app/utils/size_util.dart';
 import 'package:hirevire_app/utils/string_handler.dart';
 import '../../../../common/widgets/button_outline.dart';
 import '../../../../common/widgets/button_primary.dart';
+import '../../requisitions_tab/components/create_job_posting_screen.dart';
+import 'edit_job_posting_screen.dart';
+import 'package:get/get.dart';
 
 class JobPostingsCard extends StatelessWidget {
   const JobPostingsCard({
@@ -133,9 +136,13 @@ class JobPostingsCard extends StatelessWidget {
                   btnText: 'Edit Job Posting',
                   btnColor: AppColors.primaryDark,
                   onPressed: () {
-                    // Get.to(
-                    //  //TODO: open create job posting tab with list
-                    // );
+                    Get.to(
+                      EditJobPostingScreen(
+                        jobPostingsController: jobPostingsController,
+                        jobPostings: jobPostings,
+                        index: index,
+                      ),
+                    );
                   },
                   textStyle: AppTextThemes.buttonTextStyle(context),
                 ),

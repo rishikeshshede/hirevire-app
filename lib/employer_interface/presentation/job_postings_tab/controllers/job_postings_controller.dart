@@ -8,7 +8,9 @@ import 'package:hirevire_app/utils/persistence_handler.dart';
 import 'package:hirevire_app/utils/show_toast_util.dart';
 
 import '../../../../constants/error_constants.dart';
+import '../../../../constants/global_constants.dart';
 import '../../../../services/api_endpoint_service.dart';
+import '../../../../utils/capitalize_first_letter.dart';
 import '../../../../utils/log_handler.dart';
 
 class JobPostingsController extends GetxController {
@@ -27,6 +29,38 @@ class JobPostingsController extends GetxController {
   FocusNode nameFocusNode = FocusNode();
 
   RxList<Map<String, dynamic>> suggestedJobs = <Map<String, dynamic>>[].obs;
+
+  TextEditingController jobTitleController = TextEditingController();
+  TextEditingController descController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+  //TextEditingController jobModeController = TextEditingController();
+  RxString jobModeController = GlobalConstants.locationTypes[0].obs;
+  TextEditingController vidReqController = TextEditingController();
+  TextEditingController reqSkillsController = TextEditingController();
+  TextEditingController perksController = TextEditingController();
+  TextEditingController openingCountController = TextEditingController();
+  TextEditingController ctcController = TextEditingController();
+  TextEditingController tDaysPlanController = TextEditingController();
+  TextEditingController sDaysPlanController = TextEditingController();
+  TextEditingController nDaysPlanController = TextEditingController();
+  TextEditingController qOneController = TextEditingController();
+  TextEditingController qTwoController = TextEditingController();
+
+  void setJobTitle(String? jobTitle) {
+    jobTitleController.text = jobTitle ?? '';
+  }
+
+  void setOpeningCount(int openingCount) {
+    openingCountController.text = openingCount.toString();
+  }
+
+  void setJobMode(List<String>? jobMode) {
+    jobModeController.value = capitalizeFirstLetter(jobMode?[0] ?? GlobalConstants.locationTypes[0]) ;
+  }
+
+  void setDescription(String? desc) {
+    descController.text = desc ?? '';
+  }
 
   @override
   void onInit() {
