@@ -1,6 +1,8 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
@@ -25,6 +27,9 @@ class JobsController extends GetxController {
   RxString name = ''.obs;
   RxBool isProfileComplete = false.obs;
   RxList<bool> isOpen = [true, false, false].obs;
+
+  RxString videoUrl = ''.obs;
+  RxString thumbnailUrl = ''.obs;
 
   String defaultItemId = "Other";
 
@@ -235,49 +240,60 @@ class JobsController extends GetxController {
     }
   }
 
-  Future<Map<String, dynamic>?> uploadFiles() async {
-    if (selectedVideoFile == null) {
-      ToastWidgit.bottomToast('please upload video, it is required');
-    }
-
-    try {
-      await apiClient
-          .uploadVideoWithThumbnail(
-        EndpointService.userUploadVideoWithThumbnail,
-        selectedVideoFile!,
-        selectedThumbnailFile!,
-      )
-          .then((response) {
-        if (response['success']) {
-          // Handle success
-          debugPrint('Upload successful: ${response['body']}');
-          return response;
-        } else {
-          // Handle error
-          debugPrint('Upload failed: ${response['error']}');
-          return response;
-        }
-      });
-    } catch (error) {
-      LogHandler.error(error);
-    }
-
-    return null;
-  }
+  // uploadFiles() async {
+  //   if (selectedVideoFile == null) {
+  //     ToastWidgit.bottomToast('please upload video, it is required');
+  //   }
+  //
+  //   try {
+  //     await apiClient
+  //         .uploadVideoWithThumbnail(
+  //       EndpointService.userUploadVideoWithThumbnail,
+  //       selectedVideoFile!,
+  //       selectedThumbnailFile!,
+  //     )
+  //         .then((response) {
+  //       if (response['success']) {
+  //         // Handle success
+  //         debugPrint('Upload successful: ${response['body']}');
+  //         videoUrl.value = response['body']['videoURL'];
+  //         thumbnailUrl.value = response['body']['thumbnailURL'];
+  //
+  //         // return response;
+  //       } else {
+  //         // Handle error
+  //         debugPrint('Upload failed: ${response['error']}');
+  //         //return response;
+  //       }
+  //     });
+  //   } catch (error) {
+  //     LogHandler.error(error);
+  //   }
+  //
+  //   return null;
+  // }
 
   submitJobApplication(JobRecommendations job) async {
+
+    print("skillratings map");
+    print(skillsRatings.entries);
+
     isLoading.value = true;
     if (selectedVideoFile == null) {
       ToastWidgit.bottomToast('please upload video, it is required');
       return;
     }
 
-    String endpoint = EndpointService.createJobPostings;
+    String endpoint = EndpointService.userJobApply;
 
-    var videoThumbRes = await uploadFiles();
+    //await uploadFiles();
 
-    String vidUrl = videoThumbRes?['videoURL'] ?? '';
-    String thumbnailURL = videoThumbRes?['thumbnailURL'] ?? '';
+    List<Map<String, dynamic>> requiredSkills = skillsRatings.entries.map((entry) {
+      return {
+        "skill": entry.key,
+        "rating": entry.value,
+      };
+    }).toList();
 
     List<Map<String, dynamic>> answers = job.questions?.map<Map<String, dynamic>>((question) {
       return {
@@ -292,26 +308,51 @@ class JobsController extends GetxController {
       "jobPostId": job.id,
       "media": [
         {
-          "url": vidUrl,
+          "url": videoUrl.value,
           "type": "video",
-          "thumbnail": thumbnailURL,
+          "thumbnail": thumbnailUrl.value,
         }
       ],
       "answers": answers,
+      "requiredSkills": requiredSkills,
     };
     LogHandler.debug(body);
 
     try {
-      Map<String, dynamic> response = await apiClient.post(endpoint, body);
-      LogHandler.debug(response);
 
-      if (response['success']) {
-        Get.back();
-      } else {
-        String errorMsg =
-            response['error']['message'] ?? Errors.somethingWentWrong;
-        LogHandler.error(errorMsg);
-      }
+      await apiClient
+          .uploadVideoWithThumbnail(
+        EndpointService.userUploadVideoWithThumbnail,
+        selectedVideoFile!,
+        selectedThumbnailFile!,
+      )
+          .then((response) async {
+        if (response['success']) {
+          // Handle success
+          debugPrint('Upload successful: ${response}');
+          videoUrl.value = response['body']['videoURL'][0];
+          thumbnailUrl.value = response['body']['thumbnailURL'][0];
+
+          Map<String, dynamic> responseJobApply = await apiClient.post(endpoint, body);
+          LogHandler.debug(responseJobApply);
+
+          if (responseJobApply['success']) {
+            Get.back();
+          } else {
+            if (responseJobApply['error']['message'] == "You have already applied for this job") {
+              ToastWidgit.bottomToast('You have already applied for this job');
+              Get.back();
+            }
+            String errorMsg =
+                responseJobApply['error']['message'] ?? Errors.somethingWentWrong;
+            LogHandler.error(errorMsg);
+          }
+
+        } else {
+          // Handle error
+          debugPrint('Upload failed: ${response['error']}');
+        }
+      });
     } catch (error) {
       LogHandler.error(error);
 
