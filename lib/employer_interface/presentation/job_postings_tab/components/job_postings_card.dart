@@ -8,8 +8,8 @@ import 'package:hirevire_app/employer_interface/presentation/job_postings_tab/co
 import 'package:hirevire_app/themes/text_theme.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 import 'package:hirevire_app/utils/string_handler.dart';
-
 import '../../../../common/widgets/button_outline.dart';
+import '../../../../common/widgets/button_primary.dart';
 
 class JobPostingsCard extends StatelessWidget {
   const JobPostingsCard({
@@ -128,6 +128,19 @@ class JobPostingsCard extends StatelessWidget {
 
           Row(
             children: [
+              Flexible(
+                child: ButtonPrimary(
+                  btnText: 'Edit Job Posting',
+                  btnColor: AppColors.primaryDark,
+                  onPressed: () {
+                    // Get.to(
+                    //  //TODO: open create job posting tab with list
+                    // );
+                  },
+                  textStyle: AppTextThemes.buttonTextStyle(context),
+                ),
+              ),
+              const HorizontalSpace(),
               Flexible(
                 child: ButtonOutline(
                   btnText: 'View applicants',

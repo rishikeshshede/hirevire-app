@@ -161,8 +161,8 @@ class CreateJobPostingScreen extends StatelessWidget {
                   Text(
                     textAlign: TextAlign.start,
                     'Growth Plan',
-                    style: AppTextThemes.bodyTextStyle(context)
-                        .copyWith(fontWeight: FontWeight.w300),
+                    style: AppTextThemes.subtitleStyle(context)
+                        .copyWith(fontWeight: FontWeight.w400),
                   ),
                   VerticalSpace(space: 4.h(context)), // CustomTextField(
                   CustomTextField(
@@ -205,41 +205,41 @@ class CreateJobPostingScreen extends StatelessWidget {
                           .requestFocus(requisitionsController.qOneFocusNode);
                       },
                   ),
-                  VerticalSpace(space: 8.h(context)),
+                  //VerticalSpace(space: 8.h(context)),
 
-                  Text(
-                    textAlign: TextAlign.start,
-                    'Questions for Applicant',
-                    style: AppTextThemes.bodyTextStyle(context)
-                        .copyWith(fontWeight: FontWeight.w300),
-                  ),
-                  VerticalSpace(space: 4.h(context)), // CustomTextField(
-                  CustomTextField(
-                    titleText: 'Question 1',
-                    textInputType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    focusNode: requisitionsController.qOneFocusNode,
-                    controller: requisitionsController.qOneController,
-                    onChanged: (String value) {},
-                    onEditingComplete: () {
-                      requisitionsController.qOneFocusNode.unfocus();
-                      FocusScope.of(context)
-                          .requestFocus(requisitionsController.qTwoFocusNode);
-                    },
-                  ),
-                  VerticalSpace(space: 8.h(context)),
-                  CustomTextField(
-                    titleText: 'Question 2',
-                    textInputType: TextInputType.text,
-                    textInputAction: TextInputAction.done,
-                    focusNode: requisitionsController.qTwoFocusNode,
-                    controller: requisitionsController.qTwoController,
-                    onChanged: (String value) {},
-                    onEditingComplete: () {
-                      requisitionsController.qTwoFocusNode.unfocus();
-                      requisitionsController.createJobApplication(requisition);
-                    },
-                  ),
+                  // Text(
+                  //   textAlign: TextAlign.start,
+                  //   'Questions for Applicant',
+                  //   style: AppTextThemes.bodyTextStyle(context)
+                  //       .copyWith(fontWeight: FontWeight.w300),
+                  // ),
+                  // VerticalSpace(space: 4.h(context)), // CustomTextField(
+                  // CustomTextField(
+                  //   titleText: 'Question 1',
+                  //   textInputType: TextInputType.text,
+                  //   textInputAction: TextInputAction.next,
+                  //   focusNode: requisitionsController.qOneFocusNode,
+                  //   controller: requisitionsController.qOneController,
+                  //   onChanged: (String value) {},
+                  //   onEditingComplete: () {
+                  //     requisitionsController.qOneFocusNode.unfocus();
+                  //     FocusScope.of(context)
+                  //         .requestFocus(requisitionsController.qTwoFocusNode);
+                  //   },
+                  // ),
+                  // VerticalSpace(space: 8.h(context)),
+                  // CustomTextField(
+                  //   titleText: 'Question 2',
+                  //   textInputType: TextInputType.text,
+                  //   textInputAction: TextInputAction.done,
+                  //   focusNode: requisitionsController.qTwoFocusNode,
+                  //   controller: requisitionsController.qTwoController,
+                  //   onChanged: (String value) {},
+                  //   onEditingComplete: () {
+                  //     requisitionsController.qTwoFocusNode.unfocus();
+                  //     requisitionsController.createJobApplication(requisition);
+                  //   },
+                  // ),
 
                   const VerticalSpace(space: 15),
                   ButtonPrimary(

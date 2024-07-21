@@ -168,7 +168,7 @@ class JobCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      job.requestedBy != null && job.requestedBy!.name != null ? job.requestedBy!.name ?? 'Unknown' : 'Unknown',
+                      job.requestedBy != null && job.requestedBy!.name != null ? job.requestedBy!.name ?? '' : '',
                       style: AppTextThemes.screenTitleStyle(context).copyWith(
                         color: AppColors.background,
                       ),

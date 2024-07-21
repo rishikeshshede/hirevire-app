@@ -220,6 +220,30 @@ class Media {
   };
 }
 
+class LeftSwipe {
+  String? jobSeekerId;
+  DateTime? timestamp;
+  String? id;
+
+  LeftSwipe({
+    this.jobSeekerId,
+    this.timestamp,
+    this.id,
+  });
+
+  factory LeftSwipe.fromMap(Map<String, dynamic> json) => LeftSwipe(
+    jobSeekerId: json["jobSeekerId"],
+    timestamp: json["timestamp"] == null ? null : DateTime.parse(json["timestamp"]),
+    id: json["_id"],
+  );
+
+  Map<String, dynamic> toMap() => {
+    "jobSeekerId": jobSeekerId,
+    "timestamp": timestamp?.toIso8601String(),
+    "_id": id,
+  };
+}
+
 class JobRecommendations {
   Location? location;
   String? id;
@@ -243,7 +267,7 @@ class JobRecommendations {
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
-  List<String>? leftSwipes;
+  List<LeftSwipe>? leftSwipes;
 
   JobRecommendations({
     this.location,
@@ -294,8 +318,7 @@ class JobRecommendations {
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
-    leftSwipes: json["leftSwipes"] == null ? [] : List<String>.from(json["leftSwipes"].map((x) => x)),
-  );
+    leftSwipes: json["leftSwipes"] == null ? [] : List<LeftSwipe>.from(json["leftSwipes"].map((x) => LeftSwipe.fromMap(x))),  );
 
   Map<String, dynamic> toMap() => {
     "location": location?.toMap(),
@@ -320,7 +343,7 @@ class JobRecommendations {
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
     "__v": v,
-    "leftSwipes": leftSwipes == null ? [] : List<dynamic>.from(leftSwipes!.map((x) => x)),
+    "leftSwipes": leftSwipes == null ? [] : List<dynamic>.from(leftSwipes!.map((x) => x.toMap())),
   };
 
   factory JobRecommendations.fromJson(String str) => JobRecommendations.fromMap(json.decode(str));

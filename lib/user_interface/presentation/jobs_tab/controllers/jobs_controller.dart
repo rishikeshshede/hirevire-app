@@ -16,6 +16,7 @@ import '../../../../services/api_endpoint_service.dart';
 import '../../../../utils/log_handler.dart';
 import '../../../../utils/show_toast_util.dart';
 import '../../../models/job_recommendations.dart';
+import '../../../models/job_seeker_profile.dart';
 
 class JobsController extends GetxController {
   late ApiClient apiClient;
@@ -29,6 +30,8 @@ class JobsController extends GetxController {
 
   //RxList<JobModel> jobs = <JobModel>[].obs;
   RxList<JobRecommendations> jobs = <JobRecommendations>[].obs;
+  Rx<JobSeekerProfile> jobSeekerProfile = JobSeekerProfile().obs;
+
   var status = ''.obs; // Status text
   var statusColor = Colors.transparent.obs; // Status color
 
@@ -157,7 +160,7 @@ class JobsController extends GetxController {
     status.value = 'Rejected';
     statusColor.value = Colors.red;
 
-    isLoading.value = true;
+    //isLoading.value = true;
     String endpoint = EndpointService.userLeftSwipe;
 
     Map<String, dynamic> body = {
@@ -173,15 +176,37 @@ class JobsController extends GetxController {
       } else {
         String errorMsg =
             response['error']['message'] ?? Errors.somethingWentWrong;
+        //ToastWidgit.bottomToast(errorMsg);
+        LogHandler.error(errorMsg);
+      }
+    } catch (error) {
+      // ToastWidgit.bottomToast(
+      //     'Unknown error occurred');
+      LogHandler.error(error);
+    } finally {
+      //isLoading.value = false;
+    }
+  }
+
+  fetchUserProfile() async {
+    String endpoint = EndpointService.getUserProfile;
+
+    try {
+      Map<String, dynamic> response = await apiClient.get(endpoint);
+      LogHandler.debug(response);
+
+      if (response['success']) {
+        jobSeekerProfile.value = JobSeekerProfile.fromMap(response['body']['data']); //get user profile model
+      } else {
+        String errorMsg =
+            response['error']['message'] ?? Errors.somethingWentWrong;
         ToastWidgit.bottomToast(errorMsg);
         LogHandler.error(errorMsg);
       }
     } catch (error) {
       ToastWidgit.bottomToast(
-          'Unknown error occurred');
+          'Unknown error occurred while getting Job recommendations');
       LogHandler.error(error);
-    } finally {
-      isLoading.value = false;
     }
   }
 

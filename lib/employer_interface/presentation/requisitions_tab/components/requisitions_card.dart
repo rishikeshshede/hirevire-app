@@ -106,8 +106,10 @@ class RequisitionsCard extends StatelessWidget {
               const HorizontalSpace(),
               Flexible(
                 child: ButtonOutline(
-                  btnText: 'View Job Posting',
-                  onPressed: () {},
+                  btnText: 'View Job Postings',
+                  onPressed: () {
+                    //TODO: same screen as list of job postings tab
+                  },
                 ),
               ),
             ],
