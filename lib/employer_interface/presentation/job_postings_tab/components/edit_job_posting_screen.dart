@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hirevire_app/common/widgets/padded_container.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
-import 'package:hirevire_app/employer_interface/models/requisition.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 import '../../../../common/widgets/button_primary.dart';
 import '../../../../common/widgets/chip_widget.dart';
 import '../../../../common/widgets/dropdown_widget.dart';
-import '../../../../common/widgets/error_text_widget.dart';
 import '../../../../common/widgets/text_field.dart';
-import '../../../../common/widgets/video_upload_widget.dart';
 import '../../../../constants/global_constants.dart';
 import '../../../../themes/text_theme.dart';
 import 'package:get/get.dart';
@@ -42,14 +39,10 @@ class EditJobPostingScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  //TODO:add status switch to close application
-
-
                   //TODO:prefill video
                   // VideoUploadWidget(
                   //     onFilesSelected: jobPostingsController.onFilesSelected),
                   // VerticalSpace(space: 40.h(context)),
-
 
                   CustomTextField(
                     titleText: 'Job Title',
@@ -197,7 +190,7 @@ class EditJobPostingScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  VerticalSpace(space: 4.h(context)), // C
+                  VerticalSpace(space: 4.h(context)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -205,11 +198,21 @@ class EditJobPostingScreen extends StatelessWidget {
                     ],
                   ),
 
+                  VerticalSpace(space: 4.h(context)),
+                  Obx(() => SwitchListTile(
+                    title: const Text('Close Status'),
+                    value: jobPostingsController.isClosedStatus.value,
+                    onChanged: (bool value) {
+                      jobPostingsController.isClosedStatus.value = value;
+
+                    },
+                  )),
+
                   const VerticalSpace(space: 20),
                   ButtonPrimary(
                     btnText: 'Update',
                     onPressed: () {
-                      //jobPostingsController.updateJobApplication(jobPostings);
+                      jobPostingsController.updateJobPosting(jobPostings);
                     },
                   ),
                   const VerticalSpace(space: 30),

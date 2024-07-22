@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
 import 'package:hirevire_app/employer_interface/models/job_posting.dart';
 import 'package:hirevire_app/services/api_service.dart';
@@ -20,6 +21,7 @@ class JobPostingsController extends GetxController {
   RxString name = ''.obs;
   RxBool isProfileComplete = false.obs;
   RxList<bool> isOpen = [true, false, false].obs;
+  RxBool isClosedStatus = false.obs;
 
   RxList<JobPosting> jobPostings = <JobPosting>[].obs;
   var status = ''.obs; // Status text
@@ -45,6 +47,7 @@ class JobPostingsController extends GetxController {
   TextEditingController nDaysPlanController = TextEditingController();
   TextEditingController qOneController = TextEditingController();
   TextEditingController qTwoController = TextEditingController();
+
 
   void setJobTitle(String? jobTitle) {
     jobTitleController.text = jobTitle ?? '';
@@ -103,17 +106,75 @@ class JobPostingsController extends GetxController {
     return DatetimeUtil.timeAgo(date);
   }
 
-  submitJobApplication() async {
-    String endpoint = ""; //Endpoints.submitJob; //TODO: add api endpoint
+  closeJobPosting(String jobPostId) async {
+    String endpoint = EndpointService.closeJobPostings;
 
-    Map<String, dynamic> body = {};
+    Map<String, dynamic> body = {
+      'status': 'closed',
+    };
     LogHandler.debug(body);
 
+    var url = '$endpoint/$jobPostId';
+
     try {
-      Map<String, dynamic> response = await apiClient.post(endpoint, body);
+      Map<String, dynamic> response = await apiClient.put(url, body);
       LogHandler.debug(response);
 
       if (response['success']) {
+        ToastWidgit.bottomToast('Job posting closed successfully');
+        Get.back();
+      } else {
+        String errorMsg =
+            response['error']['message'] ?? Errors.somethingWentWrong;
+        LogHandler.error(errorMsg);
+      }
+    } catch (error) {
+      LogHandler.error(error);
+    }
+  }
+
+
+  updateJobPosting(JobPosting jobPosting) async {
+    String endpoint = EndpointService.updateJobPostings;
+
+    if (isClosedStatus.value) {
+      await closeJobPosting(jobPosting.id ?? '');
+    }
+
+    Map<String, dynamic> body = {
+      "jobRequisitionId": jobPosting.id,
+      "postedBy": jobPosting.postedBy,
+      "title": jobPosting.title,
+      "department": jobPosting.department,
+      "project": jobPosting.project,
+      "openingsCount": 0,
+      "location": {
+        "country": jobPosting.location?.country,
+        "city": jobPosting.location?.city
+      },
+      "jobMode": jobPosting.jobMode,
+      "description": jobPosting.description,
+      "videoRequirement": '',
+      "ctc": jobPosting.ctc,
+      "questions": jobPosting.questions?.map((q) => q.toMap()).toList(),
+      "growth_plan": jobPosting.growthPlan?.map((g) => g.toMap()).toList(),
+      "perks": jobPosting.perks,
+      "requiredSkills": jobPosting.requiredSkills?.map((s) => s.toMap()).toList(),
+      "media": jobPosting.media?.map((m) => m.toMap()).toList(),
+      "endsOn": jobPosting.endsOn?.toIso8601String(),
+      "status": isClosedStatus.value ? 'closed' : jobPosting.status,
+    };
+
+    LogHandler.debug(body);
+
+    var url = '$endpoint/${jobPosting.id}';
+
+    try {
+      Map<String, dynamic> response = await apiClient.put(url, body);
+      LogHandler.debug(response);
+
+      if (response['success']) {
+        ToastWidgit.bottomToast('Job posting closed successfully');
         Get.back();
       } else {
         String errorMsg =

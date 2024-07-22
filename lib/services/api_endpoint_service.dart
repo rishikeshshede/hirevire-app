@@ -26,6 +26,7 @@ class EndpointService {
   static const String createJobPostings = 'jobPosting/create';
 
   // UPDATE Endpoints
-
+  static const String closeJobPostings = 'jobPosting/close';
+  static const String updateJobPostings = 'jobPosting/update';
 
 }
