@@ -10,6 +10,7 @@ class ImageConstant {
 
   // ICONS
   static String linkedInLogo = "$iconPath/linkedin-icon.svg";
+  static String facebookLogo = "$iconPath/facebook-logo.svg";
   static String githubLogo = "$iconPath/github-icon.svg";
   static String instagramLogo = "$iconPath/instagram-icon.svg";
   static String xLogo = "$iconPath/x-icon.svg";

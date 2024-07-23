@@ -40,7 +40,9 @@ class GlobalConstants {
     'LinkedIn': ImageConstant.linkedInLogo,
     'Instagram': ImageConstant.instagramLogo,
     'X': ImageConstant.xLogo,
+    'Twitter': ImageConstant.xLogo,
     'Youtube': ImageConstant.youtubeLogo,
+    'Facebook': ImageConstant.facebookLogo,
     'Other': ImageConstant.linkOtherIcon,
   };
 

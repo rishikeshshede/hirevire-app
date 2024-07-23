@@ -1,19 +1,12 @@
-import 'dart:ffi';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
 import 'package:hirevire_app/services/api_service.dart';
-import 'package:hirevire_app/user_interface/models/job_model.dart';
 import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/persistence_handler.dart';
-
 import '../../../../constants/endpoint_constants.dart';
 import '../../../../constants/error_constants.dart';
-import '../../../../routes/app_routes.dart';
 import '../../../../services/api_endpoint_service.dart';
 import '../../../../utils/log_handler.dart';
 import '../../../../utils/show_toast_util.dart';
@@ -34,7 +27,7 @@ class JobsController extends GetxController {
   String defaultItemId = "Other";
 
   //RxList<JobModel> jobs = <JobModel>[].obs;
-  RxList<JobRecommendations> jobs = <JobRecommendations>[].obs;
+  RxList<JobRecommendationsModel> jobs = <JobRecommendationsModel>[].obs;
   Rx<JobSeekerProfile> jobSeekerProfile = JobSeekerProfile().obs;
 
   var status = ''.obs; // Status text
@@ -105,8 +98,6 @@ class JobsController extends GetxController {
     skillsRatings.remove(skill['data']);
   }
 
-
-
   Future<void> suggestSkills() async {
     if (skillsSearchQuery.isEmpty) {
       filteredSkillsSuggestions.value = [];
@@ -119,7 +110,7 @@ class JobsController extends GetxController {
 
         if (response['success']) {
           List<Map<String, dynamic>> convertedList =
-          List<Map<String, dynamic>>.from(response['body']['data']);
+              List<Map<String, dynamic>>.from(response['body']['data']);
           filteredSkillsSuggestions.value = convertedList;
         } else {
           String errorMsg =
@@ -131,7 +122,6 @@ class JobsController extends GetxController {
       }
     }
   }
-
 
   void onFilesSelected(File? videoFile, File? thumbnailFile) {
     selectedVideoFile = videoFile;
@@ -153,14 +143,14 @@ class JobsController extends GetxController {
     return DatetimeUtil.timeAgo(date);
   }
 
-  void applyJob(JobRecommendations job) {
+  void applyJob(JobRecommendationsModel job) {
     jobs.remove(job);
     status.value = 'Applied';
     statusColor.value = Colors.green;
     // Handle job application logic
   }
 
-  void rejectJob(JobRecommendations job) async {
+  void rejectJob(JobRecommendationsModel job) async {
     jobs.remove(job);
     status.value = 'Rejected';
     statusColor.value = Colors.red;
@@ -177,7 +167,8 @@ class JobsController extends GetxController {
       LogHandler.debug(response);
 
       if (response['success']) {
-        jobs.value = JobRecommendations.fromJsonList(response['body']['data']);
+        jobs.value =
+            JobRecommendationsModel.fromJsonList(response['body']['data']);
       } else {
         String errorMsg =
             response['error']['message'] ?? Errors.somethingWentWrong;
@@ -201,7 +192,8 @@ class JobsController extends GetxController {
       LogHandler.debug(response);
 
       if (response['success']) {
-        jobSeekerProfile.value = JobSeekerProfile.fromMap(response['body']['data']); //get user profile model
+        jobSeekerProfile.value = JobSeekerProfile.fromMap(
+            response['body']['data']); //get user profile model
       } else {
         String errorMsg =
             response['error']['message'] ?? Errors.somethingWentWrong;
@@ -224,7 +216,8 @@ class JobsController extends GetxController {
       LogHandler.debug(response);
 
       if (response['success']) {
-        jobs.value = JobRecommendations.fromJsonList(response['body']['data']);
+        jobs.value =
+            JobRecommendationsModel.fromJsonList(response['body']['data']);
       } else {
         String errorMsg =
             response['error']['message'] ?? Errors.somethingWentWrong;
@@ -273,8 +266,7 @@ class JobsController extends GetxController {
   //   return null;
   // }
 
-  submitJobApplication(JobRecommendations job) async {
-
+  submitJobApplication(JobRecommendationsModel job) async {
     print("skillratings map");
     print(skillsRatings.entries);
 
@@ -288,21 +280,24 @@ class JobsController extends GetxController {
 
     //await uploadFiles();
 
-    List<Map<String, dynamic>> requiredSkills = skillsRatings.entries.map((entry) {
+    List<Map<String, dynamic>> requiredSkills =
+        skillsRatings.entries.map((entry) {
       return {
         "skill": entry.key,
         "rating": entry.value,
       };
     }).toList();
 
-    List<Map<String, dynamic>> answers = job.questions?.map<Map<String, dynamic>>((question) {
-      return {
-        "question": question.content,
-        "type": question.type,
-        "options": question.options ?? [],
-        "answer": question.type == "text" ? "" : "",
-      };
-    }).toList() ?? [];
+    List<Map<String, dynamic>> answers =
+        job.questions?.map<Map<String, dynamic>>((question) {
+              return {
+                "question": question.content,
+                "type": question.type,
+                "options": question.options ?? [],
+                "answer": question.type == "text" ? "" : "",
+              };
+            }).toList() ??
+            [];
 
     Map<String, dynamic> body = {
       "jobPostId": job.id,
@@ -319,7 +314,6 @@ class JobsController extends GetxController {
     LogHandler.debug(body);
 
     try {
-
       await apiClient
           .uploadVideoWithThumbnail(
         EndpointService.userUploadVideoWithThumbnail,
@@ -333,21 +327,22 @@ class JobsController extends GetxController {
           videoUrl.value = response['body']['videoURL'][0];
           thumbnailUrl.value = response['body']['thumbnailURL'][0];
 
-          Map<String, dynamic> responseJobApply = await apiClient.post(endpoint, body);
+          Map<String, dynamic> responseJobApply =
+              await apiClient.post(endpoint, body);
           LogHandler.debug(responseJobApply);
 
           if (responseJobApply['success']) {
             Get.back();
           } else {
-            if (responseJobApply['error']['message'] == "You have already applied for this job") {
+            if (responseJobApply['error']['message'] ==
+                "You have already applied for this job") {
               ToastWidgit.bottomToast('You have already applied for this job');
               Get.back();
             }
-            String errorMsg =
-                responseJobApply['error']['message'] ?? Errors.somethingWentWrong;
+            String errorMsg = responseJobApply['error']['message'] ??
+                Errors.somethingWentWrong;
             LogHandler.error(errorMsg);
           }
-
         } else {
           // Handle error
           debugPrint('Upload failed: ${response['error']}');

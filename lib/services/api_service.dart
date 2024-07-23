@@ -9,11 +9,11 @@ import 'package:mime/mime.dart';
 
 class ApiClient {
   // Live
-  static const String _baseUrl =
-      'https://sea-turtle-app-cpepq.ondigitalocean.app/api/v1/';
+  // static const String _baseUrl =
+  //     'https://sea-turtle-app-cpepq.ondigitalocean.app/api/v1/';
 
   // Wifi
-  //static const String _baseUrl = 'http://10.0.2.16:5000/api/v1/';
+  static const String _baseUrl = 'http://192.168.29.243:5000/api/v1/';
 
   // Mobile hotspot
   // static const String _baseUrl = 'http://192.168.11.29:5000/api/v1/';

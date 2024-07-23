@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hirevire_app/constants/color_constants.dart';
 
 class SkillChip extends StatelessWidget {
   const SkillChip({
@@ -14,7 +13,7 @@ class SkillChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(.1),
+        color: const Color.fromARGB(255, 247, 247, 247),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(text),

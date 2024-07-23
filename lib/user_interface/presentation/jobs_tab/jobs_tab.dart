@@ -21,7 +21,6 @@ class JobsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     jobsController.fetchLocalData();
 
     return Scaffold(
@@ -38,19 +37,19 @@ class JobsTab extends StatelessWidget {
           ),
         ),
         actions: [
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              margin: EdgeInsets.only(
-                  right: GlobalConstants.screenHorizontalPadding),
-              padding: const EdgeInsets.all(3),
-              height: 35,
-              width: 35,
-              child: CustomImageView(
-                imagePath: ImageConstant.settingsIcon,
-              ),
-            ),
-          ),
+          // GestureDetector(
+          //   onTap: () {},
+          //   child: Container(
+          //     margin: EdgeInsets.only(
+          //         right: GlobalConstants.screenHorizontalPadding),
+          //     padding: const EdgeInsets.all(3),
+          //     height: 35,
+          //     width: 35,
+          //     child: CustomImageView(
+          //       imagePath: ImageConstant.settingsIcon,
+          //     ),
+          //   ),
+          // ),
           GestureDetector(
             onTap: () {},
             child: Container(
@@ -70,94 +69,104 @@ class JobsTab extends StatelessWidget {
         () {
           return jobsController.isLoading.value
               ? Container(
-            alignment: Alignment.center,
-            height: Responsive.height(context, 1),
-            child: const LoaderCircularWithBg(),
-          )
-              :
-            jobsController.jobs.isEmpty
-              ? const Center(
-                  child: Text('No jobs available'),
+                  alignment: Alignment.center,
+                  height: Responsive.height(context, 1),
+                  child: const LoaderCircularWithBg(),
                 )
-              : Column(
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: CardSwiper(
-                          cardsCount: jobsController.jobs.length,
-                          cardBuilder: (context, index, percentThresholdX,
-                              percentThresholdY) {
-                            final job = jobsController.jobs[index];
-                            return JobCard(
-                              jobsController: jobsController,
-                              job: job,
-                              index: index,
-                            );
-                          },
-                          onSwipe: (index, percentThresholdX, direction) {
-                            if (direction == CardSwiperDirection.right) {
-                              if (jobsController.isProfileComplete.value == false) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Please complete your profile',
-                                        style: AppTextThemes.subtitleStyle(context).copyWith(
-                                        fontWeight: FontWeight.w500),
-                                      ),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text('Yes'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop(); // Close the dialog
-                                            Get.toNamed(AppRoutes.completeProfile);
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: const Text('Not Now'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop(); // Close the dialog
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
+              : jobsController.jobs.isEmpty
+                  ? const Center(
+                      child: Text('No jobs available'),
+                    )
+                  : Column(
+                      children: [
+                        Expanded(
+                          child: Center(
+                            child: CardSwiper(
+                              cardsCount: jobsController.jobs.length,
+                              cardBuilder: (context, index, percentThresholdX,
+                                  percentThresholdY) {
+                                final job = jobsController.jobs[index];
+                                return JobCard(
+                                  jobsController: jobsController,
+                                  job: job,
+                                  index: index,
                                 );
-                                return false; // Prevent the card from being swiped away
-                              }
+                              },
+                              onSwipe: (index, percentThresholdX, direction) {
+                                if (direction == CardSwiperDirection.right) {
+                                  if (jobsController.isProfileComplete.value ==
+                                      false) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            'Please complete your profile',
+                                            style: AppTextThemes.subtitleStyle(
+                                                    context)
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('Yes'),
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                                Get.toNamed(
+                                                    AppRoutes.completeProfile);
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: const Text('Not Now'),
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // Close the dialog
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                    return false; // Prevent the card from being swiped away
+                                  }
 
-                              jobsController.applyJob(jobsController.jobs[index]);
-                              ToastWidgit.bottomToast("Accepted");
+                                  jobsController
+                                      .applyJob(jobsController.jobs[index]);
+                                  ToastWidgit.bottomToast("Accepted");
 
-                              final job = jobsController.jobs[index];
+                                  final job = jobsController.jobs[index];
 
-                              Get.to(
-                                  JobApplicationForm(
+                                  Get.to(JobApplicationForm(
                                     jobsController: jobsController,
                                     job: job,
                                     index: index,
-                                  )
-                              );
-                            } else if (direction == CardSwiperDirection.left) {
-                              jobsController.rejectJob(jobsController.jobs[index]);
-                              ToastWidgit.bottomToast("Rejected");
-                            }
+                                  ));
+                                } else if (direction ==
+                                    CardSwiperDirection.left) {
+                                  jobsController
+                                      .rejectJob(jobsController.jobs[index]);
+                                  ToastWidgit.bottomToast("Rejected");
+                                }
 
-                            debugPrint(jobsController.jobs.length.toString());
-                            return true; // Allow the swipe
-                          },
-
-                          //allowedSwipeDirection: AllowedSwipeDirection.horizontal,
-                          scale: 1,
-                          numberOfCardsDisplayed: 1,
-                          maxAngle: 30.0,
-                          padding: EdgeInsets.zero,
-                          isLoop: false,
+                                debugPrint(
+                                    jobsController.jobs.length.toString());
+                                return true; // Allow the swipe
+                              },
+                              allowedSwipeDirection:
+                                  const AllowedSwipeDirection.symmetric(
+                                      horizontal: true),
+                              scale: 1,
+                              numberOfCardsDisplayed: 1,
+                              maxAngle: 60.0,
+                              padding: EdgeInsets.zero,
+                              isLoop: false,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                );
+                      ],
+                    );
         },
       ),
     );

@@ -24,7 +24,7 @@ class ApplicantsCard extends StatelessWidget {
     required this.index,
   });
   final JobsController jobsController;
-  final JobRecommendations job;
+  final JobRecommendationsModel job;
   final int index;
 
   @override
@@ -63,8 +63,8 @@ class ApplicantsCard extends StatelessWidget {
             const VerticalSpace(),
             if (job.requiredSkills != null && job.requiredSkills!.isNotEmpty)
               const SectionTitle(title: 'Skills Match'),
-            if (job.requiredSkills != null && job.requiredSkills!.isNotEmpty) requiredSkills(),
-
+            if (job.requiredSkills != null && job.requiredSkills!.isNotEmpty)
+              requiredSkills(),
             const VerticalSpace(),
             ActionButtons(
               onAccept: () {
@@ -217,7 +217,9 @@ class ApplicantsCard extends StatelessWidget {
 
   Text jobLocation(BuildContext context) {
     return Text(
-      job.location != null ? '${job.location!.country ?? ''},${job.location!.city ?? ''}' : 'No location',
+      job.location != null
+          ? '${job.location!.country ?? ''},${job.location!.city ?? ''}'
+          : 'No location',
       style: AppTextThemes.secondaryTextStyle(context),
     );
   }
@@ -236,7 +238,8 @@ class ApplicantsCard extends StatelessWidget {
       runSpacing: 8,
       children: List.generate(
         job.requiredSkills!.length,
-        (index) => SkillChip(text: job.requiredSkills![index].skill?.name ?? ''),
+        (index) =>
+            SkillChip(text: job.requiredSkills![index].skill?.name ?? ''),
       ),
     );
   }
@@ -339,7 +342,7 @@ class SectionTitle extends StatelessWidget {
   }
 }
 
-  class ActionButtons extends StatelessWidget {
+class ActionButtons extends StatelessWidget {
   final VoidCallback onAccept;
   final VoidCallback onReject;
   final VoidCallback onSkip;
@@ -375,4 +378,3 @@ class SectionTitle extends StatelessWidget {
     );
   }
 }
-
