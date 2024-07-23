@@ -38,7 +38,7 @@ class EmpLoginScreen extends GetWidget<EmpOnbController> {
             controller: controller.emailController,
             focusNode: controller.emailFocusNode,
             onChanged: (String value) {
-              controller.validateEmail();
+              controller.loginValidation();
             },
             onEditingComplete: () {
               controller.emailFocusNode.unfocus();
@@ -54,7 +54,7 @@ class EmpLoginScreen extends GetWidget<EmpOnbController> {
             controller: controller.passwordController,
             focusNode: controller.passwordFocusNode,
             onChanged: (String value) {
-              // controller.validatePassword();
+              controller.loginValidation();
             },
             onEditingComplete: () {
               controller.emailFocusNode.unfocus();
@@ -73,10 +73,7 @@ class EmpLoginScreen extends GetWidget<EmpOnbController> {
                         onPressed: () {
                           controller.signin();
                         },
-                        isActive: controller.isEmailValid.value &&
-                            controller.passwordController.text
-                                .trim()
-                                .isNotEmpty,
+                        isActive: controller.isLoginDataValid.value,
                       ),
               ),
               SizedBox(width: 4.h(context)),
