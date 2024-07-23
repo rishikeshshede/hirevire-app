@@ -334,7 +334,6 @@ class JobsController extends GetxController {
           LogHandler.debug(responseJobApply);
 
           if (responseJobApply['success']) {
-            // TODO: handle successfull right swipe here
             applyJob(job);
             Get.back();
           } else {

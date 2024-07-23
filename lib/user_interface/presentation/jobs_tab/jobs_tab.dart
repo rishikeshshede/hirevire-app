@@ -129,7 +129,6 @@ class JobsTab extends StatelessWidget {
                                     );
                                     return false; // Prevent the card from being swiped away
                                   }
-                                  // TODO: this needs to be done once application form is submitted successfully
                                   // jobsController
                                   //     .applyJob(jobsController.jobs[index]);
                                   // ToastWidgit.bottomToast("Accepted");
@@ -142,7 +141,7 @@ class JobsTab extends StatelessWidget {
                                       job: job,
                                       index: index,
                                     ),
-                                  );
+                                  )?.then((value) => { if (value == true) {jobsController.fetchRecommendedJobs()} });
                                 } else if (direction ==
                                     CardSwiperDirection.left) {
                                   jobsController

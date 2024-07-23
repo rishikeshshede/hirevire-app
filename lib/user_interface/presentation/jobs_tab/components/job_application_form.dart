@@ -30,6 +30,9 @@ class JobApplicationForm extends StatelessWidget {
     jobsController.fetchUserProfile();
 
     return PaddedContainer(
+      onBackBtnPressed: () => {
+        Get.back(result: true),
+      },
       screenTitle: 'Job Application Form',
       child: Container(
         color: AppColors.background,
