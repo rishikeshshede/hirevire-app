@@ -4,7 +4,6 @@ import 'package:hirevire_app/common/widgets/custom_image_view.dart';
 import 'package:hirevire_app/common/widgets/loader_circular_with_bg.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/global_constants.dart';
-import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/employer_interface/presentation/job_postings_tab/components/job_postings_card.dart';
 import 'package:hirevire_app/employer_interface/presentation/job_postings_tab/controllers/job_postings_controller.dart';
 import 'package:hirevire_app/utils/responsive.dart';
@@ -29,21 +28,21 @@ class JobPostingsTab extends StatelessWidget {
           imageType: ImageType.network,
           showLoader: false,
         ),
-        actions: [
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              margin: EdgeInsets.only(
-                  right: GlobalConstants.screenHorizontalPadding),
-              padding: const EdgeInsets.all(3),
-              height: 35,
-              width: 35,
-              child: CustomImageView(
-                imagePath: ImageConstant.userIcon,
-              ),
-            ),
-          ),
-        ],
+        // actions: [
+        //   GestureDetector(
+        //     onTap: () {},
+        //     child: Container(
+        //       margin: EdgeInsets.only(
+        //           right: GlobalConstants.screenHorizontalPadding),
+        //       padding: const EdgeInsets.all(3),
+        //       height: 35,
+        //       width: 35,
+        //       child: CustomImageView(
+        //         imagePath: ImageConstant.userIcon,
+        //       ),
+        //     ),
+        //   ),
+        // ],
       ),
       body: Obx(
         () {

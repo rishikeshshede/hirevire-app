@@ -159,6 +159,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 textInputAction: widget.textInputAction,
                 keyboardType: widget.textInputType,
                 maxLines: widget.maxLines ?? 1,
+                // minLines: 1,
                 maxLength: widget.maxLength,
                 decoration: getDecoration(context),
                 validator: widget.validator,

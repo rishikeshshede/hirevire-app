@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hirevire_app/themes/text_theme.dart';
 
 class SkillChip extends StatelessWidget {
   const SkillChip({
@@ -16,7 +17,10 @@ class SkillChip extends StatelessWidget {
         color: const Color.fromARGB(255, 247, 247, 247),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Text(text),
+      child: Text(
+        text,
+        style: AppTextThemes.smallText(context),
+      ),
     );
   }
 }

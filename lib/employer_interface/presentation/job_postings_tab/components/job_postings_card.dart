@@ -10,7 +10,6 @@ import 'package:hirevire_app/utils/size_util.dart';
 import 'package:hirevire_app/utils/string_handler.dart';
 import '../../../../common/widgets/button_outline.dart';
 import '../../../../common/widgets/button_primary.dart';
-import '../../requisitions_tab/components/create_job_posting_screen.dart';
 import 'applicants_screen.dart';
 import 'edit_job_posting_screen.dart';
 import 'package:get/get.dart';
@@ -54,7 +53,7 @@ class JobPostingsCard extends StatelessWidget {
                         ? ''
                         : StringHandler.capitalizeFirstLetterOfWord(
                             jobPostings.status!),
-                    style: AppTextThemes.bodyTextStyle(context),
+                    style: AppTextThemes.smallText(context),
                   ),
                 ],
               ),
@@ -78,21 +77,15 @@ class JobPostingsCard extends StatelessWidget {
           //     ),
           //   ],
           // ),
-
           const VerticalSpace(),
           Row(
             children: [
-              Text(
-                'Hiring Manager:',
-                style: AppTextThemes.secondaryTextStyle(context),
+              textWidget(
+                context,
+                'Hiring Manager: ',
+                color: AppColors.greyDisabled,
               ),
-              const HorizontalSpace(),
-              Text(
-                jobPostings.postedBy?.name ?? '',
-                style: AppTextThemes.bodyTextStyle(context).copyWith(
-                  fontWeight: FontWeight.w300,
-                ),
-              ),
+              textWidget(context, jobPostings.postedBy?.name ?? ''),
             ],
           ),
           const VerticalSpace(),
@@ -101,41 +94,36 @@ class JobPostingsCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text(
-                    'Openings',
-                    style: AppTextThemes.secondaryTextStyle(context),
+                  textWidget(
+                    context,
+                    'Openings: ',
+                    color: AppColors.greyDisabled,
                   ),
-                  const HorizontalSpace(),
-                  Text(
-                    '${jobPostings.savedApplications?.length ?? '0'}',
-                    style: AppTextThemes.bodyTextStyle(context),
-                  ),
+                  textWidget(context,
+                      '${jobPostings.savedApplications?.length ?? '0'}'),
                 ],
               ),
               const VerticalSpace(),
               Row(
                 children: [
-                  Text(
-                    'Accepted',
-                    style: AppTextThemes.secondaryTextStyle(context),
+                  textWidget(
+                    context,
+                    'Accepted: ',
+                    color: AppColors.greyDisabled,
                   ),
-                  const HorizontalSpace(),
-                  Text(
-                    '${jobPostings.savedApplications?.length ?? '0'}',
-                    style: AppTextThemes.bodyTextStyle(context),
-                  ),
+                  textWidget(context,
+                      '${jobPostings.savedApplications?.length ?? '0'}'),
                 ],
               ),
             ],
           ),
           const VerticalSpace(),
-
           Row(
             children: [
               Flexible(
-                child: ButtonPrimary(
+                child: ButtonOutline(
                   btnText: 'Edit Job Posting',
-                  btnColor: AppColors.primaryDark,
+                  height: 38.h(context),
                   onPressed: () {
                     Get.to(
                       EditJobPostingScreen(
@@ -145,23 +133,23 @@ class JobPostingsCard extends StatelessWidget {
                       ),
                     );
                   },
-                  textStyle: AppTextThemes.buttonTextStyle(context),
+                  textStyle: AppTextThemes.buttonTextStyle(context).copyWith(
+                    fontSize: 13,
+                    color: AppColors.primaryDark,
+                  ),
                 ),
               ),
               const HorizontalSpace(),
               Flexible(
-                child: ButtonOutline(
+                child: ButtonPrimary(
                   btnText: 'View applicants',
+                  btnColor: AppColors.primaryDark,
+                  height: 38.h(context),
                   onPressed: () {
-                    Get.to(
-                        const ApplicantsScreen()
-                    );
+                    Get.to(const ApplicantsScreen());
                   },
-                  textStyle: AppTextThemes.genericTextStyle(
-                    context,
-                    customFontSize: 14.0,
-                    color: AppColors.primaryDark,
-                  ),
+                  textStyle: AppTextThemes.buttonTextStyle(context)
+                      .copyWith(fontSize: 13),
                 ),
               ),
             ],
@@ -171,12 +159,20 @@ class JobPostingsCard extends StatelessWidget {
     );
   }
 
+  Text textWidget(BuildContext context, String text, {Color? color}) {
+    return Text(
+      text,
+      style: AppTextThemes.bodyTextStyle(context).copyWith(
+        fontSize: 13.5,
+        color: color ?? AppColors.textPrimary,
+      ),
+    );
+  }
+
   Text jobTitle(BuildContext context) {
     return Text(
       jobPostings.title ?? 'Unknown job title',
-      style: AppTextThemes.subtitleStyle(context).copyWith(
-        fontWeight: FontWeight.w500,
-      ),
+      style: AppTextThemes.subtitleStyle(context),
     );
   }
 }

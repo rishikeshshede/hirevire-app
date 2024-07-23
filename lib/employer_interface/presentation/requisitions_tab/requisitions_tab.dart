@@ -4,7 +4,6 @@ import 'package:hirevire_app/common/widgets/custom_image_view.dart';
 import 'package:hirevire_app/common/widgets/loader_circular_with_bg.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/global_constants.dart';
-import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/employer_interface/presentation/requisitions_tab/components/requisitions_card.dart';
 import 'package:hirevire_app/utils/responsive.dart';
 
@@ -30,21 +29,21 @@ class RequisitionsTab extends StatelessWidget {
           imageType: ImageType.network,
           showLoader: false,
         ),
-        actions: [
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              margin: EdgeInsets.only(
-                  right: GlobalConstants.screenHorizontalPadding),
-              padding: const EdgeInsets.all(3),
-              height: 35,
-              width: 35,
-              child: CustomImageView(
-                imagePath: ImageConstant.dummyUserImage,
-              ),
-            ),
-          ),
-        ],
+        // actions: [
+        //   GestureDetector(
+        //     onTap: () {},
+        //     child: Container(
+        //       margin: EdgeInsets.only(
+        //           right: GlobalConstants.screenHorizontalPadding),
+        //       padding: const EdgeInsets.all(3),
+        //       height: 35,
+        //       width: 35,
+        //       child: CustomImageView(
+        //         imagePath: ImageConstant.dummyUserImage,
+        //       ),
+        //     ),
+        //   ),
+        // ],
       ),
       body: Obx(
         () {
@@ -72,7 +71,7 @@ class RequisitionsTab extends StatelessWidget {
                       child: SingleChildScrollView(
                         padding: EdgeInsets.symmetric(
                             horizontal:
-                                GlobalConstants.screenHorizontalPadding),
+                                GlobalConstants.screenHorizontalPadding * .75),
                         child: Column(
                           children: List.generate(
                             requisitionsController.requisitions.length,

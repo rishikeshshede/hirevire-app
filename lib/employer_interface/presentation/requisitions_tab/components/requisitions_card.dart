@@ -8,6 +8,7 @@ import 'package:hirevire_app/employer_interface/presentation/requisitions_tab/co
 import 'package:hirevire_app/themes/text_theme.dart';
 import 'package:hirevire_app/employer_interface/models/requisition.dart';
 import 'package:hirevire_app/utils/size_util.dart';
+import 'package:hirevire_app/utils/string_handler.dart';
 
 import '../../../../common/widgets/button_outline.dart';
 
@@ -39,49 +40,37 @@ class RequisitionsCard extends StatelessWidget {
           const VerticalSpace(space: 3),
           Row(
             children: [
-              Text(
+              textWidget(
+                context,
                 requisition.department == null
                     ? ''
-                    : '${requisition.department},',
-                style: AppTextThemes.bodyTextStyle(context).copyWith(
-                  fontWeight: FontWeight.w300,
-                ),
+                    : '${requisition.department}, ',
               ),
-              const HorizontalSpace(),
-              Text(
-                requisition.jobMode?[0].toUpperCase() ?? '',
-                style: AppTextThemes.bodyTextStyle(context).copyWith(
-                  fontWeight: FontWeight.w300,
-                ),
+              textWidget(
+                context,
+                StringHandler.capitalizeFirstLetterOfWord(
+                    requisition.jobMode![0]),
               ),
             ],
           ),
           const VerticalSpace(),
           Row(
             children: [
-              Text(
-                'Openings:',
-                style: AppTextThemes.secondaryTextStyle(context),
-              ),
-              const HorizontalSpace(),
-              Text(
-                '${requisition.openingsCount ?? 'Not specified'}',
-                style: AppTextThemes.bodyTextStyle(context),
-              ),
+              textWidget(context, 'Openings: ', color: AppColors.greyDisabled),
+              textWidget(
+                  context, '${requisition.openingsCount ?? 'Not specified'}'),
             ],
           ),
           const VerticalSpace(),
           Row(
             children: [
-              Text(
-                'Job Budget:',
-                style: AppTextThemes.secondaryTextStyle(context),
+              textWidget(
+                context,
+                'Job Budget: ',
+                color: AppColors.greyDisabled,
               ),
-              const HorizontalSpace(),
-              Text(
-                '${requisition.budgetAllocation ?? 'Not specified'}',
-                style: AppTextThemes.bodyTextStyle(context),
-              ),
+              textWidget(context,
+                  '${requisition.budgetAllocation ?? 'Not specified'}'),
             ],
           ),
           const VerticalSpace(),
@@ -91,25 +80,32 @@ class RequisitionsCard extends StatelessWidget {
                 child: ButtonPrimary(
                   btnText: 'Create Job Posting',
                   btnColor: AppColors.primaryDark,
+                  height: 38.h(context),
                   onPressed: () {
                     Get.to(
-                      CreateJobPostingScreen(
+                      () => CreateJobPostingScreen(
                         requisitionsController: requisitionsController,
                         requisition: requisition,
                         index: index,
                       ),
                     );
                   },
-                  textStyle: AppTextThemes.buttonTextStyle(context),
+                  textStyle: AppTextThemes.buttonTextStyle(context)
+                      .copyWith(fontSize: 13),
                 ),
               ),
               const HorizontalSpace(),
               Flexible(
                 child: ButtonOutline(
                   btnText: 'View Job Postings',
+                  height: 38.h(context),
                   onPressed: () {
                     //TODO: same screen as list of job postings tab
                   },
+                  textStyle: AppTextThemes.buttonTextStyle(context).copyWith(
+                    fontSize: 13,
+                    color: AppColors.primaryDark,
+                  ),
                 ),
               ),
             ],
@@ -119,12 +115,20 @@ class RequisitionsCard extends StatelessWidget {
     );
   }
 
+  Text textWidget(BuildContext context, String text, {Color? color}) {
+    return Text(
+      text,
+      style: AppTextThemes.bodyTextStyle(context).copyWith(
+        fontSize: 13.5,
+        color: color ?? AppColors.textPrimary,
+      ),
+    );
+  }
+
   Text jobTitle(BuildContext context) {
     return Text(
       requisition.title ?? 'Unknown job title',
-      style: AppTextThemes.subtitleStyle(context).copyWith(
-        fontWeight: FontWeight.w500,
-      ),
+      style: AppTextThemes.subtitleStyle(context),
     );
   }
 }
