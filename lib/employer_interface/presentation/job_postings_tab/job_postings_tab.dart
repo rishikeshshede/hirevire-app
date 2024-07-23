@@ -70,7 +70,7 @@ class JobPostingsTab extends StatelessWidget {
                       child: SingleChildScrollView(
                         padding: EdgeInsets.symmetric(
                             horizontal:
-                                GlobalConstants.screenHorizontalPadding),
+                                GlobalConstants.screenHorizontalPadding * .75),
                         child: Column(
                           children: List.generate(
                             jobPostingsController.jobPostings.length,

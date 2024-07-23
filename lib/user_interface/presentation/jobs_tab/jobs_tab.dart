@@ -13,7 +13,7 @@ import 'package:hirevire_app/utils/show_toast_util.dart';
 import '../../../common/widgets/loader_circular_with_bg.dart';
 import '../../../routes/app_routes.dart';
 import '../../../utils/responsive.dart';
-import 'components/JobApplicationForm.dart';
+import 'components/job_application_form.dart';
 
 class JobsTab extends StatelessWidget {
   const JobsTab({super.key});
@@ -31,9 +31,8 @@ class JobsTab extends StatelessWidget {
         centerTitle: false,
         title: Obx(
           () => Text(
-            'Hi ${jobsController.name}',
-            style:
-                AppTextThemes.screenTitleStyle(context).copyWith(fontSize: 18),
+            'Hi ${jobsController.name.split(' ')[0]}',
+            style: AppTextThemes.subtitleStyle(context).copyWith(fontSize: 17),
           ),
         ),
         actions: [
@@ -94,8 +93,7 @@ class JobsTab extends StatelessWidget {
                               },
                               onSwipe: (index, percentThresholdX, direction) {
                                 if (direction == CardSwiperDirection.right) {
-                                  if (jobsController.isProfileComplete.value ==
-                                      false) {
+                                  if (!jobsController.isProfileComplete.value) {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -131,18 +129,20 @@ class JobsTab extends StatelessWidget {
                                     );
                                     return false; // Prevent the card from being swiped away
                                   }
-
-                                  jobsController
-                                      .applyJob(jobsController.jobs[index]);
-                                  ToastWidgit.bottomToast("Accepted");
+                                  // TODO: this needs to be done once application form is submitted successfully
+                                  // jobsController
+                                  //     .applyJob(jobsController.jobs[index]);
+                                  // ToastWidgit.bottomToast("Accepted");
 
                                   final job = jobsController.jobs[index];
 
-                                  Get.to(JobApplicationForm(
-                                    jobsController: jobsController,
-                                    job: job,
-                                    index: index,
-                                  ));
+                                  Get.to(
+                                    () => JobApplicationForm(
+                                      jobsController: jobsController,
+                                      job: job,
+                                      index: index,
+                                    ),
+                                  );
                                 } else if (direction ==
                                     CardSwiperDirection.left) {
                                   jobsController

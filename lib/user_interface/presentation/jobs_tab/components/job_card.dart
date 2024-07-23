@@ -7,6 +7,7 @@ import 'package:hirevire_app/common/widgets/green_dot.dart';
 import 'package:hirevire_app/common/widgets/social_icon_widget.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
+import 'package:hirevire_app/constants/global_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
 import 'package:hirevire_app/user_interface/models/job_recommendations.dart';
@@ -32,7 +33,8 @@ class JobCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.w(context)),
+        padding: EdgeInsets.symmetric(
+            horizontal: GlobalConstants.screenHorizontalPadding * .5),
         color: AppColors.background,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,7 +145,9 @@ class JobCard extends StatelessWidget {
           const HorizontalSpace(),
           Text(
             '${job.savedApplications?.length ?? '0'} applicants',
-            style: AppTextThemes.buttonTextStyle(context),
+            style: AppTextThemes.smallText(context).copyWith(
+              color: Colors.white,
+            ),
           ),
         ],
       ),
@@ -173,8 +177,9 @@ class JobCard extends StatelessWidget {
                       job.requestedBy != null && job.requestedBy!.name != null
                           ? job.requestedBy!.name ?? ''
                           : '',
-                      style: AppTextThemes.screenTitleStyle(context).copyWith(
+                      style: AppTextThemes.subtitleStyle(context).copyWith(
                         color: AppColors.background,
+                        fontSize: 16,
                       ),
                     ),
                     Text(

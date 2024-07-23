@@ -10,9 +10,10 @@ import 'package:video_player/video_player.dart';
 
 class VideoUploadWidget extends StatefulWidget {
   final Function(File? videoFile, File? thumbnailFile) onFilesSelected;
-  String? titleText;
+  final String? titleText;
 
-  VideoUploadWidget({required this.onFilesSelected, titleText, super.key});
+  const VideoUploadWidget(
+      {required this.onFilesSelected, this.titleText, super.key});
 
   @override
   VideoUploadWidgetState createState() => VideoUploadWidgetState();

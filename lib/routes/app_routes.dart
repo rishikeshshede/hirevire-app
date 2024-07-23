@@ -5,7 +5,6 @@ import 'package:hirevire_app/employer_interface/presentation/auth/bindings/emp_l
 import 'package:hirevire_app/employer_interface/presentation/auth/emp_login_screen.dart';
 import 'package:hirevire_app/user_interface/presentation/base_navigator.dart';
 import 'package:hirevire_app/common/screens/common_landing_screen.dart';
-import 'package:hirevire_app/user_interface/presentation/jobs_tab/components/JobApplicationForm.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/bindings/user_onb_binding.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/name_dob_section.dart';
 import 'package:hirevire_app/user_interface/presentation/profile/professional_details/bindings/user_profile_binding.dart';
@@ -27,7 +26,6 @@ class AppRoutes {
   static const String nameScreen = '/nameScreen';
   static const String completeProfile = '/completeProfile';
   static const String userBaseNavigator = '/userBaseNavigator';
-
 
   // Employer Routes
   static const String empLoginScreen = '/empLoginScreen';

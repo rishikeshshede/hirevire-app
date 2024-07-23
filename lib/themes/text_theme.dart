@@ -44,6 +44,14 @@ class AppTextThemes {
     );
   }
 
+  static TextStyle mediumTextStyle(BuildContext context) {
+    return TextStyle(
+      fontSize: _getResponsiveFontSize(context, 16.0.adaptSize(context)),
+      fontWeight: FontWeight.w400,
+      color: AppColors.textPrimary,
+    );
+  }
+
   static TextStyle bodyTextStyle(BuildContext context) {
     return TextStyle(
       fontSize: _getResponsiveFontSize(context, 14.0.adaptSize(context)),

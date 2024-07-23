@@ -34,6 +34,14 @@ class JobPostingsCard extends StatelessWidget {
         color: AppColors.background,
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(color: AppColors.disabled),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.greyDisabled.withOpacity(.2),
+            offset: const Offset(0, 2),
+            spreadRadius: 1,
+            blurRadius: 8,
+          )
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

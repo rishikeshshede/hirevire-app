@@ -35,9 +35,11 @@ class JobsController extends GetxController {
 
   TextEditingController nameController = TextEditingController();
   TextEditingController skillsSearchController = TextEditingController();
+  TextEditingController additionalNoteController = TextEditingController();
 
   FocusNode nameFocusNode = FocusNode();
   final FocusNode searchFocusNode = FocusNode();
+  FocusNode additionalNoteFocusNode = FocusNode();
 
   RxList<Map<String, dynamic>> suggestedJobs = <Map<String, dynamic>>[].obs;
 
@@ -267,8 +269,8 @@ class JobsController extends GetxController {
   // }
 
   submitJobApplication(JobRecommendationsModel job) async {
-    print("skillratings map");
-    print(skillsRatings.entries);
+    LogHandler.debug("skillratings map");
+    LogHandler.debug(skillsRatings.entries);
 
     isLoading.value = true;
     if (selectedVideoFile == null) {
@@ -323,7 +325,7 @@ class JobsController extends GetxController {
           .then((response) async {
         if (response['success']) {
           // Handle success
-          debugPrint('Upload successful: ${response}');
+          debugPrint('Upload successful: $response}');
           videoUrl.value = response['body']['videoURL'][0];
           thumbnailUrl.value = response['body']['thumbnailURL'][0];
 
@@ -332,6 +334,8 @@ class JobsController extends GetxController {
           LogHandler.debug(responseJobApply);
 
           if (responseJobApply['success']) {
+            // TODO: handle successfull right swipe here
+            applyJob(job);
             Get.back();
           } else {
             if (responseJobApply['error']['message'] ==

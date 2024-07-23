@@ -70,23 +70,20 @@ class CreateJobPostingScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Flexible(
-                    fit: FlexFit.loose,
-                    child: CustomTextField(
-                      titleText: 'Description',
-                      textInputType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      maxLength: 2000,
-                      maxLines: 5,
-                      focusNode: requisitionsController.descFocusNode,
-                      controller: requisitionsController.descController,
-                      onChanged: (String value) {},
-                      onEditingComplete: () {
-                        requisitionsController.descFocusNode.unfocus();
-                        FocusScope.of(context).requestFocus(
-                            requisitionsController.locationFocusNode);
-                      },
-                    ),
+                  CustomTextField(
+                    titleText: 'Description',
+                    textInputType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    maxLength: 2000,
+                    maxLines: 5,
+                    focusNode: requisitionsController.descFocusNode,
+                    controller: requisitionsController.descController,
+                    onChanged: (String value) {},
+                    onEditingComplete: () {
+                      requisitionsController.descFocusNode.unfocus();
+                      FocusScope.of(context).requestFocus(
+                          requisitionsController.locationFocusNode);
+                    },
                   ),
                   Obx(
                     () => Row(
