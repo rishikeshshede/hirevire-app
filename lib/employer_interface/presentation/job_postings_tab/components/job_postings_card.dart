@@ -11,6 +11,7 @@ import 'package:hirevire_app/utils/string_handler.dart';
 import '../../../../common/widgets/button_outline.dart';
 import '../../../../common/widgets/button_primary.dart';
 import '../../requisitions_tab/components/create_job_posting_screen.dart';
+import 'applicants_screen.dart';
 import 'edit_job_posting_screen.dart';
 import 'package:get/get.dart';
 
@@ -151,7 +152,11 @@ class JobPostingsCard extends StatelessWidget {
               Flexible(
                 child: ButtonOutline(
                   btnText: 'View applicants',
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(
+                        const ApplicantsScreen()
+                    );
+                  },
                   textStyle: AppTextThemes.genericTextStyle(
                     context,
                     customFontSize: 14.0,
