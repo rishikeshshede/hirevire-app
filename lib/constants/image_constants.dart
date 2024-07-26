@@ -17,6 +17,9 @@ class ImageConstant {
   static String youtubeLogo = "$iconPath/youtube-icon.svg";
   static String arrowLeft = "$iconPath/arrow-left.png";
   static String arrowNext = "$iconPath/arrow-next.png";
+  static String next = "$iconPath/next.png";
+  static String cross = "$iconPath/cross.png";
+  static String tickWhite = "$iconPath/tick-white.png";
   static String editIcon = "$iconPath/edit.png";
   static String tickIcon = "$iconPath/tick.png";
   static String linkOtherIcon = "$iconPath/link-other.png";

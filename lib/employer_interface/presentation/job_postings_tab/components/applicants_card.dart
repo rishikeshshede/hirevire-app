@@ -15,16 +15,18 @@ import 'package:hirevire_app/utils/show_toast_util.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 
 import '../../../../common/widgets/VideoPlayerWidget.dart';
+import '../../../models/job_posting.dart';
+import '../controllers/job_postings_controller.dart';
 
 class ApplicantsCard extends StatelessWidget {
   const ApplicantsCard({
     super.key,
-    required this.jobsController,
-    required this.job,
+    required this.jobPostingsController,
+    required this.jobPostings,
     required this.index,
   });
-  final JobsController jobsController;
-  final JobRecommendationsModel job;
+  final JobPostingsController jobPostingsController;
+  final JobPosting jobPostings;
   final int index;
 
   @override
@@ -39,7 +41,7 @@ class ApplicantsCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                recruiterDetails(context),
+                recruiterName(context),
                 //companyDetails(context),
                 //jobPostingDate(context),
               ],
@@ -61,10 +63,10 @@ class ApplicantsCard extends StatelessWidget {
               ],
             ),
             const VerticalSpace(),
-            if (job.requiredSkills != null && job.requiredSkills!.isNotEmpty)
+            if (jobPostings.requiredSkills != null && jobPostings.requiredSkills!.isNotEmpty)
               const SectionTitle(title: 'Skills Match'),
-            if (job.requiredSkills != null && job.requiredSkills!.isNotEmpty)
-              requiredSkills(),
+            if (jobPostings.requiredSkills != null && jobPostings.requiredSkills!.isNotEmpty)
+              //requiredSkills(),
             const VerticalSpace(),
             ActionButtons(
               onAccept: () {
@@ -91,14 +93,14 @@ class ApplicantsCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         CustomImageView(
-          imagePath: job.postedBy?.profilePicUrl,
+          imagePath: jobPostings.postedBy?.profilePicUrl,
           height: 24,
           imageType: ImageType.network,
           showLoader: false,
         ),
         const HorizontalSpace(),
         Text(
-          job.postedBy?.name ?? '',
+          jobPostings.postedBy?.name ?? '',
           style: AppTextThemes.bodyTextStyle(context).copyWith(
             fontWeight: FontWeight.w500,
           ),
@@ -109,7 +111,7 @@ class ApplicantsCard extends StatelessWidget {
 
   Text jobPostingDate(BuildContext context) {
     return Text(
-      jobsController.getPostTime(job.createdAt ?? DateTime.now()),
+      jobPostingsController.getPostTime(jobPostings.createdAt ?? DateTime.now()),
       style: AppTextThemes.smallText(context),
     );
   }
@@ -122,11 +124,11 @@ class ApplicantsCard extends StatelessWidget {
           maxHeight: Responsive.height(context, .64),
           minWidth: Responsive.width(context, 1),
         ),
-        child: job.media == null
+        child: jobPostings.media == null
             ? const Center(
                 child: Text('No video available'),
               )
-            : VideoPlayerWidget(videoUrl: job.media![0].url ?? ''),
+            : VideoPlayerWidget(videoUrl: jobPostings.media![0].url ?? ''),
         // CustomImageView(
         //   imagePath: job.videoUrl,
         //   fit: BoxFit.fitWidth,
@@ -147,7 +149,7 @@ class ApplicantsCard extends StatelessWidget {
           const GreenDot(),
           const HorizontalSpace(),
           Text(
-            '${job.savedApplications?.length ?? '0'} applicants',
+            '${jobPostings.savedApplications?.length ?? '0'} applicants',
             style: AppTextThemes.buttonTextStyle(context),
           ),
         ],
@@ -197,6 +199,33 @@ class ApplicantsCard extends StatelessWidget {
     );
   }
 
+  Positioned recruiterName(BuildContext context) {
+    return Positioned(
+      left: 10,
+      bottom: 10,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          const CustomImageView(
+            imagePath:
+            "https://banner2.cleanpng.com/20190417/sxw/kisspng-microsoft-windows-portable-network-graphics-logo-t-aevinel-reino-maldito-descarga-5cb6fb279ba648.3641279715554957196376.jpg",
+            height: 35,
+            imageType: ImageType.network,
+            showLoader: false,
+          ),
+          HorizontalSpace(),
+      Text(
+              jobPostings.postedBy != null && jobPostings.postedBy!.name != null ? jobPostings.postedBy!.name ?? '' : '',
+              style: AppTextThemes.screenTitleStyle(context).copyWith(
+                color: AppColors.background,
+              ),
+            ),
+
+        ],
+      ),
+    );
+  }
+
   CustomImageView chatWithRecruiter() {
     return CustomImageView(
       imagePath: ImageConstant.chatButtonIcon,
@@ -207,7 +236,7 @@ class ApplicantsCard extends StatelessWidget {
 
   Text jobTitle(BuildContext context) {
     return Text(
-      job.title ?? 'Unknown job title',
+      jobPostings.title ?? 'Unknown job title',
       style: AppTextThemes.titleStyle(context).copyWith(
         fontWeight: FontWeight.w500,
         fontSize: 22.w(context),
@@ -217,8 +246,8 @@ class ApplicantsCard extends StatelessWidget {
 
   Text jobLocation(BuildContext context) {
     return Text(
-      job.location != null
-          ? '${job.location!.country ?? ''},${job.location!.city ?? ''}'
+      jobPostings.location != null
+          ? '${jobPostings.location!.country ?? ''},${jobPostings.location!.city ?? ''}'
           : 'No location',
       style: AppTextThemes.secondaryTextStyle(context),
     );
@@ -226,98 +255,32 @@ class ApplicantsCard extends StatelessWidget {
 
   Text ctcDetails(BuildContext context) {
     return Text(
-      job.ctc == null ? '' : '  ·  ${job.ctc} LPA',
+      jobPostings.ctc == null ? '' : '  ·  ${jobPostings.ctc} LPA',
       style: AppTextThemes.secondaryTextStyle(context),
     );
   }
 
-  Wrap requiredSkills() {
-    return Wrap(
-      alignment: WrapAlignment.start,
-      spacing: 8,
-      runSpacing: 8,
-      children: List.generate(
-        job.requiredSkills!.length,
-        (index) =>
-            SkillChip(text: job.requiredSkills![index].skill?.name ?? ''),
-      ),
-    );
-  }
+  // Wrap requiredSkills() {
+  //   return Wrap(
+  //     alignment: WrapAlignment.start,
+  //     spacing: 8,
+  //     runSpacing: 8,
+  //     children: List.generate(
+  //       jobPostings.requiredSkills!.length,
+  //       (index) =>
+  //           SkillChip(text: jobPostings.requiredSkills![index]. ?.name ?? ''),
+  //     ),
+  //   );
+  // }
 
-  Obx growthPlans(BuildContext context) {
-    return Obx(
-      () => ExpansionPanelList(
-        animationDuration: const Duration(milliseconds: 400),
-        dividerColor: AppColors.greyDisabled,
-        elevation: 0,
-        expandedHeaderPadding: const EdgeInsets.symmetric(vertical: 0),
-        children: List.generate(
-          job.growthPlan!.length,
-          (index) => planWidget(
-            context,
-            job.growthPlan![index],
-            index,
-          ),
-        ),
-        expansionCallback: (index, isOpen) =>
-            jobsController.toggleGrowthPlan(index, isOpen),
-      ),
-    );
-  }
-
-  ExpansionPanel planWidget(BuildContext context, GrowthPlan plan, int index) {
-    return ExpansionPanel(
-      headerBuilder: (c, isOpen) {
-        return Container(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            plan.title ?? 'Plan $index',
-            style: AppTextThemes.subtitleStyle(context),
-          ),
-        );
-      },
-      body: Text(
-        plan.description ?? 'No plan provided',
-        style: AppTextThemes.bodyTextStyle(context),
-      ),
-      isExpanded: jobsController.isOpen[index],
-      canTapOnHeader: true,
-      backgroundColor: AppColors.background,
-    );
-  }
 
   Text perks(BuildContext context) {
     return Text(
-      job.perks ?? 'Not mentioned',
+      jobPostings.perks ?? 'Not mentioned',
       style: AppTextThemes.bodyTextStyle(context),
     );
   }
 
-  // Row socialHandles(BuildContext context) {
-  //   return Row(
-  //     children: List.generate(
-  //       job.socialHandles!.length,
-  //       (index) => Container(
-  //         padding: const EdgeInsets.symmetric(horizontal: 4),
-  //         margin: const EdgeInsets.only(right: 20),
-  //         child: Column(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             CustomImageView(
-  //               imagePath: GlobalConstants
-  //                   .socialProfileTypesMap[job.socialHandles![index].platform],
-  //               height: 30.w(context),
-  //             ),
-  //             Text(
-  //               job.socialHandles![index].platform ?? 'Other',
-  //               style: AppTextThemes.extraSmallText(context),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  //}
 }
 
 class SectionTitle extends StatelessWidget {
@@ -356,23 +319,39 @@ class ActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Column(
       children: [
-        FloatingActionButton(
-          onPressed: onReject,
-          backgroundColor: AppColors.primary,
-          child: const Icon(Icons.close, color: AppColors.background),
-        ),
+
         FloatingActionButton(
           onPressed: onSkip,
           backgroundColor: AppColors.primary,
-          child: const Icon(Icons.share, color: AppColors.background),
+          child: CustomImageView(
+            imagePath: ImageConstant.next,
+            height: 35,
+          ),
         ),
-        FloatingActionButton(
-          onPressed: onAccept,
-          backgroundColor: AppColors.primary,
-          child: const Icon(Icons.check, color: AppColors.background),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            FloatingActionButton(
+              onPressed: onReject,
+              backgroundColor: AppColors.primary,
+              child:  CustomImageView(
+                imagePath: ImageConstant.cross,
+                height: 24,
+              ),
+            ),
+
+            FloatingActionButton(
+              onPressed: onAccept,
+              backgroundColor: AppColors.primary,
+              child: CustomImageView(
+                imagePath: ImageConstant.tickWhite,
+                height: 24,
+              ),
+            ),
+          ],
         ),
       ],
     );

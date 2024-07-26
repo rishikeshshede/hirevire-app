@@ -154,7 +154,11 @@ class JobPostingsCard extends StatelessWidget {
                   btnColor: AppColors.primaryDark,
                   height: 38.h(context),
                   onPressed: () {
-                    Get.to(const ApplicantsScreen());
+                    Get.to(ApplicantsScreen(
+                      jobPostingsController: jobPostingsController,
+                      jobPostings: jobPostings,
+                      index: index,
+                    ));
                   },
                   textStyle: AppTextThemes.buttonTextStyle(context)
                       .copyWith(fontSize: 13),
