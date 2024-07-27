@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hirevire_app/common/widgets/padded_container.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:hirevire_app/employer_interface/presentation/job_postings_tab/controllers/view_applicants_controller.dart';
 import 'package:hirevire_app/utils/show_toast_util.dart';
 
 import '../../../../common/widgets/loader_circular_with_bg.dart';
@@ -26,18 +27,21 @@ class ApplicantsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final ViewApplicantsController viewApplicantsController =
+    Get.put(ViewApplicantsController(jobPostings.id ?? ''));
+
     return PaddedContainer(
         screenTitle: 'Applicants',
       child: Obx(
             () {
-          return jobPostingsController.isLoading.value
+          return viewApplicantsController.isLoading.value
               ? Container(
             alignment: Alignment.center,
             height: Responsive.height(context, 1),
             child: const LoaderCircularWithBg(),
           )
               :
-          jobPostingsController.jobPostings.isEmpty
+          viewApplicantsController.jobApplicant.isEmpty
                 ? const Center(
                     child: Text('No applicants found'),
                   )
@@ -46,30 +50,22 @@ class ApplicantsScreen extends StatelessWidget {
                     Expanded(
                       child: Center(
                     child: CardSwiper(
-                      cardsCount: jobPostingsController.jobPostings.length,
+                      cardsCount: viewApplicantsController.jobApplicant.length,
                       cardBuilder: (context, index, percentThresholdX,
                           percentThresholdY) {
-                        final job = jobPostingsController.jobPostings[index];
+                        final job = viewApplicantsController.jobApplicant[index];
                         return ApplicantsCard(
-                          jobPostingsController: jobPostingsController,
-                          jobPostings: jobPostings,
+                          jobPostingsController: viewApplicantsController,
+                          jobApplicant: job,
                           index: index,
                         );
                       },
                       onSwipe: (index, percentThresholdX, direction) {
                         if (direction == CardSwiperDirection.right) {
-
-                          //jobsController.applyJob(jobsController.jobs[index]);
-                          ToastWidgit.bottomToast("Accepted");
-
-                          //final job = jobsController.jobs[index];
-
-
+                          viewApplicantsController.shortListApplicant(viewApplicantsController.jobApplicant[index]);
                         } else if (direction == CardSwiperDirection.left) {
-                          //jobsController.rejectJob(jobsController.jobs[index]);
-                          ToastWidgit.bottomToast("Rejected");
+                          viewApplicantsController.rejectApplicant(viewApplicantsController.jobApplicant[index]);
                         }
-
                         return true; // Allow the swipe
                       },
 

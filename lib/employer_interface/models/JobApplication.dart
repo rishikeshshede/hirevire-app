@@ -62,7 +62,7 @@ class JobApplication {
   factory JobApplication.fromMap(Map<String, dynamic> map) {
     return JobApplication(
       id: map['_id'],
-      //jobPostId: map['jobPostId'] != null ? JobPostId.fromMap(map['jobPostId']) : null, //TODO: remove this
+      jobPostId: map['jobPostId'] != null ? JobPostId.fromMap(map['jobPostId']) : null,
       appliedBy: map['appliedBy'] != null ? AppliedBy.fromMap(map['appliedBy']) : null,
       media: map['media'] != null ? List<Media>.from(map['media'].map((x) => Media.fromMap(x))) : null,
       answers: map['answers'] != null ? List<Answer>.from(map['answers'].map((x) => Answer.fromMap(x))) : null,
@@ -135,34 +135,33 @@ class JobPostId {
     this.leftSwipes,
   });
 
-  //TODO: remove this
-  // factory JobPostId.fromMap(Map<String, dynamic> map) {
-  //   return JobPostId(
-  //     location: map['location'] != null ? Location.fromMap(map['location']) : null,
-  //     id: map['_id'],
-  //     postedBy: map['postedBy'] != null ? PostedBy.fromMap(map['postedBy']) : null,
-  //     requestedBy: map['requestedBy'] != null ? RequestedBy.fromMap(map['requestedBy']) : null,
-  //     jobRequisition: map['jobRequisition'] != null ? JobRequisition.fromMap(map['jobRequisition']) : null,
-  //     title: map['title'],
-  //     department: map['department'],
-  //     project: map['project'],
-  //     jobMode: map['jobMode'] != null ? List<String>.from(map['jobMode']) : null,
-  //     description: map['description'],
-  //     ctc: map['ctc'],
-  //     status: map['status'],
-  //     questions: map['questions'] != null ? List<Question>.from(map['questions'].map((x) => Question.fromMap(x))) : null,
-  //     growthPlan: map['growth_plan'] != null ? List<GrowthPlan>.from(map['growth_plan'].map((x) => GrowthPlan.fromMap(x))) : null,
-  //     perks: map['perks'],
-  //     requiredSkills: map['requiredSkills'] != null ? List<RequiredSkill>.from(map['requiredSkills'].map((x) => RequiredSkill.fromMap(x))) : null,
-  //     media: map['media'] != null ? List<Media>.from(map['media'].map((x) => Media.fromMap(x))) : null,
-  //     endsOn: map['endsOn'] != null ? DateTime.parse(map['endsOn']) : null,
-  //     savedApplications: map['savedApplications'] != null ? List<String>.from(map['savedApplications']) : null,
-  //     createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
-  //     updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
-  //     v: map['__v'],
-  //     leftSwipes: map['leftSwipes'],
-  //   );
-  // }
+  factory JobPostId.fromMap(Map<String, dynamic> map) {
+    return JobPostId(
+      location: map['location'] != null ? Location.fromMap(map['location']) : null,
+      id: map['_id'],
+      postedBy: map['postedBy'] != null ? PostedBy.fromMap(map['postedBy']) : null,
+      requestedBy: map['requestedBy'] != null ? RequestedBy.fromMap(map['requestedBy']) : null,
+      jobRequisition: map['jobRequisition'] != null ? JobRequisition.fromMap(map['jobRequisition']) : null,
+      title: map['title'],
+      department: map['department'],
+      project: map['project'],
+      jobMode: map['jobMode'] != null ? List<String>.from(map['jobMode']) : null,
+      description: map['description'],
+      ctc: map['ctc'],
+      status: map['status'],
+      questions: map['questions'] != null ? List<Question>.from(map['questions'].map((x) => Question.fromMap(x))) : null,
+      growthPlan: map['growth_plan'] != null ? List<GrowthPlan>.from(map['growth_plan'].map((x) => GrowthPlan.fromMap(x))) : null,
+      perks: map['perks'],
+      requiredSkills: map['requiredSkills'] != null ? List<RequiredSkill>.from(map['requiredSkills'].map((x) => RequiredSkill.fromMap(x))) : null,
+      media: map['media'] != null ? List<Media>.from(map['media'].map((x) => Media.fromMap(x))) : null,
+      endsOn: map['endsOn'] != null ? DateTime.parse(map['endsOn']) : null,
+      savedApplications: map['savedApplications'] != null ? List<String>.from(map['savedApplications']) : null,
+      createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
+      updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
+      v: map['__v'],
+      leftSwipes: map['leftSwipes'],
+    );
+  }
 
   factory JobPostId.fromJson(Map<String, dynamic> json) {
     return JobPostId(
@@ -234,6 +233,13 @@ class Location {
     );
   }
 
+  factory Location.fromMap(Map<String, dynamic> map) {
+    return Location(
+      country: map['country'],
+      city: map['city'],
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'country': country,
@@ -260,6 +266,17 @@ class PostedBy {
       officialEmail: json['officialEmail'],
       industry: json['industry'],
       socialUrls: json['socialUrls'] != null ? List<SocialUrl>.from(json['socialUrls'].map((x) => SocialUrl.fromJson(x))) : null,
+    );
+  }
+
+  factory PostedBy.fromMap(Map<String, dynamic> map) {
+    return PostedBy(
+      id: map['_id'],
+      name: map['name'],
+      description: map['description'],
+      officialEmail: map['officialEmail'],
+      industry: map['industry'],
+      socialUrls: map['socialUrls'] != null ? List<SocialUrl>.from(map['socialUrls'].map((x) => SocialUrl.fromMap(x))) : null,
     );
   }
 
@@ -290,6 +307,14 @@ class SocialUrl {
     );
   }
 
+  factory SocialUrl.fromMap(Map<String, dynamic> map) {
+    return SocialUrl(
+      id: map['_id'],
+      platform: map['platform'],
+      url: map['url'],
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       '_id': id,
@@ -314,6 +339,14 @@ class RequestedBy {
     );
   }
 
+  factory RequestedBy.fromMap(Map<String, dynamic> map) {
+    return RequestedBy(
+      id: map['_id'],
+      email: map['email'],
+      name: map['name'],
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       '_id': id,
@@ -333,6 +366,13 @@ class JobRequisition {
     return JobRequisition(
       id: json['_id'],
       title: json['title'],
+    );
+  }
+
+  factory JobRequisition.fromMap(Map<String, dynamic> map) {
+    return JobRequisition(
+      id: map['_id'],
+      title: map['title'],
     );
   }
 

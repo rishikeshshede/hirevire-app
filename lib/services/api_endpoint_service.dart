@@ -25,6 +25,8 @@ class EndpointService {
 
   // POST Endpoints
   static const String createJobPostings = 'jobPosting/create';
+  static const String rightSwipeApplicant = 'jobApplication/recruiter/rightSwipe';
+  static const String leftSwipeApplicant = 'jobApplication/recruiter/leftSwipe';
 
   // UPDATE Endpoints
   static const String closeJobPostings = 'jobPosting/close';

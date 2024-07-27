@@ -7,6 +7,7 @@ import 'package:hirevire_app/common/widgets/green_dot.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
+import 'package:hirevire_app/employer_interface/models/JobApplication.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
 import 'package:hirevire_app/user_interface/models/job_recommendations.dart';
 import 'package:hirevire_app/user_interface/presentation/jobs_tab/controllers/jobs_controller.dart';
@@ -17,20 +18,25 @@ import 'package:hirevire_app/utils/size_util.dart';
 import '../../../../common/widgets/VideoPlayerWidget.dart';
 import '../../../models/job_posting.dart';
 import '../controllers/job_postings_controller.dart';
-
+import '../controllers/view_applicants_controller.dart';
+import 'package:fl_chart/fl_chart.dart';
 class ApplicantsCard extends StatelessWidget {
   const ApplicantsCard({
     super.key,
     required this.jobPostingsController,
-    required this.jobPostings,
+    required this.jobApplicant,
     required this.index,
   });
-  final JobPostingsController jobPostingsController;
-  final JobPosting jobPostings;
+  final ViewApplicantsController jobPostingsController;
+  final JobApplication jobApplicant;
   final int index;
 
   @override
   Widget build(BuildContext context) {
+    final radarData = jobPostingsController.prepareRadarData(jobApplicant.jobPostId, jobApplicant);
+    final skillNames = jobApplicant.requiredSkills?.map((skill) => skill.skill?.name ?? '').toList();
+
+
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 8.w(context)),
@@ -41,7 +47,7 @@ class ApplicantsCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                recruiterName(context),
+                applicantName(context),
                 //companyDetails(context),
                 //jobPostingDate(context),
               ],
@@ -51,7 +57,7 @@ class ApplicantsCard extends StatelessWidget {
               children: [
                 videoFrame(context),
                 //applicantsCount(context),
-                recruiterDetails(context),
+                aplicantDetails(context),
               ],
             ),
             const VerticalSpace(),
@@ -59,23 +65,32 @@ class ApplicantsCard extends StatelessWidget {
             Row(
               children: [
                 jobLocation(context),
+                //ctcDetails(context),
+              ],
+            ),
+            const VerticalSpace(),
+            Row(
+              children: [
+                //jobLocation(context),
                 ctcDetails(context),
               ],
             ),
             const VerticalSpace(),
-            if (jobPostings.requiredSkills != null && jobPostings.requiredSkills!.isNotEmpty)
+            if (jobApplicant.requiredSkills != null && jobApplicant.requiredSkills!.isNotEmpty)
               const SectionTitle(title: 'Skills Match'),
-            if (jobPostings.requiredSkills != null && jobPostings.requiredSkills!.isNotEmpty)
-              //requiredSkills(),
+            if (jobApplicant.requiredSkills != null && jobApplicant.requiredSkills!.isNotEmpty)
+              RadarChartComponent(
+                jobPostData: radarData[0],
+                applicantData: radarData[1],
+                skillNames: skillNames,
+              ),
             const VerticalSpace(),
             ActionButtons(
               onAccept: () {
-                //jobsController.applyJob(jobsController.jobs[index]);
-                ToastWidgit.bottomToast("Accepted");
+                jobPostingsController.shortListApplicant(jobPostingsController.jobApplicant[index]);
               },
               onReject: () {
-                //jobsController.rejectJob(jobsController.jobs[index]);
-                ToastWidgit.bottomToast("Rejected");
+                jobPostingsController.rejectApplicant(jobPostingsController.jobApplicant[index]);
               },
               onSkip: () {
                 ToastWidgit.bottomToast("Skipped");
@@ -93,26 +108,19 @@ class ApplicantsCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         CustomImageView(
-          imagePath: jobPostings.postedBy?.profilePicUrl,
+          imagePath: jobApplicant.jobPostId?.postedBy?.socialUrls?[0].url ?? '',
           height: 24,
           imageType: ImageType.network,
           showLoader: false,
         ),
         const HorizontalSpace(),
         Text(
-          jobPostings.postedBy?.name ?? '',
+          jobApplicant.jobPostId?.postedBy?.name ?? '',
           style: AppTextThemes.bodyTextStyle(context).copyWith(
             fontWeight: FontWeight.w500,
           ),
         ),
       ],
-    );
-  }
-
-  Text jobPostingDate(BuildContext context) {
-    return Text(
-      jobPostingsController.getPostTime(jobPostings.createdAt ?? DateTime.now()),
-      style: AppTextThemes.smallText(context),
     );
   }
 
@@ -124,11 +132,11 @@ class ApplicantsCard extends StatelessWidget {
           maxHeight: Responsive.height(context, .64),
           minWidth: Responsive.width(context, 1),
         ),
-        child: jobPostings.media == null
+        child: jobApplicant.media == null
             ? const Center(
                 child: Text('No video available'),
               )
-            : VideoPlayerWidget(videoUrl: jobPostings.media![0].url ?? ''),
+            : VideoPlayerWidget(videoUrl: jobApplicant.media![0].url ?? ''),
         // CustomImageView(
         //   imagePath: job.videoUrl,
         //   fit: BoxFit.fitWidth,
@@ -149,7 +157,7 @@ class ApplicantsCard extends StatelessWidget {
           const GreenDot(),
           const HorizontalSpace(),
           Text(
-            '${jobPostings.savedApplications?.length ?? '0'} applicants',
+            '${jobApplicant.jobPostId?.savedApplications?.length ?? '0'} applicants',
             style: AppTextThemes.buttonTextStyle(context),
           ),
         ],
@@ -157,41 +165,26 @@ class ApplicantsCard extends StatelessWidget {
     );
   }
 
-  Positioned recruiterDetails(BuildContext context) {
+  Positioned aplicantDetails(BuildContext context) {
     return Positioned(
-      left: 10,
+      left: 0,
       bottom: 10,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8.0),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            width: Responsive.width(context, 1) - (8.w(context) * 2) - 20,
-            padding: const EdgeInsets.all(8.0),
-            color: Colors.black.withOpacity(0.2),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                // Column(
-                //   mainAxisSize: MainAxisSize.min,
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //   children: [
-                //     Text(
-                //       job.requestedBy != null && job.requestedBy!.name != null ? job.requestedBy!.name ?? '' : '',
-                //       style: AppTextThemes.screenTitleStyle(context).copyWith(
-                //         color: AppColors.background,
-                //       ),
-                //     ),
-                //     Text(
-                //       'Recruiter',
-                //       style: AppTextThemes.smallText(context).copyWith(
-                //         color: AppColors.background,
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                chatWithRecruiter(),
-              ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8.0),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(
+              width: Responsive.width(context, 1) - (8.w(context) * 2) - 20,
+              padding: const EdgeInsets.all(8.0),
+              color: Colors.black.withOpacity(0.2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  chatWithRecruiter(),
+                ],
+              ),
             ),
           ),
         ),
@@ -199,25 +192,25 @@ class ApplicantsCard extends StatelessWidget {
     );
   }
 
-  Positioned recruiterName(BuildContext context) {
+  Positioned applicantName(BuildContext context) {
     return Positioned(
       left: 10,
       bottom: 10,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          const CustomImageView(
+          CustomImageView(
             imagePath:
-            "https://banner2.cleanpng.com/20190417/sxw/kisspng-microsoft-windows-portable-network-graphics-logo-t-aevinel-reino-maldito-descarga-5cb6fb279ba648.3641279715554957196376.jpg",
+            jobApplicant.appliedBy != null && jobApplicant.appliedBy?.profilePicUrl != null && jobApplicant.appliedBy!.profilePicUrl != null ? jobApplicant.appliedBy!.profilePicUrl ?? '' : '',
             height: 35,
             imageType: ImageType.network,
             showLoader: false,
           ),
           HorizontalSpace(),
       Text(
-              jobPostings.postedBy != null && jobPostings.postedBy!.name != null ? jobPostings.postedBy!.name ?? '' : '',
+        jobApplicant.appliedBy != null && jobApplicant.appliedBy?.name != null && jobApplicant.appliedBy!.name != null ? jobApplicant.appliedBy!.name ?? '' : '',
               style: AppTextThemes.screenTitleStyle(context).copyWith(
-                color: AppColors.background,
+                color: AppColors.black,
               ),
             ),
 
@@ -236,7 +229,7 @@ class ApplicantsCard extends StatelessWidget {
 
   Text jobTitle(BuildContext context) {
     return Text(
-      jobPostings.title ?? 'Unknown job title',
+      jobApplicant.jobPostId?.title ?? 'Unknown job title',
       style: AppTextThemes.titleStyle(context).copyWith(
         fontWeight: FontWeight.w500,
         fontSize: 22.w(context),
@@ -246,8 +239,8 @@ class ApplicantsCard extends StatelessWidget {
 
   Text jobLocation(BuildContext context) {
     return Text(
-      jobPostings.location != null
-          ? '${jobPostings.location!.country ?? ''},${jobPostings.location!.city ?? ''}'
+      jobApplicant.jobPostId != null && jobApplicant.jobPostId?.location != null
+          ? '${jobApplicant.jobPostId?.location!.country ?? ''}, ${jobApplicant.jobPostId?.location!.city ?? ''} · ${jobApplicant.jobPostId?.jobMode?[0] ?? ''}'
           : 'No location',
       style: AppTextThemes.secondaryTextStyle(context),
     );
@@ -255,7 +248,7 @@ class ApplicantsCard extends StatelessWidget {
 
   Text ctcDetails(BuildContext context) {
     return Text(
-      jobPostings.ctc == null ? '' : '  ·  ${jobPostings.ctc} LPA',
+      jobApplicant.jobPostId?.ctc == null ? '' : '${jobApplicant.jobPostId?.ctc ?? ''} LPA',
       style: AppTextThemes.secondaryTextStyle(context),
     );
   }
@@ -276,7 +269,7 @@ class ApplicantsCard extends StatelessWidget {
 
   Text perks(BuildContext context) {
     return Text(
-      jobPostings.perks ?? 'Not mentioned',
+      jobApplicant.jobPostId?.perks ?? 'Not mentioned',
       style: AppTextThemes.bodyTextStyle(context),
     );
   }
@@ -325,9 +318,13 @@ class ActionButtons extends StatelessWidget {
         FloatingActionButton(
           onPressed: onSkip,
           backgroundColor: AppColors.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+          ),
           child: CustomImageView(
             imagePath: ImageConstant.next,
-            height: 35,
+            height: 28,
+            width: 28,
           ),
         ),
 
@@ -336,24 +333,86 @@ class ActionButtons extends StatelessWidget {
           children: [
             FloatingActionButton(
               onPressed: onReject,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100),
+              ),
               backgroundColor: AppColors.primary,
               child:  CustomImageView(
                 imagePath: ImageConstant.cross,
                 height: 24,
+                width: 24,
               ),
             ),
 
             FloatingActionButton(
               onPressed: onAccept,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100),
+              ),
               backgroundColor: AppColors.primary,
               child: CustomImageView(
                 imagePath: ImageConstant.tickWhite,
                 height: 24,
+                width: 24,
               ),
             ),
           ],
         ),
       ],
+    );
+  }
+}
+
+class RadarChartComponent extends StatelessWidget {
+  final List<RadarEntry> jobPostData;
+  final List<RadarEntry> applicantData;
+  final List<String>? skillNames;
+
+  RadarChartComponent({
+    required this.jobPostData,
+    required this.applicantData,
+    required this.skillNames,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 300,
+      child: RadarChart(
+        RadarChartData(
+          radarTouchData: RadarTouchData(enabled: true),
+          dataSets: [
+            RadarDataSet(
+              fillColor: Colors.blue.withOpacity(0.5),
+              borderColor: Colors.blue,
+              borderWidth: 2,
+              entryRadius: 2,
+              dataEntries: jobPostData,
+            ),
+            RadarDataSet(
+              fillColor: Colors.orange.withOpacity(0.5),
+              borderColor: Colors.orange,
+              borderWidth: 2,
+              entryRadius: 2,
+              dataEntries: applicantData,
+            ),
+          ],
+          radarBackgroundColor: Colors.transparent,
+          borderData: FlBorderData(show: false),
+          radarBorderData: const BorderSide(color: Colors.transparent),
+          titlePositionPercentageOffset: 0.1,
+          titleTextStyle: TextStyle(color: Colors.grey, fontSize: 14),
+          getTitle: (index, angle) {
+            if (skillNames != null && index < skillNames!.length) {
+              return RadarChartTitle(
+                text: skillNames![index],
+                angle: angle,
+              );
+            }
+            return RadarChartTitle(text: '', angle: angle);
+          },
+        ),
+      ),
     );
   }
 }
