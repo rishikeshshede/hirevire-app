@@ -143,7 +143,7 @@ class JobPostingsController extends GetxController {
 
     Map<String, dynamic> body = {
       "jobRequisitionId": jobPosting.id,
-      "postedBy": jobPosting.postedBy,
+      "postedBy": jobPosting.postedBy?.id ?? '',
       "title": jobPosting.title,
       "department": jobPosting.department,
       "project": jobPosting.project,

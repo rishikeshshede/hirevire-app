@@ -209,6 +209,7 @@ class CreateJobPostingScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                  //TODO: ctc should be in range
                   CustomTextField(
                     titleText: 'CTC',
                     labelText: 'Per annum (in Lakhs)',
@@ -225,8 +226,13 @@ class CreateJobPostingScreen extends StatelessWidget {
                     // readOnly: true,
                   ),
                   Obx(
-                    () => ErrorTextWidget(
-                        text: requisitionsController.errorMsgCtc.value),
+                    () => Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ErrorTextWidget(
+                            text: requisitionsController.errorMsgCtc.value),
+                      ],
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
