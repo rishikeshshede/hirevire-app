@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
 import 'package:hirevire_app/employer_interface/models/job_posting.dart';
 import 'package:hirevire_app/services/api_service.dart';
@@ -48,7 +47,6 @@ class JobPostingsController extends GetxController {
   TextEditingController qOneController = TextEditingController();
   TextEditingController qTwoController = TextEditingController();
 
-
   void setJobTitle(String? jobTitle) {
     jobTitleController.text = jobTitle ?? '';
   }
@@ -58,7 +56,8 @@ class JobPostingsController extends GetxController {
   }
 
   void setJobMode(List<String>? jobMode) {
-    jobModeController.value = capitalizeFirstLetter(jobMode?[0] ?? GlobalConstants.locationTypes[0]) ;
+    jobModeController.value =
+        capitalizeFirstLetter(jobMode?[0] ?? GlobalConstants.locationTypes[0]);
   }
 
   void setDescription(String? desc) {
@@ -133,7 +132,6 @@ class JobPostingsController extends GetxController {
     }
   }
 
-
   updateJobPosting(JobPosting jobPosting) async {
     String endpoint = EndpointService.updateJobPostings;
 
@@ -159,7 +157,8 @@ class JobPostingsController extends GetxController {
       "questions": jobPosting.questions?.map((q) => q.toMap()).toList(),
       "growth_plan": jobPosting.growthPlan?.map((g) => g.toMap()).toList(),
       "perks": jobPosting.perks,
-      "requiredSkills": jobPosting.requiredSkills?.map((s) => s.toMap()).toList(),
+      "requiredSkills":
+          jobPosting.requiredSkills?.map((s) => s.toMap()).toList(),
       "media": jobPosting.media?.map((m) => m.toMap()).toList(),
       "endsOn": jobPosting.endsOn?.toIso8601String(),
       "status": isClosedStatus.value ? 'closed' : jobPosting.status,

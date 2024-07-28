@@ -1,25 +1,20 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:hirevire_app/common/widgets/chip_widget.dart';
 import 'package:hirevire_app/common/widgets/custom_image_view.dart';
-import 'package:hirevire_app/common/widgets/green_dot.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
+import 'package:hirevire_app/constants/global_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
-import 'package:hirevire_app/employer_interface/models/JobApplication.dart';
+import 'package:hirevire_app/employer_interface/models/job_application_model.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
-import 'package:hirevire_app/user_interface/models/job_recommendations.dart';
-import 'package:hirevire_app/user_interface/presentation/jobs_tab/controllers/jobs_controller.dart';
+import 'package:hirevire_app/user_interface/presentation/jobs_tab/components/section_title.dart';
+import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/responsive.dart';
 import 'package:hirevire_app/utils/show_toast_util.dart';
 import 'package:hirevire_app/utils/size_util.dart';
-
 import '../../../../common/widgets/VideoPlayerWidget.dart';
-import '../../../models/job_posting.dart';
-import '../controllers/job_postings_controller.dart';
 import '../controllers/view_applicants_controller.dart';
 import 'package:fl_chart/fl_chart.dart';
+
 class ApplicantsCard extends StatelessWidget {
   const ApplicantsCard({
     super.key,
@@ -33,73 +28,200 @@ class ApplicantsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radarData = jobPostingsController.prepareRadarData(jobApplicant.jobPostId, jobApplicant);
-    final skillNames = jobApplicant.requiredSkills?.map((skill) => skill.skill?.name ?? '').toList();
-
+    final radarData = jobPostingsController.prepareRadarData(
+        jobApplicant.jobPostId, jobApplicant);
+    final skillNames = jobApplicant.requiredSkills
+        ?.map((skill) => skill.skill?.name ?? '')
+        .toList();
 
     return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.w(context)),
-        color: AppColors.background,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                applicantName(context),
-                //companyDetails(context),
-                //jobPostingDate(context),
+                applicantNameAndProfilePic(context),
+                lastUpdated(context),
               ],
             ),
-            const VerticalSpace(),
-            Stack(
-              children: [
-                videoFrame(context),
-                //applicantsCount(context),
-                aplicantDetails(context),
-              ],
+          ),
+          const VerticalSpace(),
+          Stack(
+            children: [
+              videoFrame(context),
+              chatWidget(context),
+            ],
+          ),
+          const VerticalSpace(),
+          headline(context),
+          jobApplicant.appliedBy?.bio != null ? bio(context) : const SizedBox(),
+
+          // TODO: Add experience section here
+          const SectionTitle(title: 'Recent Experience'),
+          // take experience from reponse and add most recent experience here
+          // and skip this section if no experience is added
+          // Row(
+          //   children: [
+          //     jobLocation(context),
+          //     //ctcDetails(context),
+          //   ],
+          // ),
+
+          const VerticalSpace(),
+          if (jobApplicant.requiredSkills != null &&
+              jobApplicant.requiredSkills!.isNotEmpty)
+            const SectionTitle(title: 'Skills Match'),
+          if (jobApplicant.requiredSkills != null &&
+              jobApplicant.requiredSkills!.isNotEmpty)
+            RadarChartComponent(
+              jobPostData: radarData[0],
+              applicantData: radarData[1],
+              skillNames: skillNames,
             ),
-            const VerticalSpace(),
-            jobTitle(context),
-            Row(
-              children: [
-                jobLocation(context),
-                //ctcDetails(context),
-              ],
+          const SectionTitle(title: 'Social Handles'),
+          socialHandles(context),
+          const VerticalSpace(space: 40),
+          ActionButtons(
+            onAccept: () {
+              jobPostingsController.shortListApplicant(
+                  jobPostingsController.jobApplicant[index]);
+            },
+            onReject: () {
+              jobPostingsController
+                  .rejectApplicant(jobPostingsController.jobApplicant[index]);
+            },
+            onSkip: () {
+              ToastWidgit.bottomToast("Skipped");
+            },
+          ),
+          const VerticalSpace(space: 40),
+        ],
+      ),
+    );
+  }
+
+  Widget applicantNameAndProfilePic(BuildContext context) {
+    return Expanded(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: CustomImageView(
+              imagePath: jobApplicant.appliedBy != null &&
+                      jobApplicant.appliedBy!.profilePicUrl != null
+                  ? jobApplicant.appliedBy!.profilePicUrl
+                  : '',
+              height: 28,
+              width: 28,
+              imageType: ImageType.network,
+              showLoader: false,
+              padding: 0,
             ),
-            const VerticalSpace(),
-            Row(
-              children: [
-                //jobLocation(context),
-                ctcDetails(context),
-              ],
+          ),
+          const HorizontalSpace(),
+          Text(
+            jobApplicant.appliedBy != null &&
+                    jobApplicant.appliedBy?.name != null
+                ? jobApplicant.appliedBy!.name!
+                : 'Unknown Applicant',
+            style: AppTextThemes.mediumTextStyle(context).copyWith(
+              fontWeight: FontWeight.w500,
             ),
-            const VerticalSpace(),
-            if (jobApplicant.requiredSkills != null && jobApplicant.requiredSkills!.isNotEmpty)
-              const SectionTitle(title: 'Skills Match'),
-            if (jobApplicant.requiredSkills != null && jobApplicant.requiredSkills!.isNotEmpty)
-              RadarChartComponent(
-                jobPostData: radarData[0],
-                applicantData: radarData[1],
-                skillNames: skillNames,
-              ),
-            const VerticalSpace(),
-            ActionButtons(
-              onAccept: () {
-                jobPostingsController.shortListApplicant(jobPostingsController.jobApplicant[index]);
-              },
-              onReject: () {
-                jobPostingsController.rejectApplicant(jobPostingsController.jobApplicant[index]);
-              },
-              onSkip: () {
-                ToastWidgit.bottomToast("Skipped");
-              },
-            ),
-            const VerticalSpace(space: 20),
-          ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget lastUpdated(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          'Last updated',
+          style: AppTextThemes.smallText(context).copyWith(
+            color: AppColors.greyDisabled,
+          ),
+        ),
+        Text(
+          jobApplicant.appliedBy != null &&
+                  jobApplicant.appliedBy!.updatedTime != null
+              ? DatetimeUtil.timeAgo(jobApplicant.appliedBy!.updatedTime!)
+              : 'Never',
+          style: AppTextThemes.smallText(context).copyWith(
+            color: AppColors.greyDisabled,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  ClipRRect videoFrame(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: Responsive.height(context, .64),
+          minWidth: Responsive.width(context, 1),
+        ),
+        child: jobApplicant.media == null
+            ? const Center(
+                child: Text('No video available'),
+              )
+            : VideoPlayerWidget(videoUrl: jobApplicant.media![0].url ?? ''),
+      ),
+    );
+  }
+
+  Positioned chatWidget(BuildContext context) {
+    return Positioned(
+      right: 0,
+      bottom: 8,
+      child: GestureDetector(
+        onTap: () {},
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+          child: CustomImageView(
+            imagePath: ImageConstant.chatButtonIcon,
+            height: 32,
+            imageType: ImageType.png,
+          ),
         ),
       ),
+    );
+  }
+
+  Text headline(BuildContext context) {
+    return Text(
+      jobApplicant.appliedBy?.headline ?? 'Missing Job Title',
+      style: AppTextThemes.screenTitleStyle(context).copyWith(
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+
+  Text bio(BuildContext context) {
+    return Text(
+      jobApplicant.appliedBy!.bio!,
+      style: AppTextThemes.mediumTextStyle(context).copyWith(
+        fontSize: 14.w(context),
+      ),
+      maxLines: 4,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Text jobLocation(BuildContext context) {
+    return Text(
+      jobApplicant.jobPostId != null && jobApplicant.jobPostId?.location != null
+          ? '${jobApplicant.jobPostId?.location!.country ?? ''}, ${jobApplicant.jobPostId?.location!.city ?? ''} · ${jobApplicant.jobPostId?.jobMode?[0] ?? ''}'
+          : 'No location',
+      style: AppTextThemes.secondaryTextStyle(context),
     );
   }
 
@@ -124,175 +246,21 @@ class ApplicantsCard extends StatelessWidget {
     );
   }
 
-  ClipRRect videoFrame(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: Responsive.height(context, .64),
-          minWidth: Responsive.width(context, 1),
-        ),
-        child: jobApplicant.media == null
-            ? const Center(
-                child: Text('No video available'),
-              )
-            : VideoPlayerWidget(videoUrl: jobApplicant.media![0].url ?? ''),
-        // CustomImageView(
-        //   imagePath: job.videoUrl,
-        //   fit: BoxFit.fitWidth,
-        //   padding: 0,
-        //   imageType: ImageType.network,
-        // ),
-      ),
-    );
-  }
-
-  Positioned applicantsCount(BuildContext context) {
-    return Positioned(
-      right: 10,
-      top: 10,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const GreenDot(),
-          const HorizontalSpace(),
-          Text(
-            '${jobApplicant.jobPostId?.savedApplications?.length ?? '0'} applicants',
-            style: AppTextThemes.buttonTextStyle(context),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Positioned aplicantDetails(BuildContext context) {
-    return Positioned(
-      left: 0,
-      right: 0,
-      bottom: 10,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(
-              width: Responsive.width(context, 1) - (8.w(context) * 2) - 20,
-              padding: const EdgeInsets.all(8.0),
-              color: Colors.black.withOpacity(0.2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  chatWithRecruiter(),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Positioned applicantName(BuildContext context) {
-    return Positioned(
-      left: 10,
-      bottom: 10,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          CustomImageView(
-            imagePath:
-            jobApplicant.appliedBy != null && jobApplicant.appliedBy?.profilePicUrl != null && jobApplicant.appliedBy!.profilePicUrl != null ? jobApplicant.appliedBy!.profilePicUrl ?? '' : '',
-            height: 35,
-            imageType: ImageType.network,
-            showLoader: false,
-          ),
-          HorizontalSpace(),
-      Text(
-        jobApplicant.appliedBy != null && jobApplicant.appliedBy?.name != null && jobApplicant.appliedBy!.name != null ? jobApplicant.appliedBy!.name ?? '' : '',
-              style: AppTextThemes.screenTitleStyle(context).copyWith(
-                color: AppColors.black,
-              ),
-            ),
-
-        ],
-      ),
-    );
-  }
-
-  CustomImageView chatWithRecruiter() {
-    return CustomImageView(
-      imagePath: ImageConstant.chatButtonIcon,
-      height: 32,
-      imageType: ImageType.png,
-    );
-  }
-
-  Text jobTitle(BuildContext context) {
-    return Text(
-      jobApplicant.jobPostId?.title ?? 'Unknown job title',
-      style: AppTextThemes.titleStyle(context).copyWith(
-        fontWeight: FontWeight.w500,
-        fontSize: 22.w(context),
-      ),
-    );
-  }
-
-  Text jobLocation(BuildContext context) {
-    return Text(
-      jobApplicant.jobPostId != null && jobApplicant.jobPostId?.location != null
-          ? '${jobApplicant.jobPostId?.location!.country ?? ''}, ${jobApplicant.jobPostId?.location!.city ?? ''} · ${jobApplicant.jobPostId?.jobMode?[0] ?? ''}'
-          : 'No location',
-      style: AppTextThemes.secondaryTextStyle(context),
-    );
-  }
-
   Text ctcDetails(BuildContext context) {
     return Text(
-      jobApplicant.jobPostId?.ctc == null ? '' : '${jobApplicant.jobPostId?.ctc ?? ''} LPA',
+      jobApplicant.jobPostId?.ctc == null
+          ? ''
+          : '${jobApplicant.jobPostId?.ctc ?? ''} LPA',
       style: AppTextThemes.secondaryTextStyle(context),
     );
   }
 
-  // Wrap requiredSkills() {
-  //   return Wrap(
-  //     alignment: WrapAlignment.start,
-  //     spacing: 8,
-  //     runSpacing: 8,
-  //     children: List.generate(
-  //       jobPostings.requiredSkills!.length,
-  //       (index) =>
-  //           SkillChip(text: jobPostings.requiredSkills![index]. ?.name ?? ''),
-  //     ),
-  //   );
-  // }
-
-
-  Text perks(BuildContext context) {
-    return Text(
-      jobApplicant.jobPostId?.perks ?? 'Not mentioned',
-      style: AppTextThemes.bodyTextStyle(context),
-    );
-  }
-
-}
-
-class SectionTitle extends StatelessWidget {
-  const SectionTitle({
-    super.key,
-    required this.title,
-  });
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 20, bottom: 10),
-      child: Text(
-        title,
-        style: AppTextThemes.screenTitleStyle(context).copyWith(
-          fontWeight: FontWeight.w500,
-          color: AppColors.primaryDark,
+  Row socialHandles(BuildContext context) {
+    return Row(
+      children: List.generate(
+        jobApplicant.appliedBy!.socialUrls!.length,
+        (index) => SocialIconWidget(
+          socialMedia: jobApplicant.appliedBy!.socialUrls![index],
         ),
       ),
     );
@@ -315,49 +283,56 @@ class ActionButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-
-        FloatingActionButton(
-          onPressed: onSkip,
-          backgroundColor: AppColors.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
-          ),
-          child: CustomImageView(
-            imagePath: ImageConstant.next,
-            height: 28,
-            width: 28,
+        SizedBox(
+          width: 70.0,
+          height: 70.0,
+          child: FloatingActionButton(
+            onPressed: onSkip,
+            tooltip: 'Skip / Next',
+            backgroundColor: AppColors.primary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: CustomImageView(
+              imagePath: ImageConstant.next,
+              height: 28.w(context),
+              width: 28.w(context),
+            ),
           ),
         ),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            FloatingActionButton(
-              onPressed: onReject,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 40),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              FloatingActionButton(
+                onPressed: onReject,
+                tooltip: 'Reject',
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                backgroundColor: AppColors.primary,
+                child: CustomImageView(
+                  imagePath: ImageConstant.cross,
+                  height: 18,
+                  width: 18,
+                ),
               ),
-              backgroundColor: AppColors.primary,
-              child:  CustomImageView(
-                imagePath: ImageConstant.cross,
-                height: 24,
-                width: 24,
+              FloatingActionButton(
+                onPressed: onAccept,
+                tooltip: 'Shortlist',
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                backgroundColor: AppColors.primary,
+                child: CustomImageView(
+                  imagePath: ImageConstant.tickWhite,
+                  height: 22,
+                  width: 22,
+                ),
               ),
-            ),
-
-            FloatingActionButton(
-              onPressed: onAccept,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
-              ),
-              backgroundColor: AppColors.primary,
-              child: CustomImageView(
-                imagePath: ImageConstant.tickWhite,
-                height: 24,
-                width: 24,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
@@ -369,7 +344,8 @@ class RadarChartComponent extends StatelessWidget {
   final List<RadarEntry> applicantData;
   final List<String>? skillNames;
 
-  RadarChartComponent({
+  const RadarChartComponent({
+    super.key,
     required this.jobPostData,
     required this.applicantData,
     required this.skillNames,
@@ -377,7 +353,7 @@ class RadarChartComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 300,
       child: RadarChart(
         RadarChartData(
@@ -402,7 +378,7 @@ class RadarChartComponent extends StatelessWidget {
           borderData: FlBorderData(show: false),
           radarBorderData: const BorderSide(color: Colors.transparent),
           titlePositionPercentageOffset: 0.1,
-          titleTextStyle: TextStyle(color: Colors.grey, fontSize: 14),
+          titleTextStyle: const TextStyle(color: Colors.grey, fontSize: 14),
           getTitle: (index, angle) {
             if (skillNames != null && index < skillNames!.length) {
               return RadarChartTitle(
@@ -412,6 +388,42 @@ class RadarChartComponent extends StatelessWidget {
             }
             return RadarChartTitle(text: '', angle: angle);
           },
+        ),
+      ),
+    );
+  }
+}
+
+class SocialIconWidget extends StatelessWidget {
+  const SocialIconWidget({
+    super.key,
+    required this.socialMedia,
+  });
+
+  final SocialUrl socialMedia;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // TODO: open link socialMedia.url
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        margin: const EdgeInsets.only(right: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomImageView(
+              imagePath:
+                  GlobalConstants.socialProfileTypesMap[socialMedia.platform],
+              height: 35.w(context),
+            ),
+            Text(
+              socialMedia.platform ?? 'Other',
+              style: AppTextThemes.extraSmallText(context),
+            ),
+          ],
         ),
       ),
     );

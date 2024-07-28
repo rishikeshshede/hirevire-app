@@ -122,7 +122,7 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
         const SizedBox(height: 12),
         Text(
           widget.titleText ?? 'Upload Video',
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 16,
             fontWeight: FontWeight.bold,

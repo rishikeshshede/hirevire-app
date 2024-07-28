@@ -8,7 +8,6 @@ import 'package:hirevire_app/constants/error_constants.dart';
 import 'package:hirevire_app/constants/global_constants.dart';
 import 'package:hirevire_app/services/api_service.dart';
 import 'package:hirevire_app/user_interface/presentation/profile/professional_details/bio_section.dart';
-import 'package:hirevire_app/user_interface/presentation/onboarding/name_dob_section.dart';
 import 'package:hirevire_app/user_interface/presentation/profile/personal_details.dart/phone_number.dart';
 import 'package:hirevire_app/user_interface/presentation/profile/professional_details/experience_section.dart';
 import 'package:hirevire_app/user_interface/presentation/profile/professional_details/location_section.dart';

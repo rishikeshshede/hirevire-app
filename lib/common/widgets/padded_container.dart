@@ -14,12 +14,15 @@ class PaddedContainer extends StatelessWidget {
     this.screenTitle = '',
     this.showBackIcon = true,
     this.onBackBtnPressed,
+    this.vPadding,
+    this.hPadding,
   });
   final Alignment alignment;
   final Widget child;
   final String screenTitle;
   final bool showBackIcon;
   final VoidCallback? onBackBtnPressed;
+  final double? vPadding, hPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +31,7 @@ class PaddedContainer extends StatelessWidget {
           ? AppBar(
               backgroundColor: AppColors.background,
               automaticallyImplyLeading: false,
+              titleSpacing: 0,
               leading: GestureDetector(
                 onTap: () {
                   if (onBackBtnPressed != null) onBackBtnPressed!();
@@ -41,8 +45,10 @@ class PaddedContainer extends StatelessWidget {
               ),
               title: Text(
                 screenTitle,
-                style:
-                    AppTextThemes.bodyTextStyle(context).copyWith(fontSize: 18),
+                style: AppTextThemes.mediumTextStyle(context).copyWith(
+                  fontSize: 16.w(context),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             )
           : null,
@@ -52,8 +58,8 @@ class PaddedContainer extends StatelessWidget {
         height: double.maxFinite,
         width: double.maxFinite,
         padding: EdgeInsets.symmetric(
-          horizontal: 16.w(context),
-          vertical: 8.h(context),
+          horizontal: hPadding ?? 16.w(context),
+          vertical: vPadding ?? 8.h(context),
         ),
         child: child,
       ),

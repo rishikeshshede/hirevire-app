@@ -1,7 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
 import 'package:hirevire_app/services/api_service.dart';
 import 'package:hirevire_app/utils/persistence_handler.dart';
@@ -9,7 +8,7 @@ import 'package:hirevire_app/utils/show_toast_util.dart';
 import '../../../../constants/error_constants.dart';
 import '../../../../services/api_endpoint_service.dart';
 import '../../../../utils/log_handler.dart';
-import '../../../models/JobApplication.dart';
+import '../../../models/job_application_model.dart';
 
 class ViewApplicantsController extends GetxController {
   late ApiClient apiClient;
@@ -38,7 +37,7 @@ class ViewApplicantsController extends GetxController {
     super.onInit();
     apiClient = ApiClient();
     fetchLocalData();
-    fetchJobPostings();
+    fetchJobApplications();
   }
 
   fetchLocalData() async {
@@ -113,17 +112,23 @@ class ViewApplicantsController extends GetxController {
     }
   }
 
-
-  List<List<RadarEntry>> prepareRadarData(JobPostId? jobPost, JobApplication applicant) {
+  List<List<RadarEntry>> prepareRadarData(
+      JobPostId? jobPost, JobApplication applicant) {
     final Map<String, int> jobPostSkills = jobPost?.requiredSkills != null
-        ? { for (var skill in jobPost!.requiredSkills!) skill.skill?.name ?? '': skill.rating ?? 0 }
+        ? {
+            for (var skill in jobPost!.requiredSkills!)
+              skill.skill?.name ?? '': skill.rating ?? 0
+          }
         : {};
 
-    final Map<String, int> applicantSkills = applicant?.requiredSkills != null
-        ? { for (var skill in applicant!.requiredSkills!) skill.skill?.name ?? '': skill.rating ?? 0 }
+    final Map<String, int> applicantSkills = applicant.requiredSkills != null
+        ? {
+            for (var skill in applicant.requiredSkills!)
+              skill.skill?.name ?? '': skill.rating ?? 0
+          }
         : {};
 
-    final allSkills = Set<String>()
+    final allSkills = <String>{}
       ..addAll(jobPostSkills.keys)
       ..addAll(applicantSkills.keys);
 
@@ -138,9 +143,9 @@ class ViewApplicantsController extends GetxController {
     return [jobPostEntries, applicantEntries];
   }
 
-  fetchJobPostings() async {
+  fetchJobApplications() async {
     isLoading.value = true;
-    String endpoint = '${EndpointService.getJobApplications}/${applicationJobId}';
+    String endpoint = '${EndpointService.getJobApplications}/$applicationJobId';
 
     try {
       Map<String, dynamic> response = await apiClient.get(endpoint);

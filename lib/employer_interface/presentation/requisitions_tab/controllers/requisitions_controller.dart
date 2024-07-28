@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hirevire_app/constants/endpoint_constants.dart';
@@ -9,8 +8,6 @@ import 'package:hirevire_app/employer_interface/models/requisition.dart';
 import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/persistence_handler.dart';
 import 'package:hirevire_app/utils/show_toast_util.dart';
-import 'package:logger/logger.dart';
-
 import '../../../../constants/error_constants.dart';
 import '../../../../constants/global_constants.dart';
 import '../../../../services/api_endpoint_service.dart';
@@ -91,7 +88,8 @@ class RequisitionsController extends GetxController {
   }
 
   void setJobMode(List<String>? jobMode) {
-    jobModeController.value = capitalizeFirstLetter(jobMode?[0] ?? GlobalConstants.locationTypes[0]) ;
+    jobModeController.value =
+        capitalizeFirstLetter(jobMode?[0] ?? GlobalConstants.locationTypes[0]);
   }
 
   void setDescription(String? desc) {
@@ -228,7 +226,7 @@ class RequisitionsController extends GetxController {
       // ToastWidgit.bottomToast('perks are required');
       isError.value = true;
     }
-    if (jobModeController.value == GlobalConstants.locationTypes[0].obs) {
+    if (jobModeController.value == GlobalConstants.locationTypes[0]) {
       errorMsgJobMode.value = 'Select Job mode';
     }
     if (ctcController.text.isEmpty) {
@@ -290,23 +288,15 @@ class RequisitionsController extends GetxController {
         'country': countryLocation,
         'city': cityLocation,
       },
-      'jobMode': [
-        jobModeController.value
-      ],
+      'jobMode': [jobModeController.value],
       'description': descController.text.isEmpty
           ? req.description
           : descController.text.trim(),
       'videoRequirement': '',
       'ctc': ctcController.text.trim(),
       'questions': [
-        {
-          "content": qOneController.text.trim(),
-          "type":"text"
-        },
-        {
-          "content": qTwoController.text.trim(),
-          "type":"text"
-        }
+        {"content": qOneController.text.trim(), "type": "text"},
+        {"content": qTwoController.text.trim(), "type": "text"}
       ],
       'growth_plan': [
         {
@@ -330,7 +320,11 @@ class RequisitionsController extends GetxController {
           'rating': skill.rating ?? 0,
         };
       }).toList(),
-      'media': {'url': videoUrl.value, 'type': "video", 'thumbnail': thumbnailUrl.value},
+      'media': {
+        'url': videoUrl.value,
+        'type': "video",
+        'thumbnail': thumbnailUrl.value
+      },
       'endsOn': DatetimeUtil.getCurrentDateTime().toIso8601String(),
     };
 
@@ -346,7 +340,7 @@ class RequisitionsController extends GetxController {
           .then((response) async {
         if (response['success']) {
           // Handle success
-          debugPrint('Upload successful: ${response}');
+          LogHandler.debug('Upload successful: $response');
           videoUrl.value = response['body']['videoURL'][0];
           thumbnailUrl.value = response['body']['thumbnailURL'][0];
 
@@ -356,7 +350,8 @@ class RequisitionsController extends GetxController {
             "thumbnail": response['body']['thumbnailURL'][0]
           };
 
-          Map<String, dynamic> responseRec = await apiClient.post(endpoint, body);
+          Map<String, dynamic> responseRec =
+              await apiClient.post(endpoint, body);
           LogHandler.debug(responseRec);
 
           if (responseRec['success']) {
