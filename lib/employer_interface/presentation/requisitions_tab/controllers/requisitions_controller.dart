@@ -282,7 +282,7 @@ class RequisitionsController extends GetxController {
     Map<String, dynamic> body = {
       'jobRequisitionId': req.id,
       'postedBy': req.requestedBy?.id ?? "",
-      'title': req.title,
+      'title': jobTitleController.text.trim(),
       'department': req.department ?? "",
       'project': req.project ?? "",
       'openingsCount': int.parse(openingCountController.text.trim()),
