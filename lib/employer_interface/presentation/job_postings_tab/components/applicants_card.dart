@@ -52,6 +52,7 @@ class ApplicantsCard extends StatelessWidget {
           Stack(
             children: [
               videoFrame(context),
+              showUserTrending(context),
               chatWidget(context),
             ],
           ),
@@ -174,6 +175,33 @@ class ApplicantsCard extends StatelessWidget {
                 child: Text('No video available'),
               )
             : VideoPlayerWidget(videoUrl: jobApplicant.media![0].url ?? ''),
+      ),
+    );
+  }
+
+  Widget showUserTrending(BuildContext context) {
+    return Positioned(
+      left: 12.w(context),
+      top: 12.w(context),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomImageView(
+            imagePath: jobApplicant.appliedBy!.totalProfileViewCount! >=
+                    GlobalConstants.trendingProfileMinViewCount
+                ? ImageConstant.fireIcon
+                : ImageConstant.iceIcon,
+            height: 20,
+          ),
+          const HorizontalSpace(),
+          Text(
+            jobApplicant.appliedBy!.totalProfileViewCount! >=
+                    GlobalConstants.trendingProfileMinViewCount
+                ? "Trending"
+                : 'Not trending',
+            style: AppTextThemes.buttonTextStyle(context),
+          )
+        ],
       ),
     );
   }

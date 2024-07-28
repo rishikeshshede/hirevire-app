@@ -30,4 +30,6 @@ class ImageConstant {
   static String settingsIcon = "$iconPath/settings-icon.png";
   static String chatButtonIcon = "$iconPath/chat-button.png";
   static String fileIcon = "$iconPath/file-icon.png";
+  static String fireIcon = "$iconPath/fire.png";
+  static String iceIcon = "$iconPath/ice.png";
 }
