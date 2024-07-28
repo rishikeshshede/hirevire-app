@@ -2,8 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:hirevire_app/common/widgets/custom_image_view.dart';
+import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
+import 'package:hirevire_app/themes/text_theme.dart';
+import 'package:hirevire_app/utils/responsive.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
@@ -32,28 +35,26 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
 
   @override
   Widget build(BuildContext context) {
+    double videoHeight = Responsive.height(context, .8);
     return Column(
       children: [
         GestureDetector(
           onTap: _pickVideo,
           child: Container(
             width: double.infinity,
-            height: _videoFile == null ? 200 : null,
+            height: _videoFile == null ? videoHeight * .8 : null,
             decoration: BoxDecoration(
-              // color: AppColors.red,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
             ),
             child: _videoFile == null
                 ? CustomPaint(
                     painter: DashedBorderPainter(),
-                    child: Center(
-                      child: _buildUploadContent(),
-                    ),
+                    child: _buildUploadContent(),
                   )
-                : _buildVideoPreview(),
+                : _buildVideoPreview(videoHeight),
           ),
         ),
-        if (_videoFile != null) _buildThumbnailPicker(),
+        // if (_videoFile != null) _buildThumbnailPicker(),
       ],
     );
   }
@@ -100,7 +101,10 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
                 children: [
                   Icon(Icons.image, size: 50, color: AppColors.disabled),
                   SizedBox(height: 8),
-                  Text('Pick Thumbnail')
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text('Pick Thumbnail'),
+                  )
                 ],
               )
             : Image.file(
@@ -135,26 +139,45 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
             fontSize: 14,
           ),
         ),
+        const VerticalSpace(space: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            'Tip: Videos in Portrait format are better for user experience.',
+            style: AppTextThemes.secondaryTextStyle(context).copyWith(
+              fontStyle: FontStyle.italic,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildVideoPreview() {
+  Widget _buildVideoPreview(double videoHeight) {
     if (_videoController!.value.isInitialized) {
-      final isPortrait = _videoController!.value.size.height >
-          _videoController!.value.size.width;
-      return AspectRatio(
-        aspectRatio: _videoController!.value.aspectRatio,
-        child: SizedBox(
-          height: isPortrait ? 100 : null,
-          child: VideoPlayer(_videoController!),
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: videoHeight),
+          child: AspectRatio(
+            aspectRatio: _videoController!.value.aspectRatio,
+            child: FittedBox(
+              fit: BoxFit.cover,
+              child: SizedBox(
+                width: _videoController!.value.size.width,
+                height: _videoController!.value.size.height,
+                child: VideoPlayer(_videoController!),
+              ),
+            ),
+          ),
         ),
       );
     } else {
       return const Center(
         child: SizedBox(
-          width: 50, // Specify the desired width
-          height: 50, // Specify the desired height
+          width: 50,
+          height: 50,
           child: CircularProgressIndicator(),
         ),
       );

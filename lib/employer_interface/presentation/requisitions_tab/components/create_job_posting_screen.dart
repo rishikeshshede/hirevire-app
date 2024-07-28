@@ -14,7 +14,7 @@ import '../../../../themes/text_theme.dart';
 import '../controllers/requisitions_controller.dart';
 import 'package:get/get.dart';
 
-class CreateJobPostingScreen extends StatelessWidget {
+class CreateJobPostingScreen extends StatefulWidget {
   const CreateJobPostingScreen({
     super.key,
     required this.requisitionsController,
@@ -27,13 +27,24 @@ class CreateJobPostingScreen extends StatelessWidget {
   final int index;
 
   @override
-  Widget build(BuildContext context) {
-    requisitionsController.setJobTitle(requisition.title);
-    //requisitionsController.setJobMode(requisition.jobMode);
-    requisitionsController.setDescription(requisition.description ?? '');
-    requisitionsController.setOpeningCount(requisition.openingsCount ?? 0);
-    requisitionsController.setJobMode(requisition.jobMode ?? []);
+  State<CreateJobPostingScreen> createState() => _CreateJobPostingScreenState();
+}
 
+class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    widget.requisitionsController.setJobTitle(widget.requisition.title);
+    //requisitionsController.setJobMode(requisition.jobMode);
+    widget.requisitionsController
+        .setDescription(widget.requisition.description ?? '');
+    widget.requisitionsController
+        .setOpeningCount(widget.requisition.openingsCount ?? 0);
+    widget.requisitionsController.setJobMode(widget.requisition.jobMode ?? []);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return PaddedContainer(
       screenTitle: "Create Job Posting",
       child: Stack(
@@ -45,19 +56,21 @@ class CreateJobPostingScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   VideoUploadWidget(
-                      onFilesSelected: requisitionsController.onFilesSelected),
+                      onFilesSelected:
+                          widget.requisitionsController.onFilesSelected),
                   VerticalSpace(space: 20.h(context)),
                   CustomTextField(
                     titleText: 'Job Title',
                     textInputType: TextInputType.text,
                     textInputAction: TextInputAction.next,
-                    focusNode: requisitionsController.jobTitleFocusNode,
-                    controller: requisitionsController.jobTitleController,
+                    focusNode: widget.requisitionsController.jobTitleFocusNode,
+                    controller:
+                        widget.requisitionsController.jobTitleController,
                     onChanged: (String value) {},
                     onEditingComplete: () {
-                      requisitionsController.jobTitleFocusNode.unfocus();
-                      FocusScope.of(context)
-                          .requestFocus(requisitionsController.descFocusNode);
+                      widget.requisitionsController.jobTitleFocusNode.unfocus();
+                      FocusScope.of(context).requestFocus(
+                          widget.requisitionsController.descFocusNode);
                     },
                   ),
                   Obx(
@@ -65,8 +78,9 @@ class CreateJobPostingScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ErrorTextWidget(
-                            text:
-                                requisitionsController.errorMsgJobTitle.value),
+                          text: widget
+                              .requisitionsController.errorMsgJobTitle.value,
+                        ),
                       ],
                     ),
                   ),
@@ -76,13 +90,13 @@ class CreateJobPostingScreen extends StatelessWidget {
                     textInputAction: TextInputAction.next,
                     maxLength: 2000,
                     maxLines: 5,
-                    focusNode: requisitionsController.descFocusNode,
-                    controller: requisitionsController.descController,
+                    focusNode: widget.requisitionsController.descFocusNode,
+                    controller: widget.requisitionsController.descController,
                     onChanged: (String value) {},
                     onEditingComplete: () {
-                      requisitionsController.descFocusNode.unfocus();
+                      widget.requisitionsController.descFocusNode.unfocus();
                       FocusScope.of(context).requestFocus(
-                          requisitionsController.locationFocusNode);
+                          widget.requisitionsController.locationFocusNode);
                     },
                   ),
                   Obx(
@@ -90,7 +104,7 @@ class CreateJobPostingScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ErrorTextWidget(
-                            text: requisitionsController
+                            text: widget.requisitionsController
                                 .errorMsgDescription.value),
                       ],
                     ),
@@ -112,15 +126,17 @@ class CreateJobPostingScreen extends StatelessWidget {
                   // const VerticalSpace(),
                   CustomTextField(
                     titleText: 'Location',
-                    textInputType: TextInputType.text,
+                    textInputType: TextInputType.streetAddress,
                     textInputAction: TextInputAction.next,
-                    focusNode: requisitionsController.locationFocusNode,
-                    controller: requisitionsController.locationController,
+                    textCapitalization: TextCapitalization.words,
+                    focusNode: widget.requisitionsController.locationFocusNode,
+                    controller:
+                        widget.requisitionsController.locationController,
                     onChanged: (String value) {},
                     onEditingComplete: () {
-                      requisitionsController.locationFocusNode.unfocus();
-                      FocusScope.of(context)
-                          .requestFocus(requisitionsController.perksFocusNode);
+                      widget.requisitionsController.locationFocusNode.unfocus();
+                      FocusScope.of(context).requestFocus(
+                          widget.requisitionsController.perksFocusNode);
                     },
                   ),
                   Obx(
@@ -128,23 +144,23 @@ class CreateJobPostingScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ErrorTextWidget(
-                            text:
-                                requisitionsController.errorMsgLocation.value),
+                            text: widget
+                                .requisitionsController.errorMsgLocation.value),
                       ],
                     ),
                   ),
                   VerticalSpace(space: 8.h(context)),
                   Obx(
                     () => DropdownWidget(
-                      controller: requisitionsController,
+                      controller: widget.requisitionsController,
                       title: 'Job mode',
                       list: GlobalConstants.locationTypes,
                       initialValue:
-                          requisitionsController.jobModeController.value,
+                          widget.requisitionsController.jobModeController.value,
                       onChanged: (String? value) {
                         if (value != null) {
-                          requisitionsController.jobModeController.value =
-                              value;
+                          widget.requisitionsController.jobModeController
+                              .value = value;
                         }
                       },
                     ),
@@ -154,7 +170,8 @@ class CreateJobPostingScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ErrorTextWidget(
-                            text: requisitionsController.errorMsgJobMode.value),
+                            text: widget
+                                .requisitionsController.errorMsgJobMode.value),
                       ],
                     ),
                   ),
@@ -171,7 +188,8 @@ class CreateJobPostingScreen extends StatelessWidget {
                     titleText: 'Opening Count',
                     textInputType: TextInputType.number,
                     textInputAction: TextInputAction.done,
-                    controller: requisitionsController.openingCountController,
+                    controller:
+                        widget.requisitionsController.openingCountController,
                     onChanged: (String value) {},
                     readOnly: true,
                   ),
@@ -180,7 +198,7 @@ class CreateJobPostingScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ErrorTextWidget(
-                            text: requisitionsController
+                            text: widget.requisitionsController
                                 .errorMsgOpeningCount.value),
                       ],
                     ),
@@ -191,13 +209,13 @@ class CreateJobPostingScreen extends StatelessWidget {
                     textInputType: TextInputType.text,
                     textInputAction: TextInputAction.next,
                     maxLines: 4,
-                    focusNode: requisitionsController.perksFocusNode,
-                    controller: requisitionsController.perksController,
+                    focusNode: widget.requisitionsController.perksFocusNode,
+                    controller: widget.requisitionsController.perksController,
                     onChanged: (String value) {},
                     onEditingComplete: () {
-                      requisitionsController.perksFocusNode.unfocus();
-                      FocusScope.of(context)
-                          .requestFocus(requisitionsController.ctcFocusNode);
+                      widget.requisitionsController.perksFocusNode.unfocus();
+                      FocusScope.of(context).requestFocus(
+                          widget.requisitionsController.ctcFocusNode);
                     },
                   ),
                   Obx(
@@ -205,7 +223,8 @@ class CreateJobPostingScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ErrorTextWidget(
-                            text: requisitionsController.errorMsgPerks.value),
+                            text: widget
+                                .requisitionsController.errorMsgPerks.value),
                       ],
                     ),
                   ),
@@ -214,14 +233,14 @@ class CreateJobPostingScreen extends StatelessWidget {
                     titleText: 'CTC',
                     labelText: 'Per annum (in Lakhs)',
                     textInputType: TextInputType.number,
-                    textInputAction: TextInputAction.done,
-                    focusNode: requisitionsController.ctcFocusNode,
-                    controller: requisitionsController.ctcController,
+                    textInputAction: TextInputAction.next,
+                    focusNode: widget.requisitionsController.ctcFocusNode,
+                    controller: widget.requisitionsController.ctcController,
                     onChanged: (String value) {},
                     onEditingComplete: () {
-                      requisitionsController.ctcFocusNode.unfocus();
-                      FocusScope.of(context)
-                          .requestFocus(requisitionsController.tDaysFocusNode);
+                      widget.requisitionsController.ctcFocusNode.unfocus();
+                      FocusScope.of(context).requestFocus(
+                          widget.requisitionsController.tDaysFocusNode);
                     },
                     // readOnly: true,
                   ),
@@ -230,7 +249,8 @@ class CreateJobPostingScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ErrorTextWidget(
-                            text: requisitionsController.errorMsgCtc.value),
+                            text: widget
+                                .requisitionsController.errorMsgCtc.value),
                       ],
                     ),
                   ),
@@ -245,42 +265,47 @@ class CreateJobPostingScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  // CustomTextField(
+                  const VerticalSpace(),
                   CustomTextField(
                     titleText: '30 Days Plan',
                     textInputType: TextInputType.text,
                     textInputAction: TextInputAction.next,
-                    focusNode: requisitionsController.tDaysFocusNode,
-                    controller: requisitionsController.tDaysPlanController,
+                    focusNode: widget.requisitionsController.tDaysFocusNode,
+                    controller:
+                        widget.requisitionsController.tDaysPlanController,
                     onChanged: (String value) {},
                     onEditingComplete: () {
-                      requisitionsController.tDaysFocusNode.unfocus();
-                      FocusScope.of(context)
-                          .requestFocus(requisitionsController.sDaysFocusNode);
+                      widget.requisitionsController.tDaysFocusNode.unfocus();
+                      FocusScope.of(context).requestFocus(
+                          widget.requisitionsController.sDaysFocusNode);
                     },
                   ),
+                  const VerticalSpace(),
                   CustomTextField(
                     titleText: '60 Days Plan',
                     textInputType: TextInputType.text,
                     textInputAction: TextInputAction.next,
-                    focusNode: requisitionsController.sDaysFocusNode,
-                    controller: requisitionsController.sDaysPlanController,
+                    focusNode: widget.requisitionsController.sDaysFocusNode,
+                    controller:
+                        widget.requisitionsController.sDaysPlanController,
                     onChanged: (String value) {},
                     onEditingComplete: () {
-                      requisitionsController.sDaysFocusNode.unfocus();
-                      FocusScope.of(context)
-                          .requestFocus(requisitionsController.nDaysFocusNode);
+                      widget.requisitionsController.sDaysFocusNode.unfocus();
+                      FocusScope.of(context).requestFocus(
+                          widget.requisitionsController.nDaysFocusNode);
                     },
                   ),
+                  const VerticalSpace(),
                   CustomTextField(
                       titleText: '3 Months Plan',
                       textInputType: TextInputType.text,
                       textInputAction: TextInputAction.done,
-                      focusNode: requisitionsController.nDaysFocusNode,
-                      controller: requisitionsController.nDaysPlanController,
+                      focusNode: widget.requisitionsController.nDaysFocusNode,
+                      controller:
+                          widget.requisitionsController.nDaysPlanController,
                       onChanged: (String value) {},
                       onEditingComplete: () {
-                        requisitionsController.nDaysFocusNode.unfocus();
+                        widget.requisitionsController.nDaysFocusNode.unfocus();
                       }),
                   const VerticalSpace(space: 20),
                   Row(
@@ -336,11 +361,16 @@ class CreateJobPostingScreen extends StatelessWidget {
                   //   },
                   // ),
                   const VerticalSpace(space: 20),
-                  ButtonPrimary(
-                    btnText: 'Submit Job Post',
-                    onPressed: () {
-                      requisitionsController.createJobApplication(requisition);
-                    },
+                  Obx(
+                    () => ButtonPrimary(
+                      btnText: 'Submit Job Post',
+                      onPressed: () {
+                        widget.requisitionsController
+                            .createJobApplication(widget.requisition);
+                      },
+                      showLoading:
+                          widget.requisitionsController.isCreatingJobPost.value,
+                    ),
                   ),
                   const VerticalSpace(space: 30),
                 ],
@@ -358,9 +388,9 @@ class CreateJobPostingScreen extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: List.generate(
-        requisition.requiredSkills!.length,
+        widget.requisition.requiredSkills!.length,
         (index) => SkillChip(
-            text: requisition.requiredSkills![index].skill?.name ?? ''),
+            text: widget.requisition.requiredSkills![index].skill?.name ?? ''),
       ),
     );
   }

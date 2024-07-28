@@ -9,11 +9,11 @@ import 'package:mime/mime.dart';
 
 class ApiClient {
   // Live
-  static const String _baseUrl =
-      'https://sea-turtle-app-cpepq.ondigitalocean.app/api/v1/';
+  // static const String _baseUrl =
+  //     'https://sea-turtle-app-cpepq.ondigitalocean.app/api/v1/';
 
   // Wifi
-  // static const String _baseUrl = 'http://192.168.29.243:5000/api/v1/';
+  static const String _baseUrl = 'http://192.168.29.243:5000/api/v1/';
 
   // Mobile hotspot
   // static const String _baseUrl = 'http://192.168.11.29:5000/api/v1/';
@@ -159,11 +159,12 @@ class ApiClient {
   }
 
   Future<Map<String, dynamic>> uploadVideoWithThumbnail(
-      String endpoint, File videoFile, File thumbnailFile) async {
+      String endpoint, File videoFile,
+      {File? thumbnailFile}) async {
     final Uri url = Uri.parse(_baseUrl + endpoint);
     var request = http.MultipartRequest('POST', url);
 
-    LogHandler.info('Upload Video with Thumbnail: $url');
+    LogHandler.info('Upload Video: $url');
     try {
       // Adding the video file
       request.files.add(await http.MultipartFile.fromPath(
@@ -173,13 +174,18 @@ class ApiClient {
             MediaType.parse(lookupMimeType(videoFile.path) ?? 'video/mp4'),
       ));
 
-      // Adding the thumbnail image
-      request.files.add(await http.MultipartFile.fromPath(
-        'thumbnail',
-        thumbnailFile.path,
-        contentType:
-            MediaType.parse(lookupMimeType(thumbnailFile.path) ?? 'image/jpeg'),
-      ));
+      if (thumbnailFile != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'thumbnail',
+            thumbnailFile.path,
+            contentType: MediaType.parse(
+                lookupMimeType(thumbnailFile.path) ?? 'image/jpeg'),
+          ),
+        );
+      } else {
+        request.files.add(http.MultipartFile.fromString('thumbnail', ''));
+      }
 
       var response = await request.send();
       var statusCode = response.statusCode;

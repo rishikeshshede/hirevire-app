@@ -320,7 +320,7 @@ class JobsController extends GetxController {
           .uploadVideoWithThumbnail(
         EndpointService.userUploadVideoWithThumbnail,
         selectedVideoFile!,
-        selectedThumbnailFile!,
+        //  thumbnailFile: selectedThumbnailFile!,
       )
           .then((response) async {
         if (response['success']) {

@@ -29,21 +29,6 @@ class RequisitionsTab extends StatelessWidget {
           imageType: ImageType.network,
           showLoader: false,
         ),
-        // actions: [
-        //   GestureDetector(
-        //     onTap: () {},
-        //     child: Container(
-        //       margin: EdgeInsets.only(
-        //           right: GlobalConstants.screenHorizontalPadding),
-        //       padding: const EdgeInsets.all(3),
-        //       height: 35,
-        //       width: 35,
-        //       child: CustomImageView(
-        //         imagePath: ImageConstant.dummyUserImage,
-        //       ),
-        //     ),
-        //   ),
-        // ],
       ),
       body: Obx(
         () {

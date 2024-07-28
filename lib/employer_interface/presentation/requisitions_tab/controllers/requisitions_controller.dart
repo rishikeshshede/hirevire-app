@@ -18,6 +18,7 @@ class RequisitionsController extends GetxController {
   late ApiClient apiClient;
 
   RxBool isLoading = false.obs;
+  RxBool isCreatingJobPost = false.obs;
   RxString name = ''.obs;
   RxBool isProfileComplete = false.obs;
   RxList<bool> isOpen = [true, false, false].obs;
@@ -199,6 +200,7 @@ class RequisitionsController extends GetxController {
   // }
 
   createJobApplication(Requisition req) async {
+    isCreatingJobPost.value = true;
     RxBool isError = false.obs;
     if (selectedVideoFile == null) {
       ToastWidgit.bottomToast('please upload video, it is required');
@@ -328,38 +330,43 @@ class RequisitionsController extends GetxController {
       'endsOn': DatetimeUtil.getCurrentDateTime().toIso8601String(),
     };
 
-    LogHandler.debug(body);
-
+    LogHandler.debug("body: $body");
     try {
       await apiClient
           .uploadVideoWithThumbnail(
         Endpoints.uploadVideoWithThumbnail,
         selectedVideoFile!,
-        selectedThumbnailFile!,
+        //  thumbnailFile: selectedThumbnailFile!,
       )
           .then((response) async {
         if (response['success']) {
           // Handle success
           LogHandler.debug('Upload successful: $response');
           videoUrl.value = response['body']['videoURL'][0];
-          thumbnailUrl.value = response['body']['thumbnailURL'][0];
+          thumbnailUrl.value = response['body']['thumbnailURL'].length > 0
+              ? response['body']['thumbnailURL'][0]
+              : '';
 
           body['media'] = {
-            'url': response['body']['videoURL'][0],
+            'url': videoUrl.value,
             "type": "video",
-            "thumbnail": response['body']['thumbnailURL'][0]
+            "thumbnail": thumbnailUrl.value
           };
+          LogHandler.debug(body);
 
           Map<String, dynamic> responseRec =
               await apiClient.post(endpoint, body);
           LogHandler.debug(responseRec);
 
           if (responseRec['success']) {
+            // TODO: fetch all Job Postings again(do it using await) then show toast and go back
+            ToastWidgit.bottomToast('Created job posting');
             Get.back();
           } else {
             String errorMsg =
                 responseRec['error']['message'] ?? Errors.somethingWentWrong;
             LogHandler.error(errorMsg);
+            ToastWidgit.bottomToast('Error creating job post');
           }
         } else {
           // Handle error
@@ -369,6 +376,8 @@ class RequisitionsController extends GetxController {
     } catch (error) {
       LogHandler.error(error);
       ToastWidgit.bottomToast('Unknown error occurred');
+    } finally {
+      isCreatingJobPost.value = false;
     }
   }
 }
