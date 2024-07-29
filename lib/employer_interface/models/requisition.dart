@@ -156,12 +156,44 @@ class RequestedBy {
   }
 }
 
+class SocialUrl {
+  String? id;
+  String? platform;
+  String? url;
+
+  SocialUrl({this.id, this.platform, this.url});
+
+  factory SocialUrl.fromJson(Map<String, dynamic> json) {
+    return SocialUrl(
+      id: json['_id'],
+      platform: json['platform'],
+      url: json['url'],
+    );
+  }
+
+  factory SocialUrl.fromMap(Map<String, dynamic> map) {
+    return SocialUrl(
+      id: map['_id'],
+      platform: map['platform'],
+      url: map['url'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      '_id': id,
+      'platform': platform,
+      'url': url,
+    };
+  }
+}
+
 class Company {
   String? id;
   String? name;
   String? description;
   String? officialEmail;
-  String? profilePicUrl;
+  List<SocialUrl>? socialUrls;
   String? industry;
 
   Company({
@@ -169,7 +201,7 @@ class Company {
     this.name,
     this.description,
     this.officialEmail,
-    this.profilePicUrl,
+    this.socialUrls,
     this.industry,
   });
 
@@ -179,7 +211,10 @@ class Company {
       name: json['name'],
       description: json['description'],
       officialEmail: json['officialEmail'],
-      profilePicUrl: json['profilePicUrl'],
+      socialUrls: json['socialUrls'] != null
+          ? List<SocialUrl>.from(
+          json['socialUrls'].map((x) => SocialUrl.fromJson(x)))
+          : null,
       industry: json['industry'],
     );
   }
@@ -190,7 +225,7 @@ class Company {
       'name': name,
       'description': description,
       'officialEmail': officialEmail,
-      'profilePicUrl': profilePicUrl,
+      'socialUrls': socialUrls,
       'industry': industry,
     };
   }

@@ -660,6 +660,7 @@ class AppliedBy {
   String? id;
   String? name;
   String? email;
+  List<Experience>? experience;
   String? profilePicUrl;
   String? headline;
   String? bio;
@@ -671,6 +672,7 @@ class AppliedBy {
     this.id,
     this.name,
     this.email,
+    this.experience,
     this.profilePicUrl,
     this.headline,
     this.bio,
@@ -687,6 +689,7 @@ class AppliedBy {
       profilePicUrl: json['profilePicUrl'],
       headline: json['headline'],
       bio: json['bio'],
+      experience: json['experience'],
       socialUrls: json['socialUrls'],
       updatedTime: json['updatedTime'],
       totalProfileViewCount: json['totalProfileViewCount'],
@@ -698,6 +701,9 @@ class AppliedBy {
       id: map['_id'],
       name: map['name'],
       email: map['email'],
+      experience: map['experience'] != null
+          ? List<Experience>.from(map['experience'].map((x) => Experience.fromMap(x)))
+          : [],
       profilePicUrl: map['profilePicUrl'],
       headline: map['headline'],
       bio: map['bio'],
@@ -720,6 +726,9 @@ class AppliedBy {
       'profilePicUrl': profilePicUrl,
       'headline': headline,
       'bio': bio,
+      "experience": experience == null
+          ? []
+          : List<dynamic>.from(experience!.map((x) => x.toMap())),
       "socialUrls": socialUrls == null
           ? []
           : List<dynamic>.from(socialUrls!.map((x) => x.toMap())),
@@ -728,6 +737,125 @@ class AppliedBy {
     };
   }
 }
+
+class Experience {
+  Title? title;
+  Company? company;
+  Location? location;
+  String? id;
+  String? description;
+  List<Media>? media;
+  String? employmentType;
+  String? jobMode;
+  DateTime? startDate;
+  DateTime? endDate;
+  bool? stillWorking;
+  List<String>? skills;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  int? v;
+
+  Experience({
+    this.title,
+    this.company,
+    this.location,
+    this.id,
+    this.description,
+    this.media,
+    this.employmentType,
+    this.jobMode,
+    this.startDate,
+    this.endDate,
+    this.stillWorking,
+    this.skills,
+    this.createdAt,
+    this.updatedAt,
+    this.v,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'company': company,
+      'location': location,
+      '_id': id,
+      'description': description,
+      'media': media?.map((x) => x.toMap()).toList(),
+      'employmentType': employmentType,
+      'jobMode': jobMode,
+      'startDate': startDate?.toIso8601String(),
+      'endDate': endDate?.toIso8601String(),
+      'stillWorking': stillWorking,
+      'skills': skills,
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
+      '__v': v,
+    };
+  }
+
+  factory Experience.fromMap(Map<String, dynamic> map) {
+    return Experience(
+      title: map['title'] != null ? Title.fromMap(map['title'] as Map<String, dynamic>) : null,
+      company: map['company'] != null ? Company.fromMap(map['company'] as Map<String, dynamic>) : null,
+      location: map['location'] != null ? Location.fromMap(map['location'] as Map<String, dynamic>) : null,
+      id: map['_id'] as String?,
+      description: map['description'] as String?,
+      media: map['media'] != null ? List<Media>.from(map['media'].map((x) => Media.fromMap(x))) : null,
+      employmentType: map['employmentType'] as String?,
+      jobMode: map['jobMode'] as String?,
+      startDate: map['startDate'] != null ? DateTime.parse(map['startDate']) : null,
+      endDate: map['endDate'] != null ? DateTime.parse(map['endDate']) : null,
+      stillWorking: map['stillWorking'] as bool?,
+      skills: map['skills'] != null ? List<String>.from(map['skills']) : null,
+      createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
+      updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
+      v: map['__v'] as int?,
+    );
+  }
+}
+
+class Title {
+  String? data;
+  String? name;
+
+  Title({this.data, this.name});
+
+  factory Title.fromMap(Map<String, dynamic> map) {
+    return Title(
+      data: map['data'] as String?,
+      name: map['name'] as String?,
+    );
+  }
+}
+
+class Company {
+  String? data;
+  String? name;
+
+  Company({this.data, this.name});
+
+  factory Company.fromMap(Map<String, dynamic> map) {
+    return Company(
+      data: map['data'] as String?,
+      name: map['name'] as String?,
+    );
+  }
+}
+
+class Address {
+  String? line1;
+  String? line2;
+
+  Address({this.line1, this.line2});
+
+  factory Address.fromMap(Map<String, dynamic> map) {
+    return Address(
+      line1: map['line1'] as String?,
+      line2: map['line2'] as String?,
+    );
+  }
+}
+
 
 class Answer {
   String? question;

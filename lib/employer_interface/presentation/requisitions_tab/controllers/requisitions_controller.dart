@@ -359,7 +359,7 @@ class RequisitionsController extends GetxController {
           LogHandler.debug(responseRec);
 
           if (responseRec['success']) {
-            // TODO: fetch all Job Postings again(do it using await) then show toast and go back
+            await fetchRequisitions();
             ToastWidgit.bottomToast('Created job posting');
             Get.back();
           } else {

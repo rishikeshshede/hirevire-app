@@ -59,17 +59,10 @@ class ApplicantsCard extends StatelessWidget {
           const VerticalSpace(),
           headline(context),
           jobApplicant.appliedBy?.bio != null ? bio(context) : const SizedBox(),
+          jobApplicant.jobPostId != null && jobApplicant.jobPostId!.location != null ? jobLocation(context) : const SizedBox(),
 
-          // TODO: Add experience section here
           const SectionTitle(title: 'Recent Experience'),
-          // take experience from reponse and add most recent experience here
-          // and skip this section if no experience is added
-          // Row(
-          //   children: [
-          //     jobLocation(context),
-          //     //ctcDetails(context),
-          //   ],
-          // ),
+          jobSeekerExperience(context),
 
           const VerticalSpace(),
           if (jobApplicant.requiredSkills != null &&
@@ -249,6 +242,41 @@ class ApplicantsCard extends StatelessWidget {
       jobApplicant.jobPostId != null && jobApplicant.jobPostId?.location != null
           ? '${jobApplicant.jobPostId?.location!.country ?? ''}, ${jobApplicant.jobPostId?.location!.city ?? ''} · ${jobApplicant.jobPostId?.jobMode?[0] ?? ''}'
           : 'No location',
+      style: AppTextThemes.secondaryTextStyle(context),
+    );
+  }
+
+  String calculateExperience(List<Experience>? experiences) {
+    if (experiences == null || experiences.isEmpty) {
+      return 'No Experience';
+    }
+
+    DateTime latestStartDate = DateTime.now();
+    DateTime earliestEndDate = DateTime(0);
+
+    for (var experience in experiences) {
+      if (experience.startDate != null && experience.startDate!.isBefore(latestStartDate)) {
+        latestStartDate = experience.startDate!;
+      }
+      if (experience.endDate != null && experience.endDate!.isAfter(earliestEndDate)) {
+        earliestEndDate = experience.endDate!;
+      } else if (experience.stillWorking == true) {
+        earliestEndDate = DateTime.now();
+      }
+    }
+
+    int totalMonths = (earliestEndDate.year - latestStartDate.year) * 12 + earliestEndDate.month - latestStartDate.month;
+    int years = totalMonths ~/ 12;
+    int months = totalMonths % 12;
+
+    return '${years > 0 ? '$years years' : ''}${years > 0 && months > 0 ? ', ' : ''}${months > 0 ? '$months months' : ''}';
+  }
+
+  Text jobSeekerExperience(BuildContext context) {
+    return Text(
+      jobApplicant.appliedBy != null && jobApplicant.appliedBy?.experience != null && jobApplicant.appliedBy!.experience!.isNotEmpty
+          ? calculateExperience(jobApplicant.appliedBy?.experience ?? [])
+          : 'No Experience',
       style: AppTextThemes.secondaryTextStyle(context),
     );
   }
