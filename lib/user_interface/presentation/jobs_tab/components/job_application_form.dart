@@ -27,8 +27,6 @@ class JobApplicationForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    jobsController.fetchUserProfile();
-
     return PaddedContainer(
       onBackBtnPressed: () => {
         Get.back(result: true),
@@ -69,11 +67,10 @@ class JobApplicationForm extends StatelessWidget {
                           }
                           // Creating a map of skill IDs to ratings from jobSeekerProfile
                           final seekerSkills = jobsController
-                                      .jobSeekerProfile.value.data?.skills !=
+                                      .jobSeekerProfile.value.skills !=
                                   null
                               ? Map.fromEntries(
-                                  jobsController
-                                      .jobSeekerProfile.value.data!.skills!
+                                  jobsController.jobSeekerProfile.value.skills!
                                       .map(
                                     (s) => MapEntry(
                                         s.skill?.id ?? '', s.rating ?? 1.0),
@@ -112,9 +109,8 @@ class JobApplicationForm extends StatelessWidget {
                                               SliderTickMarkShape.noTickMark,
                                         ),
                                         child: Slider(
-                                          value: jobsController.skillsRatings[
-                                                  skill.skill?.id ?? ''] ??
-                                              preFilledRating,
+                                          value: double.parse(
+                                              preFilledRating.toString()),
                                           min: 1,
                                           max: 10,
                                           divisions: 9,

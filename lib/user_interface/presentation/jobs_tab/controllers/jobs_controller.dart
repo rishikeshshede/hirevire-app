@@ -62,6 +62,7 @@ class JobsController extends GetxController {
     debounce(skillsSearchQuery, (_) => suggestSkills(),
         time: const Duration(milliseconds: 300));
     fetchRecommendedJobs();
+    fetchUserProfile();
   }
 
   void addSkill(Map<String, dynamic> selectedSkill) {
@@ -191,7 +192,6 @@ class JobsController extends GetxController {
 
     try {
       Map<String, dynamic> response = await apiClient.get(endpoint);
-      LogHandler.debug(response);
 
       if (response['success']) {
         jobSeekerProfile.value = JobSeekerProfile.fromMap(
@@ -215,7 +215,7 @@ class JobsController extends GetxController {
 
     try {
       Map<String, dynamic> response = await apiClient.get(endpoint);
-      LogHandler.debug(response);
+      // LogHandler.debug(response);
 
       if (response['success']) {
         jobs.value =

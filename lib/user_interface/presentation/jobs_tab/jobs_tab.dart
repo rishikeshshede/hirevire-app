@@ -135,13 +135,20 @@ class JobsTab extends StatelessWidget {
 
                                   final job = jobsController.jobs[index];
 
+                                  jobsController.fetchUserProfile();
                                   Get.to(
                                     () => JobApplicationForm(
                                       jobsController: jobsController,
                                       job: job,
                                       index: index,
                                     ),
-                                  )?.then((value) => { if (value == true) {jobsController.fetchRecommendedJobs()} });
+                                  )?.then((value) => {
+                                        if (value == true)
+                                          {
+                                            jobsController
+                                                .fetchRecommendedJobs()
+                                          }
+                                      });
                                 } else if (direction ==
                                     CardSwiperDirection.left) {
                                   jobsController
