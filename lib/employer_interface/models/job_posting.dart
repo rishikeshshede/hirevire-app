@@ -18,9 +18,11 @@ class JobPosting {
   List<GrowthPlan>? growthPlan;
   DateTime? endsOn;
   List<String>? savedApplications;
+  List<LeftSwipe>? leftSwipes;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? version;
+  int? openingsCouunt;
 
   JobPosting({
     this.location,
@@ -42,9 +44,11 @@ class JobPosting {
     this.growthPlan,
     this.endsOn,
     this.savedApplications,
+    this.leftSwipes,
     this.createdAt,
     this.updatedAt,
     this.version,
+    this.openingsCouunt,
   });
 
   factory JobPosting.fromMap(Map<String, dynamic> map) {
@@ -68,9 +72,11 @@ class JobPosting {
       growthPlan: map['growthPlan'] != null ? List<GrowthPlan>.from(map['growthPlan'].map((x) => GrowthPlan.fromMap(x))) : null,
       endsOn: map['endsOn'] != null ? DateTime.parse(map['endsOn']) : null,
       savedApplications: map['savedApplications'] != null ? List<String>.from(map['savedApplications']) : null,
+      leftSwipes: map['leftSwipes'] != null ? List<LeftSwipe>.from(map['leftSwipes'].map((x) => LeftSwipe.fromMap(x))) : null,
       createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
       updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
       version: map['__v'],
+      openingsCouunt: map['openingsCouunt'],
     );
   }
 
@@ -95,9 +101,11 @@ class JobPosting {
       'growthPlan': growthPlan != null ? List<dynamic>.from(growthPlan!.map((x) => x.toMap())) : null,
       'endsOn': endsOn?.toIso8601String(),
       'savedApplications': savedApplications != null ? List<dynamic>.from(savedApplications!.map((x) => x)) : null,
+      'leftSwipes': leftSwipes != null ? List<dynamic>.from(leftSwipes!.map((x) => x.toMap())) : null,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
       '__v': version,
+      'openingsCouunt': openingsCouunt,
     };
   }
 
@@ -356,41 +364,33 @@ class Question {
 }
 
 class RequiredSkill {
+  String? skill;
+  int? rating;
+  DateTime? lastUpdated;
   String? id;
-  String? name;
-  String? category;
-  String? subcategory;
-  DateTime? createdAt;
-  DateTime? updatedAt;
 
   RequiredSkill({
+    this.skill,
+    this.rating,
+    this.lastUpdated,
     this.id,
-    this.name,
-    this.category,
-    this.subcategory,
-    this.createdAt,
-    this.updatedAt,
   });
 
   factory RequiredSkill.fromMap(Map<String, dynamic> map) {
     return RequiredSkill(
+      skill: map['skill'],
+      rating: map['rating'],
+      lastUpdated: map['lastUpdated'] != null ? DateTime.parse(map['lastUpdated']) : null,
       id: map['_id'],
-      name: map['name'],
-      category: map['category'],
-      subcategory: map['subcategory'],
-      createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
-      updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
+      'skill': skill,
+      'rating': rating,
+      'lastUpdated': lastUpdated?.toIso8601String(),
       '_id': id,
-      'name': name,
-      'category': category,
-      'subcategory': subcategory,
-      'createdAt': createdAt?.toIso8601String(),
-      'updatedAt': updatedAt?.toIso8601String(),
     };
   }
 }
@@ -451,6 +451,34 @@ class Media {
       'type': type,
       'thumbnail': thumbnail,
       '_id': id,
+    };
+  }
+}
+
+class LeftSwipe {
+  String? jobSeekerId;
+  DateTime? timestamp;
+  String? id;
+
+  LeftSwipe({
+    this.jobSeekerId,
+    this.timestamp,
+    this.id,
+  });
+
+  factory LeftSwipe.fromMap(Map<String, dynamic> map) {
+    return LeftSwipe(
+      jobSeekerId: map['jobSeekerId'] as String?,
+      timestamp: map['timestamp'] != null ? DateTime.parse(map['timestamp']) : null,
+      id: map['id'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'jobSeekerId': jobSeekerId,
+      'timestamp': timestamp?.toIso8601String(),
+      'id': id,
     };
   }
 }

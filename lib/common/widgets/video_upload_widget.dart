@@ -14,9 +14,11 @@ import 'package:video_player/video_player.dart';
 class VideoUploadWidget extends StatefulWidget {
   final Function(File? videoFile, File? thumbnailFile) onFilesSelected;
   final String? titleText;
+  final String? videoUrl;
+  final String? thumbnailUrl;
 
   const VideoUploadWidget(
-      {required this.onFilesSelected, this.titleText, super.key});
+      {required this.onFilesSelected, this.titleText, super.key, this.videoUrl, this.thumbnailUrl});
 
   @override
   VideoUploadWidgetState createState() => VideoUploadWidgetState();
@@ -39,7 +41,9 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
     return Column(
       children: [
         GestureDetector(
-          onTap: _pickVideo,
+          onTap: () => {
+            _pickVideo(videoUrl: widget.videoUrl),
+          },
           child: Container(
             width: double.infinity,
             height: _videoFile == null ? videoHeight * .8 : null,
@@ -59,19 +63,34 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
     );
   }
 
-  Future<void> _pickVideo() async {
-    final pickedFile =
-        await ImagePicker().pickVideo(source: ImageSource.gallery);
-    if (pickedFile != null) {
+  Future<void> _pickVideo({String? videoUrl}) async {
+    if (videoUrl != null && videoUrl.isNotEmpty) {
+      // If a video URL is provided, use it
       setState(() {
-        _videoFile = File(pickedFile.path);
-        _videoController = VideoPlayerController.file(_videoFile!)
+        _videoFile = null; // Clear any previously picked file
+        Uri videoUri = Uri.parse(videoUrl);
+        _videoController = VideoPlayerController.networkUrl(videoUri)
           ..initialize().then((_) {
             setState(() {});
             _videoController!.play();
           });
         widget.onFilesSelected(_videoFile, _thumbnailFile);
       });
+    } else {
+      // Otherwise, allow the user to pick a video from the gallery
+      final pickedFile =
+      await ImagePicker().pickVideo(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          _videoFile = File(pickedFile.path);
+          _videoController = VideoPlayerController.file(_videoFile!)
+            ..initialize().then((_) {
+              setState(() {});
+              _videoController!.play();
+            });
+          widget.onFilesSelected(_videoFile, _thumbnailFile);
+        });
+      }
     }
   }
 

@@ -48,7 +48,8 @@ class RequisitionsController extends GetxController {
 
   TextEditingController jobTitleController = TextEditingController();
   TextEditingController descController = TextEditingController();
-  TextEditingController locationController = TextEditingController();
+  TextEditingController locationCityController = TextEditingController();
+  TextEditingController locationCountryController = TextEditingController();
   //TextEditingController jobModeController = TextEditingController();
   RxString jobModeController = GlobalConstants.locationTypes[0].obs;
   TextEditingController vidReqController = TextEditingController();
@@ -66,7 +67,8 @@ class RequisitionsController extends GetxController {
   FocusNode jobTitleFocusNode = FocusNode();
   FocusNode descFocusNode = FocusNode();
   FocusNode reqSkillsFocusNode = FocusNode();
-  FocusNode locationFocusNode = FocusNode();
+  FocusNode locationCityFocusNode = FocusNode();
+  FocusNode locationCountryFocusNode = FocusNode();
   FocusNode jobModelFocusNode = FocusNode();
   FocusNode openingCountFocusNode = FocusNode();
   FocusNode perksFocusNode = FocusNode();
@@ -203,6 +205,7 @@ class RequisitionsController extends GetxController {
     isCreatingJobPost.value = true;
     RxBool isError = false.obs;
     if (selectedVideoFile == null) {
+      isCreatingJobPost.value = false;
       ToastWidgit.bottomToast('please upload video, it is required');
       return;
     }
@@ -213,13 +216,16 @@ class RequisitionsController extends GetxController {
     }
     if (descController.text.isEmpty) {
       errorMsgDescription.value = 'job description is required';
-      //ToastWidgit.bottomToast('job description is required');
       isError.value = true;
     }
-    if (locationController.text.isEmpty) {
-      errorMsgLocation.value = 'location is required';
+    if (locationCityController.text.isEmpty) {
+      errorMsgLocation.value = 'city and country location is required';
 
-      // ToastWidgit.bottomToast('location is required');
+      isError.value = true;
+    }
+    if (locationCountryController.text.isEmpty) {
+      errorMsgLocation.value = 'city, country location is required';
+
       isError.value = true;
     }
     if (perksController.text.isEmpty) {
@@ -271,13 +277,11 @@ class RequisitionsController extends GetxController {
     // }
 
     if (isError.value) {
+      isCreatingJobPost.value = false;
       return;
     }
 
     String endpoint = EndpointService.createJobPostings;
-
-    String countryLocation = 'India'; //hardcoded
-    String cityLocation = 'Pune'; //hardcoded
 
     Map<String, dynamic> body = {
       'jobRequisitionId': req.id,
@@ -287,8 +291,8 @@ class RequisitionsController extends GetxController {
       'project': req.project ?? "",
       'openingsCount': int.parse(openingCountController.text.trim()),
       'location': {
-        'country': countryLocation,
-        'city': cityLocation,
+        'country': locationCountryController.text.trim(),
+        'city': locationCityController.text.trim(),
       },
       'jobMode': [jobModeController.value],
       'description': descController.text.isEmpty
@@ -360,6 +364,7 @@ class RequisitionsController extends GetxController {
 
           if (responseRec['success']) {
             await fetchRequisitions();
+            emptyErrorMessages();
             ToastWidgit.bottomToast('Created job posting');
             Get.back();
           } else {
@@ -379,5 +384,18 @@ class RequisitionsController extends GetxController {
     } finally {
       isCreatingJobPost.value = false;
     }
+  }
+
+  emptyErrorMessages() {
+    errorMsgJobTitle.value = '';
+    errorMsgLocation.value = '';
+    errorMsgDescription.value = '';
+    errorMsgOpeningCount.value = '';
+    errorMsgPerks.value = '';
+    errorMsgCtc.value = '';
+    errorMsgJobMode.value = '';
+    errorMsgGrowthPlanThi.value = '';
+    errorMsgGrowthPlanSix.value = '';
+    errorMsgGrowthPlan3Mon.value = '';
   }
 }

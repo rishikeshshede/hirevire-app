@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
 import 'package:hirevire_app/employer_interface/models/job_posting.dart';
 import 'package:hirevire_app/services/api_service.dart';
@@ -33,7 +36,8 @@ class JobPostingsController extends GetxController {
 
   TextEditingController jobTitleController = TextEditingController();
   TextEditingController descController = TextEditingController();
-  TextEditingController locationController = TextEditingController();
+  TextEditingController locationCityController = TextEditingController();
+  TextEditingController locationCountryController = TextEditingController();
   //TextEditingController jobModeController = TextEditingController();
   RxString jobModeController = GlobalConstants.locationTypes[0].obs;
   TextEditingController vidReqController = TextEditingController();
@@ -47,12 +51,44 @@ class JobPostingsController extends GetxController {
   TextEditingController qOneController = TextEditingController();
   TextEditingController qTwoController = TextEditingController();
 
+  File? selectedVideoFile;
+  RxString selectedVideoFileUrl = ''.obs;
+  RxString selectedThumbnailFileUrl = ''.obs;
+  File? selectedThumbnailFile = File('');
+
+  void setRecruiterVideoThumbnail(String? videoUrl, String? thumbnailUrl) {
+    selectedVideoFileUrl.value = videoUrl ?? '';
+    selectedThumbnailFileUrl.value = thumbnailUrl ?? '';
+  }
+
   void setJobTitle(String? jobTitle) {
     jobTitleController.text = jobTitle ?? '';
   }
 
   void setOpeningCount(int openingCount) {
     openingCountController.text = openingCount.toString();
+  }
+
+  void setLocation(Location? location) {
+    locationCityController.text = location?.city ?? '';
+    locationCountryController.text = location?.country ?? '';
+  }
+
+  void setPerks(String? perks) {
+    jobModeController.value =
+        perksController.text = perks ?? '';
+  }
+  void setCtc(String? ctc) {
+    ctcController.text = ctc ?? '';
+  }
+  void setThiDays(String? growthPlan) {
+    tDaysPlanController.text = growthPlan ?? '';
+  }
+  void setSixDays(String? growthPlan) {
+    sDaysPlanController.text = growthPlan ?? '';
+  }
+  void setNinetyDays(String? growthPlan) {
+    nDaysPlanController.text = growthPlan ?? '';
   }
 
   void setJobMode(List<String>? jobMode) {
@@ -74,6 +110,11 @@ class JobPostingsController extends GetxController {
 
   fetchLocalData() async {
     name.value = await PersistenceHandler.getString(PersistenceKeys.name) ?? '';
+  }
+
+  void onFilesSelected(File? videoFile, File? thumbnailFile) {
+    selectedVideoFile = videoFile;
+    selectedThumbnailFile = thumbnailFile;
   }
 
   fetchJobPostings() async {

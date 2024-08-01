@@ -96,7 +96,7 @@ class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
                     onEditingComplete: () {
                       widget.requisitionsController.descFocusNode.unfocus();
                       FocusScope.of(context).requestFocus(
-                          widget.requisitionsController.locationFocusNode);
+                          widget.requisitionsController.locationCityFocusNode);
                     },
                   ),
                   Obx(
@@ -124,20 +124,43 @@ class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
                   //   },
                   // ),
                   // const VerticalSpace(),
-                  CustomTextField(
-                    titleText: 'Location',
-                    textInputType: TextInputType.streetAddress,
-                    textInputAction: TextInputAction.next,
-                    textCapitalization: TextCapitalization.words,
-                    focusNode: widget.requisitionsController.locationFocusNode,
-                    controller:
-                        widget.requisitionsController.locationController,
-                    onChanged: (String value) {},
-                    onEditingComplete: () {
-                      widget.requisitionsController.locationFocusNode.unfocus();
-                      FocusScope.of(context).requestFocus(
-                          widget.requisitionsController.perksFocusNode);
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomTextField(
+                        width: MediaQuery.of(context).size.width / 2 - 24,
+                        titleText: 'City',
+                        textInputType: TextInputType.streetAddress,
+                        textInputAction: TextInputAction.next,
+                        textCapitalization: TextCapitalization.words,
+                        focusNode: widget.requisitionsController.locationCityFocusNode,
+                        controller:
+                            widget.requisitionsController.locationCityController,
+                        onChanged: (String value) {},
+                        onEditingComplete: () {
+                          widget.requisitionsController.locationCityFocusNode.unfocus();
+                          FocusScope.of(context).requestFocus(
+                              widget.requisitionsController.locationCountryFocusNode);
+                        },
+                      ),
+                      const HorizontalSpace(space: 4),
+                      CustomTextField(
+                        width: MediaQuery.of(context).size.width / 2 - 20,
+                        titleText: 'Country',
+                        textInputType: TextInputType.streetAddress,
+                        textInputAction: TextInputAction.next,
+                        textCapitalization: TextCapitalization.words,
+                        focusNode: widget.requisitionsController.locationCountryFocusNode,
+                        controller:
+                        widget.requisitionsController.locationCountryController,
+                        onChanged: (String value) {},
+                        onEditingComplete: () {
+                          widget.requisitionsController.locationCountryFocusNode.unfocus();
+                          FocusScope.of(context).requestFocus(
+                              widget.requisitionsController.perksFocusNode);
+                        },
+                      ),
+                    ],
                   ),
                   Obx(
                     () => Row(
@@ -280,7 +303,17 @@ class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
                           widget.requisitionsController.sDaysFocusNode);
                     },
                   ),
-                  const VerticalSpace(),
+                  Obx(
+                        () => Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ErrorTextWidget(
+                            text: widget
+                                .requisitionsController.errorMsgGrowthPlanThi.value),
+                      ],
+                    ),
+                  ),
+                  VerticalSpace(space: 8.h(context)),
                   CustomTextField(
                     titleText: '60 Days Plan',
                     textInputType: TextInputType.text,
@@ -295,7 +328,17 @@ class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
                           widget.requisitionsController.nDaysFocusNode);
                     },
                   ),
-                  const VerticalSpace(),
+                  Obx(
+                        () => Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ErrorTextWidget(
+                            text: widget
+                                .requisitionsController.errorMsgGrowthPlanSix.value),
+                      ],
+                    ),
+                  ),
+                  VerticalSpace(space: 8.h(context)),
                   CustomTextField(
                       titleText: '3 Months Plan',
                       textInputType: TextInputType.text,
@@ -307,7 +350,17 @@ class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
                       onEditingComplete: () {
                         widget.requisitionsController.nDaysFocusNode.unfocus();
                       }),
-                  const VerticalSpace(space: 20),
+                  Obx(
+                        () => Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ErrorTextWidget(
+                            text: widget
+                                .requisitionsController.errorMsgGrowthPlan3Mon.value),
+                      ],
+                    ),
+                  ),
+                  VerticalSpace(space: 8.h(context)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
