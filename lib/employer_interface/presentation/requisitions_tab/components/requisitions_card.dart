@@ -102,20 +102,20 @@ class RequisitionsCard extends StatelessWidget {
                       .copyWith(fontSize: 13),
                 ),
               ),
-              const HorizontalSpace(),
-              Flexible(
-                child: ButtonOutline(
-                  btnText: 'View Job Postings',
-                  height: 38.h(context),
-                  onPressed: () {
-                    //TODO: same screen as list of job postings tab
-                  },
-                  textStyle: AppTextThemes.buttonTextStyle(context).copyWith(
-                    fontSize: 13,
-                    color: AppColors.primaryDark,
-                  ),
-                ),
-              ),
+              // const HorizontalSpace(),
+              // Flexible(
+              //   child: ButtonOutline(
+              //     btnText: 'View Job Postings',
+              //     height: 38.h(context),
+              //     onPressed: () {
+              //       //TODO: same screen as list of job postings tab
+              //     },
+              //     textStyle: AppTextThemes.buttonTextStyle(context).copyWith(
+              //       fontSize: 13,
+              //       color: AppColors.primaryDark,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ],

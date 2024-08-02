@@ -44,7 +44,8 @@ class JobPostingsController extends GetxController {
   TextEditingController reqSkillsController = TextEditingController();
   TextEditingController perksController = TextEditingController();
   TextEditingController openingCountController = TextEditingController();
-  TextEditingController ctcController = TextEditingController();
+  TextEditingController minCtcController = TextEditingController();
+  TextEditingController maxCtcController = TextEditingController();
   TextEditingController tDaysPlanController = TextEditingController();
   TextEditingController sDaysPlanController = TextEditingController();
   TextEditingController nDaysPlanController = TextEditingController();
@@ -78,8 +79,9 @@ class JobPostingsController extends GetxController {
     jobModeController.value =
         perksController.text = perks ?? '';
   }
-  void setCtc(String? ctc) {
-    ctcController.text = ctc ?? '';
+  void setCtc(CTC? ctc) {
+    minCtcController.text = ctc?.min ?? '';
+    maxCtcController.text = ctc?.max ?? '';
   }
   void setThiDays(String? growthPlan) {
     tDaysPlanController.text = growthPlan ?? '';

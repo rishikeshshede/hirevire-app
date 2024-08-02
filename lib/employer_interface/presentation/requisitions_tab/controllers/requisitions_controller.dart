@@ -56,7 +56,8 @@ class RequisitionsController extends GetxController {
   TextEditingController reqSkillsController = TextEditingController();
   TextEditingController perksController = TextEditingController();
   TextEditingController openingCountController = TextEditingController();
-  TextEditingController ctcController = TextEditingController();
+  TextEditingController minCtcController = TextEditingController();
+  TextEditingController maxCtcController = TextEditingController();
   TextEditingController tDaysPlanController = TextEditingController();
   TextEditingController sDaysPlanController = TextEditingController();
   TextEditingController nDaysPlanController = TextEditingController();
@@ -72,7 +73,8 @@ class RequisitionsController extends GetxController {
   FocusNode jobModelFocusNode = FocusNode();
   FocusNode openingCountFocusNode = FocusNode();
   FocusNode perksFocusNode = FocusNode();
-  FocusNode ctcFocusNode = FocusNode();
+  FocusNode maxCtcFocusNode = FocusNode();
+  FocusNode minCtcFocusNode = FocusNode();
   FocusNode tDaysFocusNode = FocusNode();
   FocusNode sDaysFocusNode = FocusNode();
   FocusNode nDaysFocusNode = FocusNode();
@@ -224,7 +226,7 @@ class RequisitionsController extends GetxController {
       isError.value = true;
     }
     if (locationCountryController.text.isEmpty) {
-      errorMsgLocation.value = 'city, country location is required';
+      errorMsgLocation.value = 'city and country location is required';
 
       isError.value = true;
     }
@@ -237,8 +239,14 @@ class RequisitionsController extends GetxController {
     if (jobModeController.value == GlobalConstants.locationTypes[0]) {
       errorMsgJobMode.value = 'Select Job mode';
     }
-    if (ctcController.text.isEmpty) {
-      errorMsgCtc.value = 'CTC is required';
+    if (minCtcController.text.isEmpty) {
+      errorMsgCtc.value = 'CTC range is required';
+
+      // ToastWidgit.bottomToast('CTC is required');
+      isError.value = true;
+    }
+    if (maxCtcController.text.isEmpty) {
+      errorMsgCtc.value = 'CTC range is required';
 
       // ToastWidgit.bottomToast('CTC is required');
       isError.value = true;
@@ -299,7 +307,10 @@ class RequisitionsController extends GetxController {
           ? req.description
           : descController.text.trim(),
       'videoRequirement': '',
-      'ctc': ctcController.text.trim(),
+      'ctc': {
+        "min": '${minCtcController.text.trim()}LPA',
+        "max": '${maxCtcController.text.trim()}LPA',
+      },
       'questions': [
         {"content": qOneController.text.trim(), "type": "text"},
         {"content": qTwoController.text.trim(), "type": "text"}

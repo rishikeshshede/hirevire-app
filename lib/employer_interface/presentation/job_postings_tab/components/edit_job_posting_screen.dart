@@ -38,11 +38,11 @@ class _EditJobPostingScreenState extends State<EditJobPostingScreen> {
     widget.jobPostingsController
         .setDescription(widget.jobPostings.description ?? '');
     widget.jobPostingsController
-        .setCtc(widget.jobPostings.ctc ?? '');
+        .setCtc(widget.jobPostings.ctc);
     widget.jobPostingsController
         .setLocation(widget.jobPostings.location);
     widget.jobPostingsController
-        .setOpeningCount(widget.jobPostings.openingsCouunt ?? 0);
+        .setOpeningCount(widget.jobPostings.openingsCount ?? 0);
     widget.jobPostingsController.setNinetyDays(widget.jobPostings.growthPlan?[2].title ?? '');
     widget.jobPostingsController.setSixDays(widget.jobPostings.growthPlan?[1].title ?? '');
     widget.jobPostingsController.setThiDays(widget.jobPostings.growthPlan?[0].title ?? '');
@@ -167,7 +167,7 @@ class _EditJobPostingScreenState extends State<EditJobPostingScreen> {
                     titleText: 'CTC',
                     textInputType: TextInputType.number,
                     textInputAction: TextInputAction.done,
-                    controller: widget.jobPostingsController.ctcController,
+                    controller: widget.jobPostingsController.minCtcController,
                     onChanged: (String value) {},
                     onEditingComplete: () {
                       },

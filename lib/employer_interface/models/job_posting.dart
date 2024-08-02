@@ -10,7 +10,7 @@ class JobPosting {
   String? project;
   List<String>? jobMode;
   String? description;
-  String? ctc;
+  CTC? ctc;
   String? perks;
   List<Question>? questions;
   List<RequiredSkill>? requiredSkills;
@@ -22,7 +22,7 @@ class JobPosting {
   DateTime? createdAt;
   DateTime? updatedAt;
   int? version;
-  int? openingsCouunt;
+  int? openingsCount;
 
   JobPosting({
     this.location,
@@ -48,7 +48,7 @@ class JobPosting {
     this.createdAt,
     this.updatedAt,
     this.version,
-    this.openingsCouunt,
+    this.openingsCount,
   });
 
   factory JobPosting.fromMap(Map<String, dynamic> map) {
@@ -64,7 +64,11 @@ class JobPosting {
       project: map['project'],
       jobMode: map['jobMode'] != null ? List<String>.from(map['jobMode']) : null,
       description: map['description'],
-      ctc: map['ctc'],
+      ctc: map['ctc'] != null
+          ? (map['ctc'] is String
+          ? CTC(min: map['ctc'], max: map['ctc'])
+          : CTC.fromMap(map['ctc'] as Map<String, dynamic>?))
+          : null,
       perks: map['perks'],
       questions: map['questions'] != null ? List<Question>.from(map['questions'].map((x) => Question.fromMap(x))) : null,
       requiredSkills: map['requiredSkills'] != null ? List<RequiredSkill>.from(map['requiredSkills'].map((x) => RequiredSkill.fromMap(x))) : null,
@@ -76,7 +80,7 @@ class JobPosting {
       createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
       updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
       version: map['__v'],
-      openingsCouunt: map['openingsCouunt'],
+      openingsCount: map['openingsCount'],
     );
   }
 
@@ -93,7 +97,7 @@ class JobPosting {
       'project': project,
       'jobMode': jobMode != null ? List<dynamic>.from(jobMode!.map((x) => x)) : null,
       'description': description,
-      'ctc': ctc,
+      'ctc': ctc?.toMap(),
       'perks': perks,
       'questions': questions != null ? List<dynamic>.from(questions!.map((x) => x.toMap())) : null,
       'requiredSkills': requiredSkills != null ? List<dynamic>.from(requiredSkills!.map((x) => x.toMap())) : null,
@@ -105,7 +109,7 @@ class JobPosting {
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
       '__v': version,
-      'openingsCouunt': openingsCouunt,
+      'openingsCount': openingsCount,
     };
   }
 
@@ -451,6 +455,40 @@ class Media {
       'type': type,
       'thumbnail': thumbnail,
       '_id': id,
+    };
+  }
+}
+
+class CTC {
+  String? min;
+  String? max;
+
+  CTC({
+    this.min,
+    this.max,
+  });
+
+  factory CTC.fromMap(Map<String, dynamic>? map) {
+    if (map == null) return CTC();
+    if (map['min'] != null && map['max'] != null) {
+      return CTC(
+        min: map['min'] as String?,
+        max: map['max'] as String?,
+      );
+    } else {
+      String singleValue = map['min'] ?? map['max'] ?? '';
+      return CTC(
+        min: singleValue,
+        max: singleValue,
+      );
+    }
+  }
+
+
+  Map<String, dynamic> toMap() {
+    return {
+      'min': min,
+      'max': max,
     };
   }
 }

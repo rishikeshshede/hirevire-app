@@ -238,7 +238,7 @@ class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
                     onEditingComplete: () {
                       widget.requisitionsController.perksFocusNode.unfocus();
                       FocusScope.of(context).requestFocus(
-                          widget.requisitionsController.ctcFocusNode);
+                          widget.requisitionsController.minCtcFocusNode);
                     },
                   ),
                   Obx(
@@ -251,21 +251,44 @@ class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
                       ],
                     ),
                   ),
-                  //TODO: ctc should be in range
-                  CustomTextField(
-                    titleText: 'CTC',
-                    labelText: 'Per annum (in Lakhs)',
-                    textInputType: TextInputType.number,
-                    textInputAction: TextInputAction.next,
-                    focusNode: widget.requisitionsController.ctcFocusNode,
-                    controller: widget.requisitionsController.ctcController,
-                    onChanged: (String value) {},
-                    onEditingComplete: () {
-                      widget.requisitionsController.ctcFocusNode.unfocus();
-                      FocusScope.of(context).requestFocus(
-                          widget.requisitionsController.tDaysFocusNode);
-                    },
-                    // readOnly: true,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomTextField(
+                        width: MediaQuery.of(context).size.width / 2 - 24,
+                        titleText: 'Min CTC',
+                        labelText: 'Per annum (in Lakhs)',
+                        textInputType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        focusNode: widget.requisitionsController.minCtcFocusNode,
+                        controller: widget.requisitionsController.minCtcController,
+                        onChanged: (String value) {},
+                        onEditingComplete: () {
+                          widget.requisitionsController.minCtcFocusNode.unfocus();
+                          FocusScope.of(context).requestFocus(
+                              widget.requisitionsController.maxCtcFocusNode);
+                        },
+                        // readOnly: true,
+                      ),
+                      const HorizontalSpace(space: 4),
+                      CustomTextField(
+                        width: MediaQuery.of(context).size.width / 2 - 20,
+                        titleText: 'Max CTC',
+                        labelText: 'Per annum (in Lakhs)',
+                        textInputType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        textCapitalization: TextCapitalization.words,
+                        focusNode: widget.requisitionsController.maxCtcFocusNode,
+                        controller:
+                        widget.requisitionsController.maxCtcController,
+                        onChanged: (String value) {},
+                        onEditingComplete: () {
+                          widget.requisitionsController.maxCtcFocusNode.unfocus();
+                          FocusScope.of(context).requestFocus(
+                              widget.requisitionsController.tDaysFocusNode);
+                        },
+                      ),
+                    ],
                   ),
                   Obx(
                     () => Row(
