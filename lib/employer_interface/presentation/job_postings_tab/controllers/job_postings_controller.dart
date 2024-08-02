@@ -10,6 +10,7 @@ import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/persistence_handler.dart';
 import 'package:hirevire_app/utils/show_toast_util.dart';
 
+import '../../../../constants/endpoint_constants.dart';
 import '../../../../constants/error_constants.dart';
 import '../../../../constants/global_constants.dart';
 import '../../../../services/api_endpoint_service.dart';
@@ -57,6 +58,9 @@ class JobPostingsController extends GetxController {
   RxString selectedThumbnailFileUrl = ''.obs;
   File? selectedThumbnailFile = File('');
 
+  RxString videoUrl = ''.obs;
+  RxString thumbnailUrl = ''.obs;
+
   void setRecruiterVideoThumbnail(String? videoUrl, String? thumbnailUrl) {
     selectedVideoFileUrl.value = videoUrl ?? '';
     selectedThumbnailFileUrl.value = thumbnailUrl ?? '';
@@ -84,6 +88,8 @@ class JobPostingsController extends GetxController {
     maxCtcController.text = ctc?.max ?? '';
   }
   void setThiDays(String? growthPlan) {
+    print('growthplan');
+    print(growthPlan);
     tDaysPlanController.text = growthPlan ?? '';
   }
   void setSixDays(String? growthPlan) {
@@ -164,7 +170,7 @@ class JobPostingsController extends GetxController {
 
       if (response['success']) {
         ToastWidgit.bottomToast('Job posting closed successfully');
-        Get.back();
+        //Get.back();
       } else {
         String errorMsg =
             response['error']['message'] ?? Errors.somethingWentWrong;
@@ -185,24 +191,43 @@ class JobPostingsController extends GetxController {
     Map<String, dynamic> body = {
       "jobRequisitionId": jobPosting.id,
       "postedBy": jobPosting.postedBy?.id ?? '',
-      "title": jobPosting.title,
+      "title": jobTitleController.text.trim(),
       "department": jobPosting.department,
       "project": jobPosting.project,
-      "openingsCount": 0,
+      "openingsCount": int.parse(openingCountController.text.trim()),
       "location": {
-        "country": jobPosting.location?.country,
-        "city": jobPosting.location?.city
+        "country":  locationCountryController.text.trim(),
+        "city": locationCityController.text.trim(),
       },
-      "jobMode": jobPosting.jobMode,
-      "description": jobPosting.description,
+      "jobMode": [jobModeController.value],
+      "description": descController.text.isEmpty
+          ? jobPosting.description
+          : descController.text.trim(),
       "videoRequirement": '',
-      "ctc": jobPosting.ctc,
+      "ctc": jobPosting.ctc?.max ?? '',
       "questions": jobPosting.questions?.map((q) => q.toMap()).toList(),
-      "growth_plan": jobPosting.growthPlan?.map((g) => g.toMap()).toList(),
-      "perks": jobPosting.perks,
+      'growth_plan': [
+        {
+          "title": "30 Days",
+          "description": tDaysPlanController.text.trim(),
+        },
+        {
+          "title": "60 Days",
+          "description": sDaysPlanController.text.trim(),
+        },
+        {
+          "title": "3 Months",
+          "description": nDaysPlanController.text.trim(),
+        }
+      ],
+      'perks': perksController.text.trim(),
       "requiredSkills":
           jobPosting.requiredSkills?.map((s) => s.toMap()).toList(),
-      "media": jobPosting.media?.map((m) => m.toMap()).toList(),
+      'media': {
+        'url': selectedVideoFile != null ? videoUrl.value : jobPosting.media?[0].url,
+        'type': "video",
+        'thumbnail': selectedThumbnailFile != null ?  thumbnailUrl.value : jobPosting.media?[0].thumbnail,
+      },
       "endsOn": jobPosting.endsOn?.toIso8601String(),
       "status": isClosedStatus.value ? 'closed' : jobPosting.status,
     };
@@ -212,17 +237,63 @@ class JobPostingsController extends GetxController {
     var url = '$endpoint/${jobPosting.id}';
 
     try {
-      Map<String, dynamic> response = await apiClient.put(url, body);
-      LogHandler.debug(response);
+      if (selectedVideoFile != null) {
+        await apiClient
+            .uploadVideoWithThumbnail(
+          Endpoints.uploadVideoWithThumbnail,
+          selectedVideoFile!,
+          //  thumbnailFile: selectedThumbnailFile!,
+        )
+            .then((response) async {
+          if (response['success']) {
+            // Handle success
+            LogHandler.debug('Upload successful: $response');
+            videoUrl.value = response['body']['videoURL'][0];
+            thumbnailUrl.value = response['body']['thumbnailURL'].length > 0
+                ? response['body']['thumbnailURL'][0]
+                : '';
 
-      if (response['success']) {
-        ToastWidgit.bottomToast('Job posting closed successfully');
-        Get.back();
+            body['media'] = {
+              'url': videoUrl.value,
+              "type": "video",
+              "thumbnail": thumbnailUrl.value
+            };
+            LogHandler.debug(body);
+
+            Map<String, dynamic> responsePut = await apiClient.put(url, body);
+
+            LogHandler.debug(responsePut);
+
+            if (responsePut['success']) {
+              await fetchJobPostings();
+              ToastWidgit.bottomToast('Updated job posting');
+              Get.back();
+            } else {
+              String errorMsg =
+                  responsePut['error']['message'] ?? Errors.somethingWentWrong;
+              LogHandler.error(errorMsg);
+              ToastWidgit.bottomToast('Error creating job post');
+            }
+          } else {
+            // Handle error
+            debugPrint('Upload failed: ${response['error']}');
+          }
+        });
       } else {
-        String errorMsg =
-            response['error']['message'] ?? Errors.somethingWentWrong;
-        LogHandler.error(errorMsg);
+        Map<String, dynamic> response = await apiClient.put(url, body);
+        LogHandler.debug(response);
+
+        if (response['success']) {
+          ToastWidgit.bottomToast('Job posting updated successfully');
+          await fetchJobPostings();
+          Get.back();
+        } else {
+          String errorMsg =
+              response['error']['message'] ?? Errors.somethingWentWrong;
+          LogHandler.error(errorMsg);
+        }
       }
+
     } catch (error) {
       LogHandler.error(error);
     }

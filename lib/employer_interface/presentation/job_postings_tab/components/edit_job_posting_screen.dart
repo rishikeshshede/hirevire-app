@@ -34,6 +34,7 @@ class _EditJobPostingScreenState extends State<EditJobPostingScreen> {
   @override
   void initState() {
     super.initState();
+    widget.jobPostingsController.setPerks(widget.jobPostings.perks);
     widget.jobPostingsController.setJobTitle(widget.jobPostings.title);
     widget.jobPostingsController
         .setDescription(widget.jobPostings.description ?? '');
@@ -43,9 +44,9 @@ class _EditJobPostingScreenState extends State<EditJobPostingScreen> {
         .setLocation(widget.jobPostings.location);
     widget.jobPostingsController
         .setOpeningCount(widget.jobPostings.openingsCount ?? 0);
-    widget.jobPostingsController.setNinetyDays(widget.jobPostings.growthPlan?[2].title ?? '');
-    widget.jobPostingsController.setSixDays(widget.jobPostings.growthPlan?[1].title ?? '');
-    widget.jobPostingsController.setThiDays(widget.jobPostings.growthPlan?[0].title ?? '');
+    widget.jobPostingsController.setNinetyDays(widget.jobPostings.growthPlan?[2].description ?? '');
+    widget.jobPostingsController.setSixDays(widget.jobPostings.growthPlan?[1].description ?? '');
+    widget.jobPostingsController.setThiDays(widget.jobPostings.growthPlan?[0].description ?? '');
     widget.jobPostingsController.setJobMode(widget.jobPostings.jobMode ?? []);
     widget.jobPostingsController.setRecruiterVideoThumbnail(widget.jobPostings.media?[0].url, widget.jobPostings.media?[0].thumbnail);
   }

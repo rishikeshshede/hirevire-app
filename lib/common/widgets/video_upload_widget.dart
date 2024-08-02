@@ -1,6 +1,6 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hirevire_app/common/widgets/custom_image_view.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
@@ -17,8 +17,13 @@ class VideoUploadWidget extends StatefulWidget {
   final String? videoUrl;
   final String? thumbnailUrl;
 
-  const VideoUploadWidget(
-      {required this.onFilesSelected, this.titleText, super.key, this.videoUrl, this.thumbnailUrl});
+  const VideoUploadWidget({
+    required this.onFilesSelected,
+    this.titleText,
+    super.key,
+    this.videoUrl,
+    this.thumbnailUrl,
+  });
 
   @override
   VideoUploadWidgetState createState() => VideoUploadWidgetState();
@@ -28,6 +33,24 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
   File? _videoFile;
   File? _thumbnailFile;
   VideoPlayerController? _videoController;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeVideo();
+  }
+
+  void _initializeVideo() {
+    if (widget.videoUrl != null && widget.videoUrl!.isNotEmpty) {
+      _videoController = VideoPlayerController.network(widget.videoUrl!)
+        ..initialize().then((_) {
+          setState(() {});
+          _videoController!.play();
+        }).catchError((error) {
+          debugPrint("VideoController Error: $error");
+        });
+    }
+  }
 
   @override
   void dispose() {
@@ -41,45 +64,41 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
     return Column(
       children: [
         GestureDetector(
-          onTap: () => {
-            _pickVideo(videoUrl: widget.videoUrl),
-          },
+          onTap: () => _pickVideo(videoUrl: widget.videoUrl),
           child: Container(
             width: double.infinity,
-            height: _videoFile == null ? videoHeight * .8 : null,
+            height: _videoFile == null && _videoController == null ? videoHeight * .8 : null,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
             ),
-            child: _videoFile == null
+            child: _videoFile == null && _videoController == null
                 ? CustomPaint(
-                    painter: DashedBorderPainter(),
-                    child: _buildUploadContent(),
-                  )
+              painter: DashedBorderPainter(),
+              child: _buildUploadContent(),
+            )
                 : _buildVideoPreview(videoHeight),
           ),
         ),
-        // if (_videoFile != null) _buildThumbnailPicker(),
       ],
     );
   }
 
   Future<void> _pickVideo({String? videoUrl}) async {
-    if (videoUrl != null && videoUrl.isNotEmpty) {
-      // If a video URL is provided, use it
-      setState(() {
-        _videoFile = null; // Clear any previously picked file
-        Uri videoUri = Uri.parse(videoUrl);
-        _videoController = VideoPlayerController.networkUrl(videoUri)
-          ..initialize().then((_) {
-            setState(() {});
-            _videoController!.play();
-          });
-        widget.onFilesSelected(_videoFile, _thumbnailFile);
-      });
-    } else {
+    // if (videoUrl != null && videoUrl.isNotEmpty) {
+    //   setState(() {
+    //     _videoFile = null; // Clear any previously picked file
+    //     _videoController = VideoPlayerController.network(videoUrl)
+    //       ..initialize().then((_) {
+    //         setState(() {});
+    //         _videoController!.play();
+    //       }).catchError((error) {
+    //         debugPrint("VideoController Error: $error");
+    //       });
+    //     widget.onFilesSelected(_videoFile, _thumbnailFile);
+    //   });
+    // } else {
       // Otherwise, allow the user to pick a video from the gallery
-      final pickedFile =
-      await ImagePicker().pickVideo(source: ImageSource.gallery);
+      final pickedFile = await ImagePicker().pickVideo(source: ImageSource.gallery);
       if (pickedFile != null) {
         setState(() {
           _videoFile = File(pickedFile.path);
@@ -87,51 +106,13 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
             ..initialize().then((_) {
               setState(() {});
               _videoController!.play();
+            }).catchError((error) {
+              debugPrint("VideoController Error: $error");
             });
           widget.onFilesSelected(_videoFile, _thumbnailFile);
         });
       }
-    }
-  }
-
-  Future<void> _pickThumbnail() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _thumbnailFile = File(pickedFile.path);
-        widget.onFilesSelected(_videoFile, _thumbnailFile);
-      });
-    }
-  }
-
-  Widget _buildThumbnailPicker() {
-    return GestureDetector(
-      onTap: _pickThumbnail,
-      child: Container(
-        margin: const EdgeInsets.only(top: 16),
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColors.disabled),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: _thumbnailFile == null
-            ? const Column(
-                children: [
-                  Icon(Icons.image, size: 50, color: AppColors.disabled),
-                  SizedBox(height: 8),
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Text('Pick Thumbnail'),
-                  )
-                ],
-              )
-            : Image.file(
-                _thumbnailFile!,
-                fit: BoxFit.cover,
-              ),
-      ),
-    );
+    //}
   }
 
   Widget _buildUploadContent() {
@@ -174,7 +155,7 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
   }
 
   Widget _buildVideoPreview(double videoHeight) {
-    if (_videoController!.value.isInitialized) {
+    if (_videoController != null && _videoController!.value.isInitialized) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: ConstrainedBox(

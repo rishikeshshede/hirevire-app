@@ -73,7 +73,7 @@ class JobPosting {
       questions: map['questions'] != null ? List<Question>.from(map['questions'].map((x) => Question.fromMap(x))) : null,
       requiredSkills: map['requiredSkills'] != null ? List<RequiredSkill>.from(map['requiredSkills'].map((x) => RequiredSkill.fromMap(x))) : null,
       media: map['media'] != null ? List<Media>.from(map['media'].map((x) => Media.fromMap(x))) : null,
-      growthPlan: map['growthPlan'] != null ? List<GrowthPlan>.from(map['growthPlan'].map((x) => GrowthPlan.fromMap(x))) : null,
+      growthPlan: map['growth_plan'] != null ? List<GrowthPlan>.from(map['growth_plan'].map((x) => GrowthPlan.fromMap(x))) : null,
       endsOn: map['endsOn'] != null ? DateTime.parse(map['endsOn']) : null,
       savedApplications: map['savedApplications'] != null ? List<String>.from(map['savedApplications']) : null,
       leftSwipes: map['leftSwipes'] != null ? List<LeftSwipe>.from(map['leftSwipes'].map((x) => LeftSwipe.fromMap(x))) : null,
