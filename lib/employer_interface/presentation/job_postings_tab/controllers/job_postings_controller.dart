@@ -21,6 +21,7 @@ class JobPostingsController extends GetxController {
   late ApiClient apiClient;
 
   RxBool isLoading = false.obs;
+  RxBool isCreatingJobPost = false.obs;
   RxString name = ''.obs;
   RxBool isProfileComplete = false.obs;
   RxList<bool> isOpen = [true, false, false].obs;
@@ -52,6 +53,32 @@ class JobPostingsController extends GetxController {
   TextEditingController nDaysPlanController = TextEditingController();
   TextEditingController qOneController = TextEditingController();
   TextEditingController qTwoController = TextEditingController();
+
+  // Focus nodes
+  FocusNode jobTitleFocusNode = FocusNode();
+  FocusNode descFocusNode = FocusNode();
+  FocusNode locationCityFocusNode = FocusNode();
+  FocusNode locationCountryFocusNode = FocusNode();
+  FocusNode openingCountFocusNode = FocusNode();
+  FocusNode perksFocusNode = FocusNode();
+  FocusNode maxCtcFocusNode = FocusNode();
+  FocusNode minCtcFocusNode = FocusNode();
+  FocusNode tDaysFocusNode = FocusNode();
+  FocusNode sDaysFocusNode = FocusNode();
+  FocusNode nDaysFocusNode = FocusNode();
+  FocusNode qOneFocusNode = FocusNode();
+  FocusNode qTwoFocusNode = FocusNode();
+
+  RxString errorMsgJobTitle = ''.obs;
+  RxString errorMsgLocation = ''.obs;
+  RxString errorMsgDescription = ''.obs;
+  RxString errorMsgOpeningCount = ''.obs;
+  RxString errorMsgPerks = ''.obs;
+  RxString errorMsgCtc = ''.obs;
+  RxString errorMsgJobMode = ''.obs;
+  RxString errorMsgGrowthPlanThi = ''.obs;
+  RxString errorMsgGrowthPlanSix = ''.obs;
+  RxString errorMsgGrowthPlan3Mon = ''.obs;
 
   File? selectedVideoFile;
   RxString selectedVideoFileUrl = ''.obs;
@@ -182,6 +209,63 @@ class JobPostingsController extends GetxController {
   }
 
   updateJobPosting(JobPosting jobPosting) async {
+    isCreatingJobPost.value = true;
+    RxBool isError = false.obs;
+
+    if (jobTitleController.text.isEmpty) {
+      errorMsgJobTitle.value = 'job title is required';
+      //ToastWidgit.bottomToast('job title is required');
+      isError.value = true;
+    }
+    if (descController.text.isEmpty) {
+      errorMsgDescription.value = 'job description is required';
+      isError.value = true;
+    }
+    if (locationCityController.text.isEmpty) {
+      errorMsgLocation.value = 'city and country location is required';
+      isError.value = true;
+    }
+    if (locationCountryController.text.isEmpty) {
+      errorMsgLocation.value = 'city and country location is required';
+      isError.value = true;
+    }
+    if (perksController.text.isEmpty) {
+      errorMsgPerks.value = 'job description is required';
+      isError.value = true;
+    }
+    if (jobModeController.value == GlobalConstants.locationTypes[0]) {
+      errorMsgJobMode.value = 'Select Job mode';
+    }
+    // if (minCtcController.text.isEmpty) {
+    //   errorMsgCtc.value = 'CTC range is required';
+    //   isError.value = true;
+    // }
+    if (maxCtcController.text.isEmpty) {
+      errorMsgCtc.value = 'CTC is required';
+      isError.value = true;
+    }
+    if (openingCountController.text.isEmpty) {
+      errorMsgOpeningCount.value = 'Opening count is required';
+      isError.value = true;
+    }
+    if (tDaysPlanController.text.isEmpty) {
+      errorMsgGrowthPlanThi.value = '30 days growth plan is required';
+      isError.value = true;
+    }
+    if (sDaysPlanController.text.isEmpty) {
+      errorMsgGrowthPlanSix.value = '60 days growth plan is required';
+      isError.value = true;
+    }
+    if (nDaysPlanController.text.isEmpty) {
+      errorMsgGrowthPlan3Mon.value = '90 days growth plan is required';
+      isError.value = true;
+    }
+
+    if (isError.value) {
+      isCreatingJobPost.value = false;
+      return;
+    }
+
     String endpoint = EndpointService.updateJobPostings;
 
     if (isClosedStatus.value) {
@@ -204,7 +288,9 @@ class JobPostingsController extends GetxController {
           ? jobPosting.description
           : descController.text.trim(),
       "videoRequirement": '',
-      "ctc": jobPosting.ctc?.max ?? '',
+      "ctc": maxCtcController.text.isEmpty
+          ? jobPosting.ctc?.max ?? ''
+          : maxCtcController.text.trim(),
       "questions": jobPosting.questions?.map((q) => q.toMap()).toList(),
       'growth_plan': [
         {
@@ -284,8 +370,8 @@ class JobPostingsController extends GetxController {
         LogHandler.debug(response);
 
         if (response['success']) {
-          ToastWidgit.bottomToast('Job posting updated successfully');
           await fetchJobPostings();
+          ToastWidgit.bottomToast('Job posting updated successfully');
           Get.back();
         } else {
           String errorMsg =
@@ -296,6 +382,8 @@ class JobPostingsController extends GetxController {
 
     } catch (error) {
       LogHandler.error(error);
+    } finally {
+      isCreatingJobPost.value = false;
     }
   }
 }
