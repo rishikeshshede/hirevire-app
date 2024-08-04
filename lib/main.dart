@@ -1,8 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:hirevire_app/common/screens/unknown_route_screen.dart';
 import 'package:hirevire_app/themes/app_theme.dart';
@@ -14,6 +13,7 @@ void main() {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) async {
+    await dotenv.load(fileName: ".env");
     runApp(const MainApp());
   });
 }
