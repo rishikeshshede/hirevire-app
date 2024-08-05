@@ -29,6 +29,12 @@ class GlobalConstants {
     'Trainee'
   ];
 
+  static const List<String> statusList = [
+    'Pending',
+    'Rejected',
+    'Approved',
+  ];
+
   static List<String> locationTypes = [
     "Please select",
     'Onsite',

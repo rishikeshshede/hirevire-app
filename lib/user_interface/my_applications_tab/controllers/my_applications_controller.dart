@@ -21,6 +21,10 @@ import '../../models/MyApplication.dart';
 class MyApplicationsController extends GetxController {
   late ApiClient apiClient;
 
+  TextEditingController filterController = TextEditingController();
+
+  RxList<String> selectedSpecializations = <String>[].obs;
+
   RxBool isLoading = false.obs;
   RxBool isCreatingJobPost = false.obs;
   RxString name = ''.obs;
@@ -105,6 +109,22 @@ class MyApplicationsController extends GetxController {
   void onFilesSelected(File? videoFile, File? thumbnailFile) {
     selectedVideoFile = videoFile;
     selectedThumbnailFile = thumbnailFile;
+  }
+
+  void toggleSpecialization(String specialization) {
+    if (selectedSpecializations.contains(specialization)) {
+      selectedSpecializations.remove(specialization);
+    } else {
+      selectedSpecializations.add(specialization);
+    }
+  }
+
+  void clearFilters() {
+    selectedSpecializations.clear();
+  }
+
+  applyFilter() async {
+
   }
 
   fetchMyApplications() async {

@@ -6,6 +6,6 @@ class MyApplicationsBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<MyApplicationsController>(() => MyApplicationsController(),
-        tag: 'myApplicationsCard');
+        tag: 'myApplicationsController');
   }
 }

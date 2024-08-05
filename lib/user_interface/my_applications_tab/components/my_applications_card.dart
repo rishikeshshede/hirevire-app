@@ -12,11 +12,11 @@ import 'package:hirevire_app/utils/string_handler.dart';
 class MyApplicationsCard extends StatelessWidget {
   const MyApplicationsCard({
     super.key,
-    required this.myApplicationsCard,
+    required this.myApplicationsController,
     required this.myApplications,
     required this.index,
   });
-  final MyApplicationsController myApplicationsCard;
+  final MyApplicationsController myApplicationsController;
   final MyApplication myApplications;
   final int index;
 

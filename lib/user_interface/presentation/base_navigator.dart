@@ -4,7 +4,7 @@ import 'package:hirevire_app/common/widgets/custom_image_view.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/user_interface/controllers/navigation_controller.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
-import 'package:hirevire_app/user_interface/my_applications_tab/bindings/job_postings_binding.dart';
+import 'package:hirevire_app/user_interface/my_applications_tab/bindings/my_applications_binding.dart';
 import 'package:hirevire_app/user_interface/my_applications_tab/my_applications_tab.dart';
 import 'package:hirevire_app/user_interface/presentation/chat/bindings/chat_binding.dart';
 import 'package:hirevire_app/user_interface/presentation/chat/chat_screen.dart';
