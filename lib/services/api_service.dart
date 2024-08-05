@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
 import 'package:hirevire_app/utils/log_handler.dart';
 import 'package:hirevire_app/utils/persistence_handler.dart';
@@ -8,15 +9,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 class ApiClient {
-  // Live
-  static const String _baseUrl =
-      'https://sea-turtle-app-cpepq.ondigitalocean.app/api/v1/';
-
-  // Wifi
-  //static const String _baseUrl = 'http://192.168.29.243:5000/api/v1/';
-
-  // Mobile hotspot
-  // static const String _baseUrl = 'http://192.168.11.29:5000/api/v1/';
+  static final String _baseUrl = dotenv.env['API_BASE_URL']!;
 
   static const Duration timeoutDuration = Duration(seconds: 30);
 
