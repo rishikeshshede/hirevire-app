@@ -43,11 +43,8 @@ class MyApplicationsTab extends StatelessWidget {
                     height: Responsive.height(context, 1),
                     child: const LoaderCircularWithBg(),
                   )
-                : myApplicationsController.myApplications.isEmpty
-                    ? const Center(
-                        child: Text('No job applications available'),
-                      )
-                    : Container(
+                :
+            Container(
                         width: Responsive.width(context, 1),
                         //height: Responsive.height(context, 1),
                         decoration: const BoxDecoration(
@@ -61,201 +58,212 @@ class MyApplicationsTab extends StatelessWidget {
                         child: Column(
                           children: [
                             // Filter TextField
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: TextField(
-                                  readOnly: true,
-                                  controller: myApplicationsController.filterController,
-                                  keyboardType: TextInputType.name,
-                                  cursorColor: Colors.grey[300],
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
-                                      builder: (context) {
-                                        return GestureDetector(
-                                          onTap: () => Navigator.of(context).pop(),
-                                          child: Container(
-                                            color: Colors.black26,
-                                            child: DraggableScrollableSheet(
-                                              builder: (_, scrollController) {
-                                                return Container(
-                                                  padding: const EdgeInsets.symmetric(
-                                                      vertical: 10, horizontal: 16),
-                                                  decoration: const BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius: BorderRadius.only(
-                                                      topLeft: Radius.circular(25.0),
-                                                      topRight: Radius.circular(25.0),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: TextField(
+                                readOnly: true,
+                                controller: myApplicationsController.filterController,
+                                keyboardType: TextInputType.name,
+                                cursorColor: Colors.grey[300],
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    builder: (context) {
+                                      return GestureDetector(
+                                        onTap: () => Navigator.of(context).pop(),
+                                        child: Container(
+                                          color: AppColors.black,
+                                          child: DraggableScrollableSheet(
+                                            builder: (_, scrollController) {
+                                              return Container(
+                                                padding: const EdgeInsets.symmetric(
+                                                    vertical: 10, horizontal: 16),
+                                                decoration: const BoxDecoration(
+                                                  color: AppColors.background,
+                                                  borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(25.0),
+                                                    topRight: Radius.circular(25.0),
+                                                  ),
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    const SizedBox(height: 15),
+                                                    Text(
+                                                      "Status",
+                                                      style:
+                                                      AppTextThemes.subtitleStyle(context).copyWith(
+                                                        fontSize: 16,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  child: Column(
-                                                    children: [
-                                                      const SizedBox(height: 15),
-                                                      Text(
-                                                        "Status",
-                                                        style:
-                                                        AppTextThemes.subtitleStyle(context).copyWith(
-                                                          fontSize: 16,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(height: 15),
-                                                      SingleChildScrollView(
-                                                        child: Column(
-                                                          children: List.generate(
+                                                    const SizedBox(height: 15),
+                                                    SingleChildScrollView(
+                                                      child: Column(
+                                                        children: List.generate(
+                                                          GlobalConstants
+                                                              .statusList.length,
+                                                              (index) {
+                                                            final specialization =
                                                             GlobalConstants
-                                                                .statusList.length,
-                                                                (index) {
-                                                              final specialization =
-                                                              GlobalConstants
-                                                                  .statusList[
-                                                              index];
-                                                              final isSelected = myApplicationsController
+                                                                .statusList[
+                                                            index];
+                                                            return Obx(() {
+                                                              RxBool isSelected = myApplicationsController
                                                                   .selectedSpecializations
-                                                                  .contains(specialization);
-                                                              return ListTile(
-                                                                title: Text(specialization),
-                                                                trailing: Theme(
-                                                                  data: ThemeData(
-                                                                    unselectedWidgetColor:
-                                                                    AppColors.disabled,
-                                                                  ),
-                                                                  child: Checkbox(
-                                                                    value: isSelected,
-                                                                    checkColor: AppColors.primary,
-                                                                    activeColor:
-                                                                    AppColors.primaryDark,
-                                                                    shape: RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                      BorderRadius.circular(6),
-                                                                      side: isSelected
-                                                                          ? const BorderSide(
-                                                                          color: AppColors.primary,
-                                                                          width: 1)
-                                                                          : const BorderSide(
-                                                                          color: AppColors
-                                                                              .disabled,
-                                                                          width: 1),
-                                                                    ),
-                                                                    onChanged: (value) {
-                                                                      myApplicationsController.toggleSpecialization(
-                                                                          specialization);
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ),
+                                                                  .contains(specialization).obs;
 
-                                                      Align(
-                                                        alignment: Alignment.bottomCenter,
-                                                        child: Container(
-                                                          height:
-                                                          Responsive.height(
-                                                              context, .07),
-                                                          width: double.infinity,
-                                                          color: AppColors.background,
-                                                          child: Row(
-                                                            children: [
-                                                              Expanded(
-                                                                child: TextButton(
-                                                                  onPressed: () async {
-                                                                    myApplicationsController
-                                                                        .clearFilters();
-                                                                    Get.back();
-                                                                    await myApplicationsController
-                                                                        .fetchMyApplications();
+                                                              return ListTile(
+                                                              title: Text(specialization),
+                                                              trailing: Theme(
+                                                                data: ThemeData(
+                                                                  unselectedWidgetColor:
+                                                                  AppColors.disabled,
+                                                                ),
+                                                                child: Checkbox(
+                                                                  value: isSelected.value,
+                                                                  checkColor: AppColors.primary,
+                                                                  activeColor:
+                                                                  AppColors.primaryDark,
+                                                                  shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                    BorderRadius.circular(6),
+                                                                    side: isSelected.value
+                                                                        ? const BorderSide(
+                                                                        color: AppColors.primary,
+                                                                        width: 1)
+                                                                        : const BorderSide(
+                                                                        color: AppColors
+                                                                            .disabled,
+                                                                        width: 1),
+                                                                  ),
+                                                                  onChanged: (value) {
+                                                                    myApplicationsController.toggleSpecialization(
+                                                                        specialization);
                                                                   },
-                                                                  child: Text(
-                                                                    'Clear All',
-                                                                    style: AppTextThemes
-                                                                        .buttonTextStyle(context)
-                                                                        .copyWith(
-                                                                      color: AppColors
-                                                                          .primary,
-                                                                    ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                            });
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ),
+
+                                                    Align(
+                                                      alignment: Alignment.bottomCenter,
+                                                      child: Container(
+                                                        height:
+                                                        Responsive.height(
+                                                            context, .07),
+                                                        width: double.infinity,
+                                                        color: AppColors.background,
+                                                        child: Row(
+                                                          children: [
+                                                            Expanded(
+                                                              child: TextButton(
+                                                                onPressed: () async {
+                                                                  myApplicationsController
+                                                                      .clearFilters();
+                                                                  Get.back();
+                                                                  await myApplicationsController
+                                                                      .fetchMyApplications();
+                                                                },
+                                                                child: Text(
+                                                                  'Clear All',
+                                                                  style: AppTextThemes
+                                                                      .buttonTextStyle(context)
+                                                                      .copyWith(
+                                                                    color: AppColors
+                                                                        .primary,
                                                                   ),
                                                                 ),
                                                               ),
-                                                              const SizedBox(width: 10),
-                                                              Expanded(
-                                                                child:
-                                                                ButtonPrimary(
-                                                                  btnText: 'Apply',
-                                                                  onPressed: () async {
-                                                                    Get.back();
-                                                                    await myApplicationsController
-                                                                        .applyFilter();
-                                                                  },
-                                                                ),
+                                                            ),
+                                                            const SizedBox(width: 10),
+                                                            Expanded(
+                                                              child:
+                                                              ButtonPrimary(
+                                                                btnText: 'Apply',
+                                                                onPressed: () async {
+                                                                  Get.back();
+                                                                  await myApplicationsController
+                                                                      .applyFilter();
+                                                                },
                                                               ),
-                                                            ],
-                                                          ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                            ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
                                           ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                  decoration: InputDecoration(
-                                    hintText: 'Filter',
-                                    fillColor: AppColors.disabled,
-                                    prefixIcon: Container(
-                                      padding: const EdgeInsets.all(14),
-                                      width: 10,
-                                      height: 10,
-                                      child: SvgPicture.asset(
-                                        'assets/icons/filter.svg',
-                                        colorFilter: ColorFilter.mode(
-                                            AppColors.primary.withOpacity(.6), BlendMode.srcIn),
-                                      ),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                      borderSide: BorderSide(
-                                        color: AppColors.primary,
-                                      ),
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    contentPadding:
-                                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                      borderSide: BorderSide(
-                                        color: AppColors.primary,
-                                      ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                                decoration: InputDecoration(
+                                  hintText: 'Filter',
+                                  fillColor: AppColors.disabled,
+                                  prefixIcon: Container(
+                                    padding: const EdgeInsets.all(14),
+                                    width: 10,
+                                    height: 10,
+                                    child: SvgPicture.asset(
+                                      'assets/icons/filter.svg',
+                                      colorFilter: ColorFilter.mode(
+                                          AppColors.primary.withOpacity(.6), BlendMode.srcIn),
                                     ),
                                   ),
-                                  onChanged: (value) {
-
-                                  },
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  contentPadding:
+                                  const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
                                 ),
+                                onChanged: (value) {
+
+                                },
                               ),
                             ),
                             // List of Applications
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: List.generate(
-                                myApplicationsController.myApplications.length,
-                                    (index) => MyApplicationsCard(
-                                  index: index,
-                                  myApplicationsController: myApplicationsController,
-                                  myApplications: myApplicationsController.myApplications[index],
+                            Obx(
+                            () { return
+                            myApplicationsController.myApplications.value.isEmpty
+                                ? const Center(
+                              child: Text('No job applications available'),
+                            )
+                                :
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: List.generate(
+                                  myApplicationsController.myApplications.value.length,
+                                      (index) => MyApplicationsCard(
+                                    index: index,
+                                    myApplicationsController: myApplicationsController,
+                                    myApplications: myApplicationsController.myApplications.value[index],
+                                  ),
                                 ),
                               ),
-                            ),
+                            ); }),
                           ],
                         ),
             );

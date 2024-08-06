@@ -31,10 +31,13 @@ class MyApplicationsController extends GetxController {
   RxBool isProfileComplete = false.obs;
   RxList<bool> isOpen = [true, false, false].obs;
   RxBool isClosedStatus = false.obs;
+  RxBool matchesFetched = false.obs;
 
   RxList<MyApplication> myApplications = <MyApplication>[].obs;
   var status = ''.obs; // Status text
   var statusColor = Colors.transparent.obs; // Status color
+
+  var filteredApplicationsOriginal = <MyApplication>[].obs;
 
   TextEditingController nameController = TextEditingController();
   FocusNode nameFocusNode = FocusNode();
@@ -121,10 +124,22 @@ class MyApplicationsController extends GetxController {
 
   void clearFilters() {
     selectedSpecializations.clear();
+
+    myApplications.assignAll(filteredApplicationsOriginal);
   }
 
   applyFilter() async {
+    matchesFetched.value = false;
 
+    if (selectedSpecializations.isEmpty) {
+      myApplications.value = filteredApplicationsOriginal;
+    } else {
+      myApplications.value = myApplications.where((application) {
+        return selectedSpecializations.contains(application.status);
+      }).toList();
+    }
+
+    matchesFetched.value = true;
   }
 
   fetchMyApplications() async {
@@ -137,6 +152,7 @@ class MyApplicationsController extends GetxController {
 
       if (response['success']) {
         myApplications.value = MyApplication.fromJsonList(response['body']['data']);
+        filteredApplicationsOriginal.value = MyApplication.fromJsonList(response['body']['data']);
       } else {
         String errorMsg =
             response['error']['message'] ?? Errors.somethingWentWrong;
