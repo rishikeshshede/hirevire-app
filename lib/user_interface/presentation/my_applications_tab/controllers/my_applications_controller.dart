@@ -16,7 +16,7 @@ import '../../../../constants/global_constants.dart';
 import '../../../../services/api_endpoint_service.dart';
 import '../../../../utils/capitalize_first_letter.dart';
 import '../../../../utils/log_handler.dart';
-import '../../models/MyApplication.dart';
+import '../../../models/MyApplication.dart';
 
 class MyApplicationsController extends GetxController {
   late ApiClient apiClient;

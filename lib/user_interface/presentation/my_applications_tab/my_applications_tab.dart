@@ -4,9 +4,9 @@ import 'package:hirevire_app/common/widgets/custom_image_view.dart';
 import 'package:hirevire_app/common/widgets/loader_circular_with_bg.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/global_constants.dart';
-import 'package:hirevire_app/user_interface/my_applications_tab/components/my_applications_card.dart';
 import 'package:hirevire_app/utils/responsive.dart';
 
+import 'components/my_applications_card.dart';
 import 'controllers/my_applications_controller.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hirevire_app/common/widgets/button_primary.dart';
