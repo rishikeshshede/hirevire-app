@@ -344,6 +344,6 @@ class UserOnbController extends GetxController {
 
   navigateToBaseNav() {
     PersistenceHandler.setBool(PersistenceKeys.isSignedIn, true);
-    Get.toNamed(AppRoutes.userBaseNavigator);
+    Get.offAllNamed(AppRoutes.userBaseNavigator);
   }
 }

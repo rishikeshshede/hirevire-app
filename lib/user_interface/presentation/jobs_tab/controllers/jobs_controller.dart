@@ -150,7 +150,8 @@ class JobsController extends GetxController {
     jobs.remove(job);
     status.value = 'Applied';
     statusColor.value = Colors.green;
-    // Handle job application logic
+    Get.back();
+
   }
 
   void rejectJob(JobRecommendationsModel job) async {
@@ -326,16 +327,23 @@ class JobsController extends GetxController {
         if (response['success']) {
           // Handle success
           debugPrint('Upload successful: $response}');
-          videoUrl.value = response['body']['videoURL'][0];
-          thumbnailUrl.value = response['body']['thumbnailURL'][0];
-
+          if (response['videoURL'] != null && response['videoURL'].isNotEmpty) {
+            videoUrl.value = response['videoURL'][0];
+          } else {
+            videoUrl.value = '';
+          }
+          if (response['thumbnailURL'] != null && response['thumbnailURL'].isNotEmpty) {
+            thumbnailUrl.value = response['thumbnailURL'][0];
+          } else {
+            thumbnailUrl.value = '';
+          }
           Map<String, dynamic> responseJobApply =
               await apiClient.post(endpoint, body);
           LogHandler.debug(responseJobApply);
 
           if (responseJobApply['success']) {
             applyJob(job);
-            Get.back();
+           // Get.back();
           } else {
             if (responseJobApply['error']['message'] ==
                 "You have already applied for this job") {
