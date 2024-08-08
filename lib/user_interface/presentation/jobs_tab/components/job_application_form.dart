@@ -33,7 +33,8 @@ class JobApplicationForm extends StatelessWidget {
         return false;
       },
       child: PaddedContainer(
-        onBackBtnPressed: () => {
+        onBackBtnPressed: () =>
+        {
           Get.back(result: true),
         },
         screenTitle: 'Job Application Form',
@@ -65,77 +66,81 @@ class JobApplicationForm extends StatelessWidget {
                       ),
                       const VerticalSpace(),
                       ...(job.requiredSkills?.map((skill) {
-                            // Ensure only one skill is displayed
-                            if (skill.skill?.name == null ||
-                                skill.skill?.id == null) {
-                              return Container(); // Return an empty container if skill name or id is null
-                            }
-                            // Creating a map of skill IDs to ratings from jobSeekerProfile
-                            final seekerSkills = jobsController
-                                        .jobSeekerProfile.value.skills !=
-                                    null
-                                ? Map.fromEntries(
-                                    jobsController.jobSeekerProfile.value.skills!
-                                        .map(
-                                      (s) => MapEntry(
-                                          s.skill?.id ?? '', s.rating ?? 1.0),
-                                    ),
-                                  )
-                                : {};
+                        // Ensure only one skill is displayed
+                        if (skill.skill?.name == null ||
+                            skill.skill?.id == null) {
+                          return Container(); // Return an empty container if skill name or id is null
+                        }
+                        // Creating a map of skill IDs to ratings from jobSeekerProfile
+                        final seekerSkills = jobsController
+                            .jobSeekerProfile.value.skills !=
+                            null
+                            ? Map.fromEntries(
+                          jobsController.jobSeekerProfile.value.skills!
+                              .map(
+                                (s) =>
+                                MapEntry(
+                                    s.skill?.id ?? '', s.rating ?? 1.0),
+                          ),
+                        )
+                            : {};
 
-                            final preFilledRating =
-                                seekerSkills[skill.skill?.id ?? ''] ?? 1.0;
+                        var preFilledRating =
+                            seekerSkills[skill.skill?.id ?? ''] ?? 1.0;
 
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const VerticalSpace(space: 15),
-                                SkillChip(
-                                  text: skill.skill?.name ?? 'Unknown',
-                                ),
-                                const VerticalSpace(space: 10),
-                                Obx(
-                                  () => skill.skill?.name == null
-                                      ? const SizedBox()
-                                      : SliderTheme(
-                                          data: SliderTheme.of(context).copyWith(
-                                            thumbShape:
-                                                const RoundSliderThumbShape(
-                                                    enabledThumbRadius: 6.0),
-                                            overlayColor: AppColors.primaryDark,
-                                            overlayShape:
-                                                SliderComponentShape.noOverlay,
-                                            inactiveTrackColor:
-                                                AppColors.disabled,
-                                            trackShape:
-                                                const RoundedRectSliderTrackShape(),
-                                            trackHeight: 4.0,
-                                            tickMarkShape:
-                                                SliderTickMarkShape.noTickMark,
-                                          ),
-                                          child: Slider(
-                                            value: double.parse(
-                                                preFilledRating.toString()),
-                                            min: 1,
-                                            max: 10,
-                                            divisions: 9,
-                                            activeColor: AppColors.primaryDark,
-                                            label: (jobsController.skillsRatings[
-                                                        skill.skill?.id ?? ''] ??
-                                                    preFilledRating)
-                                                .round()
-                                                .toString(),
-                                            onChanged: (value) {
-                                              jobsController.skillsRatings[
-                                                  skill.skill?.id ?? ''] = value;
-                                            },
-                                          ),
-                                        ),
-                                ),
-                                const VerticalSpace(),
-                              ],
-                            );
-                          }) ??
+                        jobsController.skillsRatings[skill.skill?.id ?? ''] = double.parse(preFilledRating.toString());
+
+                        jobsController.skillRatingValue.value = double.parse(preFilledRating.toString());
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const VerticalSpace(space: 15),
+                            SkillChip(
+                              text: skill.skill?.name ?? 'Unknown',
+                            ),
+                            const VerticalSpace(space: 10),
+                            Obx(
+                                  () =>
+                              skill.skill?.name == null
+                                  ? const SizedBox()
+                                  : SliderTheme(
+                                  data: SliderTheme.of(context).copyWith(
+                                    thumbShape:
+                                    const RoundSliderThumbShape(
+                                        enabledThumbRadius: 6.0),
+                                    overlayColor: AppColors.primaryDark,
+                                    overlayShape:
+                                    SliderComponentShape.noOverlay,
+                                    inactiveTrackColor:
+                                    AppColors.disabled,
+                                    trackShape:
+                                    const RoundedRectSliderTrackShape(),
+                                    trackHeight: 4.0,
+                                    tickMarkShape:
+                                    SliderTickMarkShape.noTickMark,
+                                  ),
+                                  child: Slider(
+                                    value: jobsController.skillRatingValue
+                                        .value,
+                                    min: 1,
+                                    max: 10,
+                                    divisions: 9,
+                                    activeColor: AppColors.primaryDark,
+                                    label: jobsController.skillRatingValue.value
+                                        .toString(),
+                                    onChanged: (value) {
+                                      jobsController.skillRatingValue.value =
+                                          value;
+                                      jobsController.skillsRatings[
+                                      skill.skill?.id ?? ''] = value;
+                                    },
+                                  ),),
+                            ),
+                            const VerticalSpace(),
+                          ],
+                        );
+                      }) ??
                           []),
 
                       // ...(job.requiredSkills?.map((skill) {
@@ -180,7 +185,7 @@ class JobApplicationForm extends StatelessWidget {
                       CustomTextField(
                         titleText: 'Additional note',
                         labelText:
-                            "Would you like to mentioned\nsomething which we didn't ask?",
+                        "Would you like to mentioned\nsomething which we didn't ask?",
                         textInputType: TextInputType.text,
                         textInputAction: TextInputAction.done,
                         maxLength: 500,
@@ -195,13 +200,16 @@ class JobApplicationForm extends StatelessWidget {
                       VerticalSpace(space: 20.h(context)),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 30),
-                        child: ButtonPrimary(
+                        child: Obx(
+                          () => ButtonPrimary(
                           btnText: 'Apply',
                           onPressed: () {
                             jobsController.submitJobApplication(job);
                           },
+                          showLoading:
+                          jobsController.isApplyJobPost.value,
                         ),
-                      ),
+                      ),),
                     ],
                   ),
                 ),

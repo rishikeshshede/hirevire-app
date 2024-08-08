@@ -16,6 +16,8 @@ import '../../../models/job_seeker_profile.dart';
 class JobsController extends GetxController {
   late ApiClient apiClient;
 
+  RxBool isApplyJobPost = false.obs;
+
   RxBool isLoading = false.obs;
   RxString name = ''.obs;
   RxBool isProfileComplete = false.obs;
@@ -32,6 +34,8 @@ class JobsController extends GetxController {
 
   var status = ''.obs; // Status text
   var statusColor = Colors.transparent.obs; // Status color
+
+  var skillRatingValue = 0.00.obs;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController skillsSearchController = TextEditingController();
@@ -270,11 +274,13 @@ class JobsController extends GetxController {
   // }
 
   submitJobApplication(JobRecommendationsModel job) async {
+    isApplyJobPost.value = true;
     LogHandler.debug("skillratings map");
     LogHandler.debug(skillsRatings.entries);
 
     isLoading.value = true;
     if (selectedVideoFile == null) {
+      isApplyJobPost.value = false;
       ToastWidgit.bottomToast('please upload video, it is required');
       return;
     }
@@ -327,16 +333,18 @@ class JobsController extends GetxController {
         if (response['success']) {
           // Handle success
           debugPrint('Upload successful: $response}');
-          if (response['videoURL'] != null && response['videoURL'].isNotEmpty) {
-            videoUrl.value = response['videoURL'][0];
+          if (response['body']['videoURL'] == null || response['body']['videoURL'].isBlank ) {
+            videoUrl.value = "";
           } else {
-            videoUrl.value = '';
+            videoUrl.value = response['body']['videoURL'][0];
           }
-          if (response['thumbnailURL'] != null && response['thumbnailURL'].isNotEmpty) {
-            thumbnailUrl.value = response['thumbnailURL'][0];
+
+          if (response['body']['thumbnailURL'] == null || response['body']['thumbnailURL'].isBlank ) {
+            thumbnailUrl.value = "";
           } else {
-            thumbnailUrl.value = '';
+            thumbnailUrl.value = response['body']['thumbnailURL'][0];
           }
+
           Map<String, dynamic> responseJobApply =
               await apiClient.post(endpoint, body);
           LogHandler.debug(responseJobApply);
@@ -365,6 +373,7 @@ class JobsController extends GetxController {
       isLoading.value = false;
     } finally {
       isLoading.value = false;
+      isApplyJobPost.value = false;
     }
   }
 }
