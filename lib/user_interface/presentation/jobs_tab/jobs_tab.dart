@@ -50,7 +50,9 @@ class JobsTab extends StatelessWidget {
           //   ),
           // ),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Get.toNamed(AppRoutes.userProfile);
+            },
             child: Container(
               margin: EdgeInsets.only(
                   right: GlobalConstants.screenHorizontalPadding),
