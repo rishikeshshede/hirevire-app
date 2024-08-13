@@ -14,6 +14,7 @@ class EndpointService {
   static const String userJobApply = 'jobApplication/user/rightSwipe';
 
   // UPDATE Endpoints
+  static const String updateUserProfile = 'jobSeeker/updateProfile';
 
 
   // ------------------ EMPLOYER ENDPOINTS ------------------
