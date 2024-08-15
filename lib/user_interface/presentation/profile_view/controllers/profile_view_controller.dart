@@ -48,6 +48,10 @@ class ProfileViewController extends GetxController {
   TextEditingController vidReqController = TextEditingController();
   TextEditingController reqSkillsController = TextEditingController();
   TextEditingController jobseekerBioController = TextEditingController();
+  TextEditingController jobseekerAddressLine1Controller =
+      TextEditingController();
+  TextEditingController jobseekerAddressLine2Controller =
+      TextEditingController();
   TextEditingController openingCountController = TextEditingController();
   TextEditingController minCtcController = TextEditingController();
   TextEditingController maxCtcController = TextEditingController();
@@ -58,30 +62,33 @@ class ProfileViewController extends GetxController {
   TextEditingController qTwoController = TextEditingController();
 
   // Focus nodes
-  FocusNode jobTitleFocusNode = FocusNode();
-  FocusNode descFocusNode = FocusNode();
+  FocusNode jobseekernameFocusNode = FocusNode();
+  FocusNode emailFocusNode = FocusNode();
   FocusNode locationCityFocusNode = FocusNode();
   FocusNode locationCountryFocusNode = FocusNode();
-  FocusNode openingCountFocusNode = FocusNode();
-  FocusNode perksFocusNode = FocusNode();
-  FocusNode maxCtcFocusNode = FocusNode();
+  FocusNode locationStateFocusNode = FocusNode();
+  FocusNode phoneFocusNode = FocusNode();
+  FocusNode bioFocusNode = FocusNode();
+  FocusNode addressLine1FocusNode = FocusNode();
+  FocusNode addressLine2FocusNode = FocusNode();
+  FocusNode headlineFocusNode = FocusNode();
   FocusNode minCtcFocusNode = FocusNode();
-  FocusNode tDaysFocusNode = FocusNode();
-  FocusNode sDaysFocusNode = FocusNode();
-  FocusNode nDaysFocusNode = FocusNode();
+  FocusNode githubFocusNode = FocusNode();
+  FocusNode linkedinFocusNode = FocusNode();
+  FocusNode twitterFocusNode = FocusNode();
   FocusNode qOneFocusNode = FocusNode();
   FocusNode qTwoFocusNode = FocusNode();
 
-  RxString errorMsgJobTitle = ''.obs;
+  RxString errorMsgJobSeekerName = ''.obs;
   RxString errorMsgLocation = ''.obs;
-  RxString errorMsgDescription = ''.obs;
-  RxString errorMsgOpeningCount = ''.obs;
-  RxString errorMsgPerks = ''.obs;
-  RxString errorMsgCtc = ''.obs;
+  RxString errorMsgEmail = ''.obs;
+  RxString errorMsgPhone = ''.obs;
+  RxString errorMsgBio = ''.obs;
+  RxString errorMsgHeadline = ''.obs;
   RxString errorMsgJobMode = ''.obs;
-  RxString errorMsgGrowthPlanThi = ''.obs;
-  RxString errorMsgGrowthPlanSix = ''.obs;
-  RxString errorMsgGrowthPlan3Mon = ''.obs;
+  RxString errorMsgGithub = ''.obs;
+  RxString errorMsgLinkedin = ''.obs;
+  RxString errorMsgTwitter = ''.obs;
 
   void setRecruiterVideoThumbnail(String? profileUrl) {
     selectedProfileFileUrl.value = profileUrl ?? '';
@@ -92,16 +99,19 @@ class ProfileViewController extends GetxController {
   }
 
   void setEmail(String? email) {
-    jobModeController.value = jobseekerBioController.text = email ?? '';
+    jobseekerEmailController.text = email ?? '';
   }
 
   void setPhone(String? phone) {
-    jobModeController.value = jobseekerBioController.text = phone ?? '';
+    jobseekerPhoneController.text = phone ?? '';
   }
 
   void setLocation(jobLocation.Location? location) {
     locationCityController.text = location?.city ?? '';
     locationCountryController.text = location?.country ?? '';
+    locationStateController.text = location?.state ?? '';
+    jobseekerAddressLine1Controller.text = location?.address?.line1 ?? '';
+    jobseekerAddressLine2Controller.text = location?.address?.line2 ?? '';
   }
 
   void setBio(String? perks) {
@@ -109,7 +119,6 @@ class ProfileViewController extends GetxController {
   }
 
   void setSocialGithub(String? growthPlan) {
-    print(growthPlan);
     tDaysPlanController.text = growthPlan ?? '';
   }
 
@@ -122,7 +131,7 @@ class ProfileViewController extends GetxController {
   }
 
   void setHeadline(String? headline) {
-    minCtcController.text = headline ?? '';
+    jobseekerHeadlineController.text = headline ?? '';
   }
 
   void setJobMode(List<String>? jobMode) {
@@ -132,6 +141,10 @@ class ProfileViewController extends GetxController {
       jobModeController.value = capitalizeFirstLetter(
           jobMode?[0] ?? GlobalConstants.locationTypes[0]);
     }
+  }
+
+  void onFilesSelected(File? imageFile) {
+    selectedProfileFile = imageFile;
   }
 
   @override
@@ -168,12 +181,12 @@ class ProfileViewController extends GetxController {
     }
   }
 
-  updateUserProfile(JobSeekerProfile jobPosting) async {
+  updateUserProfile(JobSeekerProfile jobseeker) async {
     isCreatingJobPost.value = true;
     RxBool isError = false.obs;
 
     if (jobseekerNameController.text.isEmpty) {
-      errorMsgJobTitle.value = 'name is required';
+      errorMsgJobSeekerName.value = 'name is required';
       //ToastWidgit.bottomToast('job title is required');
       isError.value = true;
     }
@@ -187,55 +200,63 @@ class ProfileViewController extends GetxController {
       isError.value = true;
     }
     if (jobseekerBioController.text.isEmpty) {
-      errorMsgPerks.value = 'job bio is required';
+      errorMsgBio.value = 'job bio is required';
       isError.value = true;
     }
     if (jobModeController.value == GlobalConstants.locationTypes[0]) {
       errorMsgJobMode.value = 'Select Job mode';
     }
     // if (minCtcController.text.isEmpty) {
-    //   errorMsgCtc.value = 'CTC range is required';
+    //   errorMsgHeadline.value = 'CTC range is required';
     //   isError.value = true;
     // }
-    if (maxCtcController.text.isEmpty) {
-      errorMsgCtc.value = 'CTC is required';
+
+    if (jobseekerEmailController.text.isEmpty) {
+      errorMsgPhone.value = 'Email is required';
       isError.value = true;
     }
-    if (openingCountController.text.isEmpty) {
-      errorMsgOpeningCount.value = 'Opening count is required';
+    if (jobseekerPhoneController.text.isEmpty) {
+      errorMsgPhone.value = 'Phone is required';
       isError.value = true;
     }
-    if (tDaysPlanController.text.isEmpty) {
-      errorMsgGrowthPlanThi.value = '30 days growth plan is required';
+    if (jobseekerHeadlineController.text.isEmpty) {
+      errorMsgPhone.value = 'Headline is required';
       isError.value = true;
     }
-    if (sDaysPlanController.text.isEmpty) {
-      errorMsgGrowthPlanSix.value = '60 days growth plan is required';
-      isError.value = true;
-    }
-    if (nDaysPlanController.text.isEmpty) {
-      errorMsgGrowthPlan3Mon.value = '90 days growth plan is required';
-      isError.value = true;
-    }
+    // if (tDaysPlanController.text.isEmpty) {
+    //   errorMsgGithub.value = '30 days growth plan is required';
+    //   isError.value = true;
+    // }
+    // if (sDaysPlanController.text.isEmpty) {
+    //   errorMsgLinkedin.value = '60 days growth plan is required';
+    //   isError.value = true;
+    // }
+    // if (nDaysPlanController.text.isEmpty) {
+    //   errorMsgTwitter.value = '90 days growth plan is required';
+    //   isError.value = true;
+    // }
 
     if (isError.value) {
       isCreatingJobPost.value = false;
-      return;
+      //return;
     }
 
     String endpoint = EndpointService.updateUserProfile;
 
     Map<String, dynamic> body = {
-      "name": jobPosting.name,
-      "email": jobPosting.email ?? '',
-      "phone": jobPosting.phone ?? '',
+      "name": jobseeker.name,
+      "email": jobseeker.email ?? '',
+      "phone": jobseeker.phone ?? '',
       "headline": jobseekerNameController.text.trim(),
-      "bio": jobPosting.bio,
+      "bio": jobseeker.bio,
       "location": {
         "country": locationCountryController.text.trim(),
-        "state": locationCityController.text.trim(),
+        "state": locationStateController.text.trim(),
         "city": locationCityController.text.trim(),
-        "address": {"line1": "123 Market St", "line2": "Suite 400"},
+        "address": {
+          "line1": jobseekerAddressLine1Controller.text.trim(),
+          "line2": jobseekerAddressLine2Controller.text.trim()
+        },
       },
       "preferredJobModes": [jobModeController.value],
       'socialUrls': [
@@ -249,17 +270,15 @@ class ProfileViewController extends GetxController {
           "Twitter": nDaysPlanController.text.trim(),
         }
       ],
-      "skills": jobPosting.skills?.map((s) => s.toMap()).toList(),
+      "skills": jobseeker.skills?.map((s) => s.toMap()).toList(),
     };
 
     LogHandler.debug(body);
 
-    var url = '$endpoint/${jobPosting.id}';
-
     try {
-      if (selectedProfileFile != null) {
+      if (selectedProfileFile != null && selectedProfileFile!.path.isNotEmpty) {
         await apiClient
-            .uploadVideoWithThumbnail(
+            .uploadImageOrVideo(
           Endpoints.uploadUserMedia,
           selectedProfileFile!,
           //  thumbnailFile: selectedThumbnailFile!,
@@ -280,7 +299,8 @@ class ProfileViewController extends GetxController {
             // };
             // LogHandler.debug(body);
 
-            Map<String, dynamic> responsePut = await apiClient.put(url, body);
+            Map<String, dynamic> responsePut =
+                await apiClient.put(endpoint, body);
 
             LogHandler.debug(responsePut);
 
@@ -300,7 +320,7 @@ class ProfileViewController extends GetxController {
           }
         });
       } else {
-        Map<String, dynamic> response = await apiClient.put(url, body);
+        Map<String, dynamic> response = await apiClient.put(endpoint, body);
         LogHandler.debug(response);
 
         if (response['success']) {

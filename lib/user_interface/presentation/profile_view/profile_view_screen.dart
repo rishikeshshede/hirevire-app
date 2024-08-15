@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
-import 'package:hirevire_app/user_interface/presentation/profile_view/components/edit_job_posting_screen.dart';
+import 'package:hirevire_app/user_interface/presentation/profile_view/components/edit_user_profile_screen.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 import '../../../common/widgets/button_outline.dart';
 import '../../../common/widgets/spacing_widget.dart';
