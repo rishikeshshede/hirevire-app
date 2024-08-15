@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:hirevire_app/user_interface/models/job_recommendations.dart';
+
 class JobSeekerProfile {
   String? headline;
   Location? location;
@@ -795,41 +797,41 @@ class SkillSkill {
       };
 }
 
-class SocialUrl {
-  String? id;
-  String? platform;
-  String? url;
+// class SocialUrl {
+//   String? id;
+//   String? platform;
+//   String? url;
 
-  SocialUrl({
-    this.id,
-    this.platform,
-    this.url,
-  });
+//   SocialUrl({
+//     this.id,
+//     this.platform,
+//     this.url,
+//   });
 
-  SocialUrl copyWith({
-    String? id,
-    String? platform,
-    String? url,
-  }) =>
-      SocialUrl(
-        id: id ?? this.id,
-        platform: platform ?? this.platform,
-        url: url ?? this.url,
-      );
+//   SocialUrl copyWith({
+//     String? id,
+//     String? platform,
+//     String? url,
+//   }) =>
+//       SocialUrl(
+//         id: id ?? this.id,
+//         platform: platform ?? this.platform,
+//         url: url ?? this.url,
+//       );
 
-  factory SocialUrl.fromJson(String str) => SocialUrl.fromMap(json.decode(str));
+//   factory SocialUrl.fromJson(String str) => SocialUrl.fromMap(json.decode(str));
 
-  String toJson() => json.encode(toMap());
+//   String toJson() => json.encode(toMap());
 
-  factory SocialUrl.fromMap(Map<String, dynamic> json) => SocialUrl(
-        id: json["_id"],
-        platform: json["platform"],
-        url: json["url"],
-      );
+//   factory SocialUrl.fromMap(Map<String, dynamic> json) => SocialUrl(
+//         id: json["_id"],
+//         platform: json["platform"],
+//         url: json["url"],
+//       );
 
-  Map<String, dynamic> toMap() => {
-        "_id": id,
-        "platform": platform,
-        "url": url,
-      };
-}
+//   Map<String, dynamic> toMap() => {
+//         "_id": id,
+//         "platform": platform,
+//         "url": url,
+//       };
+// }

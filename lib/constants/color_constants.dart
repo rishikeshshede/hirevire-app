@@ -14,6 +14,7 @@ class AppColors {
   static const Color green = Color(0xFF1FB453);
   static const Color black = Color(0xFF0F0F0F);
   static const Color greyDisabled = Color(0xFF98A2B3);
+  static const Color lavenderLight = Color.fromARGB(255, 245, 243, 251);
 
   static const gradientPrimary = [
     primaryLight,

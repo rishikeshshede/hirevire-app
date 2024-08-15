@@ -59,8 +59,24 @@ class JobsTab extends StatelessWidget {
               padding: const EdgeInsets.all(3),
               height: 35,
               width: 35,
-              child: CustomImageView(
-                imagePath: ImageConstant.userIcon,
+              child: CircleAvatar(
+                radius: 40,
+                backgroundColor: Colors.white,
+                child: Obx(
+                  () => jobsController.jobSeekerProfile.value.profilePicUrl !=
+                              null &&
+                          jobsController
+                              .jobSeekerProfile.value.profilePicUrl!.isNotEmpty
+                      ? CircleAvatar(
+                          radius: 38,
+                          backgroundImage: NetworkImage(
+                            "${jobsController.jobSeekerProfile.value.profilePicUrl ?? ''}",
+                          ),
+                        )
+                      : CustomImageView(
+                          imagePath: ImageConstant.userIcon,
+                        ),
+                ),
               ),
             ),
           ),

@@ -247,7 +247,7 @@ class ProfileViewController extends GetxController {
       "name": jobseeker.name,
       "email": jobseeker.email ?? '',
       "phone": jobseeker.phone ?? '',
-      "headline": jobseekerNameController.text.trim(),
+      "headline": jobseekerHeadlineController.text.trim(),
       "bio": jobseeker.bio,
       "location": {
         "country": locationCountryController.text.trim(),

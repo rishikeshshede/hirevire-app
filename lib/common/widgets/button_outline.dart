@@ -16,6 +16,7 @@ class ButtonOutline extends StatelessWidget {
     this.iconHeight,
     this.iconPadding,
     this.textStyle,
+    this.borderRadius,
   });
 
   final String btnText;
@@ -27,6 +28,7 @@ class ButtonOutline extends StatelessWidget {
   final double? iconHeight;
   final double? iconPadding;
   final TextStyle? textStyle;
+  final double? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class ButtonOutline extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           backgroundColor: AppColors.background,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(borderRadius ?? 8),
           ),
           side: BorderSide(
             color: btnColor ?? AppColors.primaryDark,

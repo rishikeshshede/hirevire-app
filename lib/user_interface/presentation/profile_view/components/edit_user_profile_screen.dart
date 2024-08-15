@@ -3,6 +3,7 @@ import 'package:hirevire_app/common/widgets/padded_container.dart';
 import 'package:hirevire_app/common/widgets/profile_upload_widget.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/user_interface/models/job_seeker_profile.dart';
+import 'package:hirevire_app/user_interface/presentation/jobs_tab/components/section_title.dart';
 import 'package:hirevire_app/user_interface/presentation/profile_view/controllers/profile_view_controller.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 import '../../../../common/widgets/button_primary.dart';
@@ -58,6 +59,13 @@ class _EditUserProfileScreenState extends State<EditUserProfileScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  const Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SectionTitle(title: 'Profile Picture'),
+                    ],
+                  ),
+
                   ProfileUploadWidget(
                     onFileSelected:
                         widget.profileViewController.onFilesSelected,
