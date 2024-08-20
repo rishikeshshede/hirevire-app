@@ -1,7 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hirevire_app/common/widgets/custom_image_view.dart';
+import 'package:hirevire_app/common/widgets/loader_circular_with_bg.dart';
+import 'package:hirevire_app/common/widgets/shimmer_widgets.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
@@ -67,15 +68,17 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
           onTap: () => _pickVideo(videoUrl: widget.videoUrl),
           child: Container(
             width: double.infinity,
-            height: _videoFile == null && _videoController == null ? videoHeight * .8 : null,
+            height: _videoFile == null && _videoController == null
+                ? videoHeight * .8
+                : null,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
             ),
             child: _videoFile == null && _videoController == null
                 ? CustomPaint(
-              painter: DashedBorderPainter(),
-              child: _buildUploadContent(),
-            )
+                    painter: DashedBorderPainter(),
+                    child: _buildUploadContent(),
+                  )
                 : _buildVideoPreview(videoHeight),
           ),
         ),
@@ -97,21 +100,22 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
     //     widget.onFilesSelected(_videoFile, _thumbnailFile);
     //   });
     // } else {
-      // Otherwise, allow the user to pick a video from the gallery
-      final pickedFile = await ImagePicker().pickVideo(source: ImageSource.gallery);
-      if (pickedFile != null) {
-        setState(() {
-          _videoFile = File(pickedFile.path);
-          _videoController = VideoPlayerController.file(_videoFile!)
-            ..initialize().then((_) {
-              setState(() {});
-              _videoController!.play();
-            }).catchError((error) {
-              debugPrint("VideoController Error: $error");
-            });
-          widget.onFilesSelected(_videoFile, _thumbnailFile);
-        });
-      }
+    // Otherwise, allow the user to pick a video from the gallery
+    final pickedFile =
+        await ImagePicker().pickVideo(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _videoFile = File(pickedFile.path);
+        _videoController = VideoPlayerController.file(_videoFile!)
+          ..initialize().then((_) {
+            setState(() {});
+            _videoController!.play();
+          }).catchError((error) {
+            debugPrint("VideoController Error: $error");
+          });
+        widget.onFilesSelected(_videoFile, _thumbnailFile);
+      });
+    }
     //}
   }
 
@@ -174,12 +178,10 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
         ),
       );
     } else {
-      return const Center(
-        child: SizedBox(
-          width: 50,
-          height: 50,
-          child: CircularProgressIndicator(),
-        ),
+      return Shimmers.box(
+        context,
+        height: videoHeight,
+        width: double.infinity,
       );
     }
   }

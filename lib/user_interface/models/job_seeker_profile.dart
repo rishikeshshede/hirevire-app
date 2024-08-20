@@ -204,7 +204,7 @@ class Experience {
   DateTime? startDate;
   DateTime? endDate;
   bool? stillWorking;
-  List<String>? skills;
+  List<ExperienceSkill>? skills;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -237,7 +237,7 @@ class Experience {
     DateTime? startDate,
     DateTime? endDate,
     bool? stillWorking,
-    List<String>? skills,
+    List<ExperienceSkill>? skills,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) =>
@@ -285,7 +285,8 @@ class Experience {
         stillWorking: json["stillWorking"],
         skills: json["skills"] == null
             ? []
-            : List<String>.from(json["skills"]!.map((x) => x)),
+            : List<ExperienceSkill>.from(
+                json["skills"]!.map((x) => ExperienceSkill.fromMap(x))),
         createdAt: json["createdAt"] == null
             ? null
             : DateTime.parse(json["createdAt"]),
@@ -308,8 +309,71 @@ class Experience {
         "startDate": startDate?.toIso8601String(),
         "endDate": endDate?.toIso8601String(),
         "stillWorking": stillWorking,
-        "skills":
-            skills == null ? [] : List<dynamic>.from(skills!.map((x) => x)),
+        "skills": skills == null
+            ? []
+            : List<dynamic>.from(skills!.map((x) => x.toMap())),
+        "createdAt": createdAt?.toIso8601String(),
+        "updatedAt": updatedAt?.toIso8601String(),
+      };
+}
+
+class ExperienceSkill {
+  String? id;
+  String? name;
+  String? category;
+  String? subcategory;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+
+  ExperienceSkill({
+    this.id,
+    this.name,
+    this.category,
+    this.subcategory,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  ExperienceSkill copyWith({
+    String? id,
+    String? name,
+    String? category,
+    String? subcategory,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) =>
+      ExperienceSkill(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        category: category ?? this.category,
+        subcategory: subcategory ?? this.subcategory,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+
+  factory ExperienceSkill.fromJson(String str) =>
+      ExperienceSkill.fromMap(json.decode(str));
+
+  String toJson() => json.encode(toMap());
+
+  factory ExperienceSkill.fromMap(Map<String, dynamic> json) => ExperienceSkill(
+        id: json["_id"],
+        name: json["name"],
+        category: json["category"],
+        subcategory: json["subcategory"],
+        createdAt: json["createdAt"] == null
+            ? null
+            : DateTime.parse(json["createdAt"]),
+        updatedAt: json["updatedAt"] == null
+            ? null
+            : DateTime.parse(json["updatedAt"]),
+      );
+
+  Map<String, dynamic> toMap() => {
+        "_id": id,
+        "name": name,
+        "category": category,
+        "subcategory": subcategory,
         "createdAt": createdAt?.toIso8601String(),
         "updatedAt": updatedAt?.toIso8601String(),
       };

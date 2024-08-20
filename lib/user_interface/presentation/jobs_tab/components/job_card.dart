@@ -16,7 +16,7 @@ import 'package:hirevire_app/user_interface/presentation/jobs_tab/controllers/jo
 import 'package:hirevire_app/utils/responsive.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 
-import '../../../../common/widgets/VideoPlayerWidget.dart';
+import '../../../../common/widgets/video_player_widget.dart';
 
 class JobCard extends StatelessWidget {
   const JobCard({
@@ -124,12 +124,6 @@ class JobCard extends StatelessWidget {
                 child: Text('No video available'),
               )
             : VideoPlayerWidget(videoUrl: job.media![0].url ?? ''),
-        // CustomImageView(
-        //   imagePath: job.videoUrl,
-        //   fit: BoxFit.fitWidth,
-        //   padding: 0,
-        //   imageType: ImageType.network,
-        // ),
       ),
     );
   }
