@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hirevire_app/common/widgets/custom_image_view.dart';
+import 'package:hirevire_app/common/widgets/shimmer_widgets.dart';
 import 'package:hirevire_app/common/widgets/social_icon_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
@@ -39,7 +40,6 @@ class ProfileViewScreen extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  // First section with purple color
                   Container(
                     height: 120,
                     decoration: const BoxDecoration(
@@ -51,142 +51,97 @@ class ProfileViewScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const VerticalSpace(
-                    space: 40,
+                  const VerticalSpace(space: 40),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Obx(() {
+                        return userName(context);
+                      }),
+                      Obx(() {
+                        return userHeadline(context);
+                      }),
+                      const VerticalSpace(space: 8),
+                      Obx(() {
+                        return jobLocation(context);
+                      }),
+                      const SectionDivider(),
+                      if (profileViewController.jobSeekerProfile.value.bio !=
+                              null &&
+                          profileViewController
+                              .jobSeekerProfile.value.bio!.isNotEmpty)
+                        const Padding(
+                          padding: EdgeInsets.only(left: 12),
+                          child: SectionTitle(
+                              title: 'About', marginBottom: 5, marginTop: 0),
+                        ),
+                      Obx(() {
+                        return userBio(context);
+                      }),
+                      const SectionDivider(),
+                      if (profileViewController
+                              .jobSeekerProfile.value.experience !=
+                          null)
+                        const Padding(
+                          padding: EdgeInsets.only(top: 8.0, left: 12),
+                          child: SectionTitle(
+                            title: 'Experience',
+                            marginBottom: 5,
+                            marginTop: 0,
+                          ),
+                        ),
+                      Obx(() {
+                        var experiences = profileViewController
+                                .jobSeekerProfile.value.experience ??
+                            [];
+                        if (experiences.isNotEmpty) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: experiences.length,
+                            itemBuilder: (context, index) {
+                              var experience = experiences[index];
+                              bool isLast = index == experiences.length - 1;
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 4.0),
+                                child: Expanded(
+                                  child: ExperienceCard(
+                                      experience: experience, isLast: isLast),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return const SizedBox
+                              .shrink(); // Empty space if no experiences
+                        }
+                      }),
+                      const SectionDivider(),
+                      Obx(
+                        () => profileViewController
+                                    .jobSeekerProfile.value.socialUrls !=
+                                null
+                            ? const Padding(
+                                padding: EdgeInsets.only(left: 12),
+                                child: SectionTitle(
+                                  title: 'Social Handles',
+                                  marginBottom: 5,
+                                  marginTop: 0,
+                                ),
+                              )
+                            : const SizedBox(),
+                      ),
+                      Obx(
+                        () => profileViewController
+                                    .jobSeekerProfile.value.socialUrls !=
+                                null
+                            ? socialHandles(context)
+                            : const SizedBox(),
+                      ),
+                    ],
                   ),
-                  Container(
-                    //color: AppColors.disabled,
-                    padding: const EdgeInsets.only(top: 20, left: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Obx(() {
-                          return userName(context);
-                        }),
-                        const VerticalSpace(
-                          space: 0,
-                        ),
-                        Obx(() {
-                          return userHeadline(context);
-                        }),
-                        const VerticalSpace(
-                          space: 0,
-                        ),
-                        Obx(() {
-                          return jobLocation(context);
-                        }),
-                        const VerticalSpace(
-                          space: 0,
-                        ),
-                        if (profileViewController.jobSeekerProfile.value.bio !=
-                                null &&
-                            profileViewController
-                                .jobSeekerProfile.value.bio!.isNotEmpty)
-                          const SectionTitle(title: 'About'),
-                        const VerticalSpace(
-                          space: 0,
-                        ),
-                        Obx(() {
-                          return userBio(context);
-                        }),
-                        const VerticalSpace(
-                          space: 8,
-                        ),
-                        if (profileViewController
-                                .jobSeekerProfile.value.experience !=
-                            null)
-                          const SectionTitle(title: 'Experience'),
-                        const VerticalSpace(
-                          space: 4,
-                        ),
-                        Obx(() {
-                          var experiences = profileViewController
-                                  .jobSeekerProfile.value.experience ??
-                              [];
-                          if (experiences.isNotEmpty) {
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: experiences.length,
-                              itemBuilder: (context, index) {
-                                var experience = experiences[index];
-                                bool isLastItem =
-                                    index == experiences.length - 1;
-
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 4.0),
-                                  child: Expanded(
-                                    child:
-                                        ExperienceCard(experience: experience),
-                                  ),
-                                  // Row(
-                                  //   children: [
-                                  //     // Column(
-                                  //     //   children: [
-                                  //     //     //Timeline dots
-
-                                  //     //     // if (!isLastItem)
-                                  //     //     //   Container(
-                                  //     //     //     height: 10,
-                                  //     //     //     width: 10,
-                                  //     //     //     decoration: const BoxDecoration(
-                                  //     //     //       color: AppColors.primary,
-                                  //     //     //       shape: BoxShape.circle,
-                                  //     //     //     ),
-                                  //     //     //   ),
-                                  //     //     // Container(
-                                  //     //     //   //height: 40,
-                                  //     //     //   width: 2,
-                                  //     //     //   color: AppColors.primary,
-                                  //     //     // ),
-                                  //     //     // if (isLastItem)
-                                  //     //     //   Container(
-                                  //     //     //     height: 10,
-                                  //     //     //     width: 10,
-                                  //     //     //     decoration: const BoxDecoration(
-                                  //     //     //       color: AppColors.primary,
-                                  //     //     //       shape: BoxShape.circle,
-                                  //     //     //     ),
-                                  //     //     //   ),
-
-                                  //     //     CircleAvatar(
-                                  //     //       backgroundImage: NetworkImage(
-                                  //     //           experience.company?.data
-                                  //     //                   ?.logoUrl ??
-                                  //     //               ''),
-                                  //     //       radius: 20,
-                                  //     //     ),
-                                  //     //   ],
-                                  //     // ),
-                                  //     Expanded(
-                                  //         child: ExperienceCard(
-                                  //             experience: experience)),
-                                  //   ],
-                                  // ),
-                                  //),
-                                );
-                              },
-                            );
-                          } else {
-                            return const SizedBox
-                                .shrink(); // Empty space if no experiences
-                          }
-                        }),
-                        const VerticalSpace(
-                          space: 8,
-                        ),
-                        const SectionTitle(title: 'Social Handles'),
-                        if (profileViewController
-                                .jobSeekerProfile.value.socialUrls !=
-                            null)
-                          socialHandles(context),
-                      ],
-                    ),
-                  ),
-                  const VerticalSpace(
-                    space: 40,
-                  ),
+                  const VerticalSpace(space: 40),
                 ],
               ),
               Positioned(
@@ -198,25 +153,11 @@ class ProfileViewScreen extends StatelessWidget {
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.background, // Background color
-                        border: Border.all(
-                          // Adding the border
-                          color: AppColors
-                              .background, // Replace with the desired color
-                          width: 4.0, // Width of the border
-                        ),
-                        borderRadius: BorderRadius.circular(
-                            4.0), // Optional: Add border radius for rounded corners
-                      ),
-                      child: CustomImageView(
-                        height: 24.0,
-                        width: 24.0,
-                        imagePath: ImageConstant.arrowLeft,
-                        //padding: 16,
-                        fit: BoxFit.contain,
-                      ),
+                    child: CustomImageView(
+                      height: 24.0,
+                      width: 24.0,
+                      imagePath: ImageConstant.arrowLeft,
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),
@@ -227,8 +168,8 @@ class ProfileViewScreen extends StatelessWidget {
                 child: ButtonOutline(
                   borderRadius: 18,
                   btnText: 'Edit Profile',
-                  width: 150,
-                  height: 38.h(context),
+                  width: 100.w(context),
+                  height: 34.h(context),
                   onPressed: () {
                     Get.to(() => EditUserProfileScreen(
                         profileViewController: profileViewController,
@@ -245,13 +186,15 @@ class ProfileViewScreen extends StatelessWidget {
                 top: 90,
                 left: 16,
                 child: CircleAvatar(
-                  radius: 46,
+                  radius: 42,
                   backgroundColor: Colors.white,
                   child: Obx(
                     () => CircleAvatar(
                       radius: 38,
                       backgroundImage: NetworkImage(
-                        "${profileViewController.jobSeekerProfile.value.profilePicUrl ?? ''}",
+                        profileViewController
+                                .jobSeekerProfile.value.profilePicUrl ??
+                            '',
                       ),
                     ),
                   ),
@@ -264,47 +207,61 @@ class ProfileViewScreen extends StatelessWidget {
     );
   }
 
-  Text userName(BuildContext context) {
-    return Text(
-      profileViewController.jobSeekerProfile.value.name ?? '',
-      style: AppTextThemes.screenTitleStyle(context).copyWith(
-        fontWeight: FontWeight.w500,
-        fontSize: 20.w(context),
+  Padding userName(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, left: 12),
+      child: Text(
+        profileViewController.jobSeekerProfile.value.name ?? '',
+        style: AppTextThemes.screenTitleStyle(context).copyWith(
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
 
-  Text userHeadline(BuildContext context) {
-    return Text(
-      profileViewController.jobSeekerProfile.value.headline ?? '',
-      style: AppTextThemes.bodyTextStyle(context).copyWith(
-        fontWeight: FontWeight.w400,
-        fontSize: 16.w(context),
+  Padding userHeadline(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12),
+      child: Text(
+        profileViewController.jobSeekerProfile.value.headline ?? '',
+        style: AppTextThemes.mediumTextStyle(context).copyWith(fontSize: 14),
       ),
     );
   }
 
-  Text jobLocation(BuildContext context) {
-    return Text.rich(
-      textAlign: TextAlign.center,
-      TextSpan(
-        children: [
-          TextSpan(
-            text:
-                "${profileViewController.jobSeekerProfile.value.location?.city ?? ''}, ",
-          ),
-          TextSpan(
-            text: profileViewController
-                    .jobSeekerProfile.value.location?.country ??
-                '',
-          ),
-        ],
+  Widget jobLocation(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12),
+      child: Text.rich(
+        textAlign: TextAlign.center,
+        TextSpan(
+          children: [
+            TextSpan(
+              text:
+                  "${profileViewController.jobSeekerProfile.value.location?.city ?? ''}, ",
+            ),
+            TextSpan(
+              text: profileViewController
+                          .jobSeekerProfile.value.location?.state ==
+                      null
+                  ? ''
+                  : "${profileViewController.jobSeekerProfile.value.location?.state}, ",
+            ),
+            TextSpan(
+              text: profileViewController
+                      .jobSeekerProfile.value.location?.country ??
+                  '',
+            ),
+          ],
+        ),
+        style: AppTextThemes.smallText(context).copyWith(
+          color: AppColors.textSecondary,
+        ),
       ),
-      style: AppTextThemes.secondaryTextStyle(context),
     );
   }
 
-  Text userBioHeading(BuildContext context) {
+  Widget userBioHeading(BuildContext context) {
     return Text(
       "About",
       style: AppTextThemes.subtitleStyle(context).copyWith(
@@ -314,45 +271,53 @@ class ProfileViewScreen extends StatelessWidget {
     );
   }
 
-  Text userBio(BuildContext context) {
-    return Text(
-      profileViewController.jobSeekerProfile.value.bio ?? '',
-      style: AppTextThemes.bodyTextStyle(context).copyWith(
-        fontWeight: FontWeight.w400,
-        fontSize: 14.w(context),
+  Widget userBio(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12),
+      child: Text(
+        profileViewController.jobSeekerProfile.value.bio ?? '',
+        style: AppTextThemes.bodyTextStyle(context),
       ),
     );
   }
 
-  Text userExperience(BuildContext context) {
-    return Text(
-      profileViewController.jobSeekerProfile.value.experience != null
-          ? "Experience"
-          : "",
-      style: AppTextThemes.bodyTextStyle(context).copyWith(
-        fontWeight: FontWeight.w400,
-        fontSize: 16.w(context),
-      ),
-    );
-  }
-
-  Row socialHandles(BuildContext context) {
-    return Row(
-      children: List.generate(
-        profileViewController.jobSeekerProfile.value.socialUrls!.length,
-        (index) => SocialIconWidget(
-          socialMedia:
-              profileViewController.jobSeekerProfile.value.socialUrls![index],
+  Widget socialHandles(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 12),
+      child: Row(
+        children: List.generate(
+          profileViewController.jobSeekerProfile.value.socialUrls!.length,
+          (index) => SocialIconWidget(
+            socialMedia:
+                profileViewController.jobSeekerProfile.value.socialUrls![index],
+          ),
         ),
       ),
     );
   }
 }
 
+class SectionDivider extends StatelessWidget {
+  const SectionDivider({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      height: 6,
+      color: AppColors.disabled,
+    );
+  }
+}
+
 class ExperienceCard extends StatelessWidget {
   final Experience experience;
+  final bool isLast;
 
-  const ExperienceCard({super.key, required this.experience});
+  const ExperienceCard(
+      {super.key, required this.experience, required this.isLast});
 
   @override
   Widget build(BuildContext context) {
@@ -362,97 +327,69 @@ class ExperienceCard extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(right: 12.0),
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: AppColors.gradientProfielCard,
-            stops: AppColors.gradientPrimaryStops,
-          ),
-        ),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 12.0),
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    backgroundImage:
-                        NetworkImage(experience.company?.data?.logoUrl ?? ''),
-                    radius: 28,
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: Container(
-                padding: const EdgeInsets.all(12.0),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: AppColors.gradientProfielCard,
-                    stops: AppColors.gradientPrimaryStops,
-                  ),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomImageView(
+                imagePath: experience.company?.data?.logoUrl ?? '',
+                width: 36,
+                height: 36,
+                fit: BoxFit.contain,
+                placeholderWidget: Shimmers.box(
+                  context,
+                  width: 36,
+                  height: 36,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      experience.title?.name ?? '',
-                      style: AppTextThemes.bodyTextStyle(context).copyWith(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16.w(context),
-                      ),
+              ),
+              const HorizontalSpace(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    experience.title?.name ?? '',
+                    style: AppTextThemes.mediumTextStyle(context).copyWith(
+                      fontWeight: FontWeight.w500,
                     ),
-                    Text(
-                      '${experience.company?.name ?? ''}, ${experience.employmentType ?? ''}',
-                      style: AppTextThemes.bodyTextStyle(context).copyWith(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16.w(context),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          '${formatDate(experience.startDate)} - ${experience.stillWorking == true ? "Present" : formatDate(experience.endDate)}',
-                          style: AppTextThemes.secondaryTextStyle(context)
-                              .copyWith(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14.w(context),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          '${experience.location?.city ?? ''}, ${experience.location?.state ?? ''}, ${experience.location?.country ?? ''}',
-                          style: AppTextThemes.secondaryTextStyle(context)
-                              .copyWith(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14.w(context),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const VerticalSpace(),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 1.6,
-                      child: Text(
-                        '${experience.title?.data?.description ?? ''}',
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis, // Handle overflow
-                        style: AppTextThemes.bodyTextStyle(context).copyWith(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14.w(context),
+                  ),
+                  Text(
+                    '${experience.company?.name ?? ''}, ${experience.employmentType ?? ''}',
+                    style: AppTextThemes.smallText(context),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        '${formatDate(experience.startDate)} - ${experience.stillWorking == true ? "Present" : formatDate(experience.endDate)}',
+                        style: AppTextThemes.smallText(context).copyWith(
+                          color: AppColors.textSecondary,
                         ),
                       ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        '${experience.location?.city ?? ''}, ${experience.location?.state ?? ''}, ${experience.location?.country ?? ''}',
+                        style: AppTextThemes.smallText(context).copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const VerticalSpace(),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.6,
+                    child: Text(
+                      experience.title?.data?.description ?? '',
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis, // Handle overflow
+                      style: AppTextThemes.smallText(context),
                     ),
-                    const VerticalSpace(),
+                  ),
+                  const VerticalSpace(),
+                  if (experience.skills!.isNotEmpty)
                     Row(
                       children: [
                         CustomImageView(
@@ -461,22 +398,43 @@ class ExperienceCard extends StatelessWidget {
                           imagePath: ImageConstant.bagIcon,
                           fit: BoxFit.contain,
                         ),
-                        HorizontalSpace(),
-                        Text(
-                          '${experience.skills?.join(', ') ?? ''}',
-                          style: AppTextThemes.bodyTextStyle(context).copyWith(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12.w(context),
+                        const HorizontalSpace(),
+                        SizedBox(
+                          height: 20.0,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: experience.skills?.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: Text(experience.skills?[index].name ==
+                                        null
+                                    ? ''
+                                    : index == experience.skills!.length - 1
+                                        ? "${experience.skills?[index].name}"
+                                        : "${experience.skills?[index].name},"),
+                              );
+                            },
                           ),
                         ),
                       ],
                     ),
-                  ],
-                ),
+                ],
+              ),
+            ],
+          ),
+          if (!isLast)
+            const Padding(
+              padding: EdgeInsets.only(top: 8.0),
+              child: Divider(
+                thickness: .2,
+                color: AppColors.textSecondary,
               ),
             ),
-          ],
-        ),
+          if (isLast) const SizedBox(height: 10),
+        ],
       ),
     );
   }

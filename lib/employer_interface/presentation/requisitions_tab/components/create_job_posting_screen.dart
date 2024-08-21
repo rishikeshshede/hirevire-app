@@ -133,14 +133,16 @@ class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
                         textInputType: TextInputType.streetAddress,
                         textInputAction: TextInputAction.next,
                         textCapitalization: TextCapitalization.words,
-                        focusNode: widget.requisitionsController.locationCityFocusNode,
-                        controller:
-                            widget.requisitionsController.locationCityController,
+                        focusNode:
+                            widget.requisitionsController.locationCityFocusNode,
+                        controller: widget
+                            .requisitionsController.locationCityController,
                         onChanged: (String value) {},
                         onEditingComplete: () {
-                          widget.requisitionsController.locationCityFocusNode.unfocus();
-                          FocusScope.of(context).requestFocus(
-                              widget.requisitionsController.locationCountryFocusNode);
+                          widget.requisitionsController.locationCityFocusNode
+                              .unfocus();
+                          FocusScope.of(context).requestFocus(widget
+                              .requisitionsController.locationCountryFocusNode);
                         },
                       ),
                       const HorizontalSpace(space: 4),
@@ -150,12 +152,14 @@ class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
                         textInputType: TextInputType.streetAddress,
                         textInputAction: TextInputAction.next,
                         textCapitalization: TextCapitalization.words,
-                        focusNode: widget.requisitionsController.locationCountryFocusNode,
-                        controller:
-                        widget.requisitionsController.locationCountryController,
+                        focusNode: widget
+                            .requisitionsController.locationCountryFocusNode,
+                        controller: widget
+                            .requisitionsController.locationCountryController,
                         onChanged: (String value) {},
                         onEditingComplete: () {
-                          widget.requisitionsController.locationCountryFocusNode.unfocus();
+                          widget.requisitionsController.locationCountryFocusNode
+                              .unfocus();
                           FocusScope.of(context).requestFocus(
                               widget.requisitionsController.perksFocusNode);
                         },
@@ -214,7 +218,7 @@ class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
                     controller:
                         widget.requisitionsController.openingCountController,
                     onChanged: (String value) {},
-                    readOnly: true,
+                    // readOnly: true,
                   ),
                   Obx(
                     () => Row(
@@ -260,11 +264,14 @@ class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
                         labelText: 'Per annum (in Lakhs)',
                         textInputType: TextInputType.number,
                         textInputAction: TextInputAction.next,
-                        focusNode: widget.requisitionsController.minCtcFocusNode,
-                        controller: widget.requisitionsController.minCtcController,
+                        focusNode:
+                            widget.requisitionsController.minCtcFocusNode,
+                        controller:
+                            widget.requisitionsController.minCtcController,
                         onChanged: (String value) {},
                         onEditingComplete: () {
-                          widget.requisitionsController.minCtcFocusNode.unfocus();
+                          widget.requisitionsController.minCtcFocusNode
+                              .unfocus();
                           FocusScope.of(context).requestFocus(
                               widget.requisitionsController.maxCtcFocusNode);
                         },
@@ -278,12 +285,14 @@ class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
                         textInputType: TextInputType.number,
                         textInputAction: TextInputAction.next,
                         textCapitalization: TextCapitalization.words,
-                        focusNode: widget.requisitionsController.maxCtcFocusNode,
+                        focusNode:
+                            widget.requisitionsController.maxCtcFocusNode,
                         controller:
-                        widget.requisitionsController.maxCtcController,
+                            widget.requisitionsController.maxCtcController,
                         onChanged: (String value) {},
                         onEditingComplete: () {
-                          widget.requisitionsController.maxCtcFocusNode.unfocus();
+                          widget.requisitionsController.maxCtcFocusNode
+                              .unfocus();
                           FocusScope.of(context).requestFocus(
                               widget.requisitionsController.tDaysFocusNode);
                         },
@@ -327,12 +336,12 @@ class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
                     },
                   ),
                   Obx(
-                        () => Row(
+                    () => Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ErrorTextWidget(
-                            text: widget
-                                .requisitionsController.errorMsgGrowthPlanThi.value),
+                            text: widget.requisitionsController
+                                .errorMsgGrowthPlanThi.value),
                       ],
                     ),
                   ),
@@ -352,12 +361,12 @@ class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
                     },
                   ),
                   Obx(
-                        () => Row(
+                    () => Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ErrorTextWidget(
-                            text: widget
-                                .requisitionsController.errorMsgGrowthPlanSix.value),
+                            text: widget.requisitionsController
+                                .errorMsgGrowthPlanSix.value),
                       ],
                     ),
                   ),
@@ -374,12 +383,12 @@ class _CreateJobPostingScreenState extends State<CreateJobPostingScreen> {
                         widget.requisitionsController.nDaysFocusNode.unfocus();
                       }),
                   Obx(
-                        () => Row(
+                    () => Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ErrorTextWidget(
-                            text: widget
-                                .requisitionsController.errorMsgGrowthPlan3Mon.value),
+                            text: widget.requisitionsController
+                                .errorMsgGrowthPlan3Mon.value),
                       ],
                     ),
                   ),

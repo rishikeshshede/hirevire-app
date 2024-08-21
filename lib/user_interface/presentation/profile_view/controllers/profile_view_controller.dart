@@ -164,6 +164,7 @@ class ProfileViewController extends GetxController {
 
     try {
       Map<String, dynamic> response = await apiClient.get(endpoint);
+      LogHandler.debug(response);
 
       if (response['success']) {
         jobSeekerProfile.value =

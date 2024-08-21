@@ -11,7 +11,7 @@ import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/responsive.dart';
 import 'package:hirevire_app/utils/show_toast_util.dart';
 import 'package:hirevire_app/utils/size_util.dart';
-import '../../../../common/widgets/VideoPlayerWidget.dart';
+import '../../../../common/widgets/video_player_widget.dart';
 import '../controllers/view_applicants_controller.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -59,11 +59,12 @@ class ApplicantsCard extends StatelessWidget {
           const VerticalSpace(),
           headline(context),
           jobApplicant.appliedBy?.bio != null ? bio(context) : const SizedBox(),
-          jobApplicant.jobPostId != null && jobApplicant.jobPostId!.location != null ? jobLocation(context) : const SizedBox(),
-
+          jobApplicant.jobPostId != null &&
+                  jobApplicant.jobPostId!.location != null
+              ? jobLocation(context)
+              : const SizedBox(),
           const SectionTitle(title: 'Recent Experience'),
           jobSeekerExperience(context),
-
           const VerticalSpace(),
           if (jobApplicant.requiredSkills != null &&
               jobApplicant.requiredSkills!.isNotEmpty)
@@ -255,17 +256,21 @@ class ApplicantsCard extends StatelessWidget {
     DateTime earliestEndDate = DateTime(0);
 
     for (var experience in experiences) {
-      if (experience.startDate != null && experience.startDate!.isBefore(latestStartDate)) {
+      if (experience.startDate != null &&
+          experience.startDate!.isBefore(latestStartDate)) {
         latestStartDate = experience.startDate!;
       }
-      if (experience.endDate != null && experience.endDate!.isAfter(earliestEndDate)) {
+      if (experience.endDate != null &&
+          experience.endDate!.isAfter(earliestEndDate)) {
         earliestEndDate = experience.endDate!;
       } else if (experience.stillWorking == true) {
         earliestEndDate = DateTime.now();
       }
     }
 
-    int totalMonths = (earliestEndDate.year - latestStartDate.year) * 12 + earliestEndDate.month - latestStartDate.month;
+    int totalMonths = (earliestEndDate.year - latestStartDate.year) * 12 +
+        earliestEndDate.month -
+        latestStartDate.month;
     int years = totalMonths ~/ 12;
     int months = totalMonths % 12;
 
@@ -274,7 +279,9 @@ class ApplicantsCard extends StatelessWidget {
 
   Text jobSeekerExperience(BuildContext context) {
     return Text(
-      jobApplicant.appliedBy != null && jobApplicant.appliedBy?.experience != null && jobApplicant.appliedBy!.experience!.isNotEmpty
+      jobApplicant.appliedBy != null &&
+              jobApplicant.appliedBy?.experience != null &&
+              jobApplicant.appliedBy!.experience!.isNotEmpty
           ? calculateExperience(jobApplicant.appliedBy?.experience ?? [])
           : 'No Experience',
       style: AppTextThemes.secondaryTextStyle(context),
