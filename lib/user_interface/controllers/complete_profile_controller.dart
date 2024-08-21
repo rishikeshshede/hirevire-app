@@ -506,7 +506,7 @@ class CompleteProfileController extends GetxController {
 
     try {
       Map<String, dynamic> response =
-          await apiClient.uploadImageOrVideo(endpoint, profilePic.value!);
+          await apiClient.uploadImageOrVideo(endpoint, profilePic.value!, false);
       LogHandler.debug(response);
 
       if (response['success']) {

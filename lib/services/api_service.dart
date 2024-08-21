@@ -200,9 +200,10 @@ class ApiClient {
     }
   }
 
-  dynamic uploadImageOrVideo(String endpoint, File imageFile) async {
+  dynamic uploadImageOrVideo(
+      String endpoint, File imageFile, bool? update) async {
     final Uri url = Uri.parse(_baseUrl + endpoint);
-    var request = http.MultipartRequest('POST', url);
+    var request = http.MultipartRequest(update != null ? 'PUT' : 'POST', url);
 
     LogHandler.info('Upload Image Or Video: $url');
     try {

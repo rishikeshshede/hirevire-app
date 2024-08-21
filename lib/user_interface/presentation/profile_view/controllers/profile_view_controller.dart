@@ -281,6 +281,7 @@ class ProfileViewController extends GetxController {
             .uploadImageOrVideo(
           Endpoints.uploadUserMedia,
           selectedProfileFile!,
+          true
           //  thumbnailFile: selectedThumbnailFile!,
         )
             .then((response) async {
