@@ -108,7 +108,7 @@ class JobPostingsCard extends StatelessWidget {
                     color: AppColors.greyDisabled,
                   ),
                   textWidget(context,
-                      '${jobPostings.savedApplications?.length ?? '0'}'),
+                      '${jobPostings.openingsCount ?? '0'}'),
                 ],
               ),
               const VerticalSpace(),
