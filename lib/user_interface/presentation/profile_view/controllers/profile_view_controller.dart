@@ -245,11 +245,11 @@ class ProfileViewController extends GetxController {
     String endpoint = EndpointService.updateUserProfile;
 
     Map<String, dynamic> body = {
-      "name": jobseeker.name,
-      "email": jobseeker.email ?? '',
-      "phone": jobseeker.phone ?? '',
+      "name": jobseekerNameController.text.trim(),
+      "email": jobseekerEmailController.text.trim(),
+      "phone": jobseekerPhoneController.text.trim(),
       "headline": jobseekerHeadlineController.text.trim(),
-      "bio": jobseeker.bio,
+      "bio": jobseekerBioController.text.trim(),
       "location": {
         "country": locationCountryController.text.trim(),
         "state": locationStateController.text.trim(),
@@ -280,11 +280,9 @@ class ProfileViewController extends GetxController {
       if (selectedProfileFile != null && selectedProfileFile!.path.isNotEmpty) {
         await apiClient
             .uploadImageOrVideo(
-          Endpoints.uploadUserMedia,
-          selectedProfileFile!,
-          true
-          //  thumbnailFile: selectedThumbnailFile!,
-        )
+                Endpoints.uploadUserMedia, selectedProfileFile!, true
+                //  thumbnailFile: selectedThumbnailFile!,
+                )
             .then((response) async {
           if (response['success']) {
             // Handle success

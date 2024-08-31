@@ -22,7 +22,7 @@ class EndpointService {
   // GET Endpoint
   static const String getRequisitions = 'jobPosting/requisitions';
   static const String getJobPostings = 'jobPosting/created';
-  static const String getJobApplications = 'jobApplication/recruiter/applicationsByJobPost';
+  static const String getJobApplications = 'jobApplication/recruiter/application';
 
 
   // POST Endpoints

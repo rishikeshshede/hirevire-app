@@ -203,7 +203,15 @@ class ApiClient {
   dynamic uploadImageOrVideo(
       String endpoint, File imageFile, bool? update) async {
     final Uri url = Uri.parse(_baseUrl + endpoint);
+
+    String? token = await getToken();
+    Map<String, String> headers = {
+      'Authorization': '$token',
+      'Content-Type': 'multipart/form-data',
+    };
+
     var request = http.MultipartRequest(update != null ? 'PUT' : 'POST', url);
+    request.headers.addAll(headers);
 
     LogHandler.info('Upload Image Or Video: $url');
     try {
