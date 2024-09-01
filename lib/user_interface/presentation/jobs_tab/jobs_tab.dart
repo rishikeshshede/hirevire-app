@@ -70,7 +70,9 @@ class JobsTab extends StatelessWidget {
                       ? CircleAvatar(
                           radius: 38,
                           backgroundImage: NetworkImage(
-                            "${jobsController.jobSeekerProfile.value.profilePicUrl ?? ''}",
+                            jobsController
+                                    .jobSeekerProfile.value.profilePicUrl ??
+                                '',
                           ),
                         )
                       : CustomImageView(
