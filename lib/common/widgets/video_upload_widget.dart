@@ -43,7 +43,7 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
 
   void _initializeVideo() {
     if (widget.videoUrl != null && widget.videoUrl!.isNotEmpty) {
-      _videoController = VideoPlayerController.network(widget.videoUrl!)
+      _videoController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl!))
         ..initialize().then((_) {
           setState(() {});
           _videoController!.play();

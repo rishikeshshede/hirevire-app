@@ -96,7 +96,6 @@ class MyApplicationsController extends GetxController {
   RxString videoUrl = ''.obs;
   RxString thumbnailUrl = ''.obs;
 
-
   @override
   void onInit() {
     super.onInit();
@@ -134,6 +133,8 @@ class MyApplicationsController extends GetxController {
     if (selectedSpecializations.isEmpty) {
       myApplications.value = filteredApplicationsOriginal;
     } else {
+      myApplications.value = filteredApplicationsOriginal;
+
       myApplications.value = myApplications.where((application) {
         return selectedSpecializations.contains(application.status);
       }).toList();
@@ -151,8 +152,10 @@ class MyApplicationsController extends GetxController {
       LogHandler.debug(response);
 
       if (response['success']) {
-        myApplications.value = MyApplication.fromJsonList(response['body']['data']);
-        filteredApplicationsOriginal.value = MyApplication.fromJsonList(response['body']['data']);
+        myApplications.value =
+            MyApplication.fromJsonList(response['body']['data']);
+        filteredApplicationsOriginal.value =
+            MyApplication.fromJsonList(response['body']['data']);
       } else {
         String errorMsg =
             response['error']['message'] ?? Errors.somethingWentWrong;
@@ -271,7 +274,7 @@ class MyApplicationsController extends GetxController {
       "project": jobPosting.project,
       "openingsCount": int.parse(openingCountController.text.trim()),
       "location": {
-        "country":  locationCountryController.text.trim(),
+        "country": locationCountryController.text.trim(),
         "city": locationCityController.text.trim(),
       },
       "jobMode": [jobModeController.value],
@@ -301,9 +304,13 @@ class MyApplicationsController extends GetxController {
       "requiredSkills":
           jobPosting.requiredSkills?.map((s) => s.toMap()).toList(),
       'media': {
-        'url': selectedVideoFile != null ? videoUrl.value : jobPosting.media?[0].url,
+        'url': selectedVideoFile != null
+            ? videoUrl.value
+            : jobPosting.media?[0].url,
         'type': "video",
-        'thumbnail': selectedThumbnailFile != null ?  thumbnailUrl.value : jobPosting.media?[0].thumbnail,
+        'thumbnail': selectedThumbnailFile != null
+            ? thumbnailUrl.value
+            : jobPosting.media?[0].thumbnail,
       },
       "endsOn": jobPosting.endsOn?.toIso8601String(),
       "status": isClosedStatus.value ? 'closed' : jobPosting.status,
@@ -370,7 +377,6 @@ class MyApplicationsController extends GetxController {
           LogHandler.error(errorMsg);
         }
       }
-
     } catch (error) {
       LogHandler.error(error);
     } finally {
