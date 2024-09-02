@@ -155,7 +155,6 @@ class JobsController extends GetxController {
     status.value = 'Applied';
     statusColor.value = Colors.green;
     Get.back();
-
   }
 
   void rejectJob(JobRecommendationsModel job) async {
@@ -281,7 +280,7 @@ class JobsController extends GetxController {
     isLoading.value = true;
     if (selectedVideoFile == null) {
       isApplyJobPost.value = false;
-      ToastWidgit.bottomToast('please upload video, it is required');
+      ToastWidgit.bottomToast('Video resume is required');
       return;
     }
 
@@ -333,13 +332,15 @@ class JobsController extends GetxController {
         if (response['success']) {
           // Handle success
           debugPrint('Upload successful: $response}');
-          if (response['body']['videoURL'] == null || response['body']['videoURL'].isBlank ) {
+          if (response['body']['videoURL'] == null ||
+              response['body']['videoURL'].isBlank) {
             videoUrl.value = "";
           } else {
             videoUrl.value = response['body']['videoURL'][0];
           }
 
-          if (response['body']['thumbnailURL'] == null || response['body']['thumbnailURL'].isBlank ) {
+          if (response['body']['thumbnailURL'] == null ||
+              response['body']['thumbnailURL'].isBlank) {
             thumbnailUrl.value = "";
           } else {
             thumbnailUrl.value = response['body']['thumbnailURL'][0];
@@ -351,7 +352,7 @@ class JobsController extends GetxController {
 
           if (responseJobApply['success']) {
             applyJob(job);
-           // Get.back();
+            // Get.back();
           } else {
             if (responseJobApply['error']['message'] ==
                 "You have already applied for this job") {

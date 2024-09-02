@@ -237,8 +237,13 @@ class MyApplicationsTab extends StatelessWidget {
                         // List of Applications
                         Obx(() {
                           return myApplicationsController.myApplications.isEmpty
-                              ? const Center(
-                                  child: Text('No job applications available'),
+                              ? Container(
+                                  alignment: Alignment.center,
+                                  height: 100,
+                                  child: const Text(
+                                    'You have not applied\nfor any job yet',
+                                    textAlign: TextAlign.center,
+                                  ),
                                 )
                               : Padding(
                                   padding: const EdgeInsets.symmetric(
