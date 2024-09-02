@@ -13,7 +13,6 @@ import 'package:hirevire_app/utils/size_util.dart';
 import '../../../common/widgets/button_outline.dart';
 import '../../../common/widgets/spacing_widget.dart';
 import '../../../themes/text_theme.dart';
-import '../../../utils/responsive.dart';
 import 'controllers/profile_view_controller.dart';
 import 'package:intl/intl.dart';
 
@@ -56,6 +55,7 @@ class ProfileViewScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      const VerticalSpace(),
                       Obx(() {
                         return userName(context);
                       }),
@@ -256,6 +256,7 @@ class ProfileViewScreen extends StatelessWidget {
         ),
         style: AppTextThemes.smallText(context).copyWith(
           color: AppColors.textSecondary,
+          fontSize: 11,
         ),
       ),
     );

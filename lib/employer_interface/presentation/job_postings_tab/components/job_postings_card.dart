@@ -54,7 +54,7 @@ class JobPostingsCard extends StatelessWidget {
                       '${jobPostings.savedApplications?.length ?? '0'} right swipes'),
               Row(
                 children: [
-                  const GreenDot(),
+                  const DotWidget(),
                   const HorizontalSpace(),
                   Text(
                     jobPostings.status == null
@@ -107,8 +107,7 @@ class JobPostingsCard extends StatelessWidget {
                     'Openings: ',
                     color: AppColors.greyDisabled,
                   ),
-                  textWidget(context,
-                      '${jobPostings.openingsCount ?? '0'}'),
+                  textWidget(context, '${jobPostings.openingsCount ?? '0'}'),
                 ],
               ),
               const VerticalSpace(),

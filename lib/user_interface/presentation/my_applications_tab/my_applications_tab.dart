@@ -125,8 +125,8 @@ class MyApplicationsTab extends StatelessWidget {
                                                                       isSelected
                                                                           .value,
                                                                   checkColor:
-                                                                      AppColors
-                                                                          .primary,
+                                                                      Colors
+                                                                          .white,
                                                                   activeColor:
                                                                       AppColors
                                                                           .primaryDark,
@@ -189,7 +189,7 @@ class MyApplicationsTab extends StatelessWidget {
                                                                             context)
                                                                     .copyWith(
                                                                   color: AppColors
-                                                                      .primary,
+                                                                      .primaryDark,
                                                                 ),
                                                               ),
                                                             ),
@@ -223,17 +223,10 @@ class MyApplicationsTab extends StatelessWidget {
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.all(12.0),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: AppColors.primary,
-                                    ),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
                                   child: SvgPicture.asset(
                                     'assets/icons/filter.svg',
-                                    colorFilter: ColorFilter.mode(
-                                        AppColors.primary.withOpacity(.6),
-                                        BlendMode.srcIn),
+                                    colorFilter: const ColorFilter.mode(
+                                        AppColors.primaryDark, BlendMode.srcIn),
                                   ),
                                 ),
                               ),

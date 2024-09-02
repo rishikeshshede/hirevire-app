@@ -7,7 +7,7 @@ class ThirdTabScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('ThirdTabScreen'),
+        child: Text('Chat, coming soon...'),
       ),
     );
   }

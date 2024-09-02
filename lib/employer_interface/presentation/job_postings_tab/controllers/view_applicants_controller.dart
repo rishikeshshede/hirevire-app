@@ -157,7 +157,7 @@ class ViewApplicantsController extends GetxController {
       } else {
         String errorMsg =
             response['error']['message'] ?? Errors.somethingWentWrong;
-        ToastWidgit.bottomToast(errorMsg);
+        // ToastWidgit.bottomToast(errorMsg);
         LogHandler.error(errorMsg);
       }
     } catch (error) {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hirevire_app/common/widgets/chip_widget.dart';
 import 'package:hirevire_app/common/widgets/green_dot.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
 import 'package:hirevire_app/user_interface/models/MyApplication.dart';
+import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 import 'package:hirevire_app/utils/string_handler.dart';
 
@@ -45,33 +45,35 @@ class MyApplicationsCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SkillChip(
-                  text:
-                      '${myApplications.jobPostId?.savedApplications?.length ?? '0'} applied'),
               Row(
                 children: [
-                  const GreenDot(),
+                  Text(
+                    DatetimeUtil.formatToDateOnlyString(
+                        myApplications.updatedAt),
+                    style: AppTextThemes.secondaryTextStyle(context)
+                        .copyWith(fontSize: 12),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  myApplications.status!.toLowerCase() == 'rejected'
+                      ? const DotWidget(color: AppColors.red)
+                      : const DotWidget(),
                   const HorizontalSpace(),
                   Text(
                     myApplications.status == null
                         ? ''
                         : StringHandler.capitalizeFirstLetterOfWord(
                             myApplications.status!),
-                    style: AppTextThemes.smallText(context),
+                    style: AppTextThemes.smallText(context).copyWith(
+                      color: myApplications.status!.toLowerCase() == 'rejected'
+                          ? AppColors.red
+                          : null,
+                    ),
                   ),
                 ],
               ),
-            ],
-          ),
-          const VerticalSpace(),
-          Row(
-            children: [
-              textWidget(
-                context,
-                'Company Name: ',
-                color: AppColors.greyDisabled,
-              ),
-              textWidget(context, myApplications.jobPostId?.postedBy?.name ?? ''),
             ],
           ),
           const VerticalSpace(),
@@ -79,107 +81,49 @@ class MyApplicationsCard extends StatelessWidget {
           const VerticalSpace(),
           Row(
             children: [
-              myApplications.jobPostId?.location == null ? const SizedBox() : jobLocation(context),
-              myApplications.jobPostId?.ctc == null ? const SizedBox() : ctcDetails(context),
-            ],
-          ),
-          // Row(
-          //   children: [
-          //     Text(
-          //       jobPostings.title ?? '',
-          //       style: AppTextThemes.bodyTextStyle(context).copyWith(
-          //         fontWeight: FontWeight.w300,
-          //       ),
-          //     ),
-          //     const HorizontalSpace(space: 12),
-          //
-          //     Text(
-          //       '${jobPostings.postedBy?.name ?? ''}',
-          //       style: AppTextThemes.bodyTextStyle(context),
-          //     ),
-          //   ],
-          // ),
-          const VerticalSpace(),
-          Row(
-            children: [
-              textWidget(
-                context,
-                'Hiring Manager: ',
-                color: AppColors.greyDisabled,
+              // textWidget(
+              //   context,
+              //   'Company Name: ',
+              //   color: AppColors.greyDisabled,
+              // ),
+              Text(
+                myApplications.jobPostId?.postedBy?.name ?? 'Unknown company',
+                style: AppTextThemes.bodyTextStyle(context).copyWith(
+                  color: AppColors.textPrimary,
+                ),
               ),
-              textWidget(context, myApplications.jobPostId?.requestedBy?.name ?? ''),
             ],
           ),
           const VerticalSpace(),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  textWidget(
-                    context,
-                    'Openings: ',
-                    color: AppColors.greyDisabled,
-                  ),
-                  textWidget(context,
-                      '${myApplications.jobPostId?.savedApplications?.length ?? '0'}'),
-                ],
-              ),
-              const VerticalSpace(),
-              Row(
-                children: [
-                  textWidget(
-                    context,
-                    'Accepted: ',
-                    color: AppColors.greyDisabled,
-                  ),
-                  textWidget(context,
-                      '${myApplications.jobPostId?.savedApplications?.length ?? '0'}'),
-                ],
-              ),
+              myApplications.jobPostId?.location == null
+                  ? const SizedBox()
+                  : jobLocation(context),
+              myApplications.jobPostId?.ctc == null
+                  ? const SizedBox()
+                  : ctcDetails(context),
             ],
           ),
-          const VerticalSpace(),
-          // Row(
-          //   children: [
-          //     Flexible(
-          //       child: ButtonOutline(
-          //         btnText: 'Edit Job Posting',
-          //         height: 38.h(context),
-          //         onPressed: () {
-          //           Get.to(
-          //             // EditJobPostingScreen(
-          //             //   jobPostingsController: jobPostingsController,
-          //             //   jobPostings: jobPostings,
-          //             //   index: index,
-          //             // ),
-          //           );
-          //         },
-          //         textStyle: AppTextThemes.buttonTextStyle(context).copyWith(
-          //           fontSize: 13,
-          //           color: AppColors.primaryDark,
-          //         ),
-          //       ),
-          //     ),
-          //     const HorizontalSpace(),
-          //     Flexible(
-          //       child: ButtonPrimary(
-          //         btnText: 'View applicants',
-          //         btnColor: AppColors.primaryDark,
-          //         height: 38.h(context),
-          //         onPressed: () {
-          //           Get.to(ApplicantsScreen(
-          //             jobPostingsController: jobPostingsController,
-          //             jobPostings: jobPostings,
-          //             index: index,
-          //           ));
-          //         },
-          //         textStyle: AppTextThemes.buttonTextStyle(context)
-          //             .copyWith(fontSize: 13),
-          //       ),
-          //     ),
-          //   ],
-          //),
+          myApplications.jobPostId?.postedBy?.name == null
+              ? const SizedBox()
+              : const VerticalSpace(),
+          myApplications.jobPostId?.postedBy?.name == null
+              ? const SizedBox()
+              : Row(
+                  children: [
+                    textWidget(
+                      context,
+                      'Recruiter: ',
+                      color: AppColors.greyDisabled,
+                    ),
+                    textWidget(context,
+                        myApplications.jobPostId?.postedBy?.name ?? ''),
+                  ],
+                ),
+          myApplications.jobPostId?.postedBy?.name == null
+              ? const SizedBox()
+              : const VerticalSpace(),
         ],
       ),
     );
@@ -198,14 +142,18 @@ class MyApplicationsCard extends StatelessWidget {
           ),
         ],
       ),
-      style: AppTextThemes.secondaryTextStyle(context).copyWith(fontSize: 13.5,),
+      style: AppTextThemes.secondaryTextStyle(context).copyWith(
+        fontSize: 13.5,
+      ),
     );
   }
 
   Text ctcDetails(BuildContext context) {
     return Text(
       '  ·  ${myApplications.jobPostId?.ctc} LPA',
-      style: AppTextThemes.secondaryTextStyle(context).copyWith(fontSize: 13.5,),
+      style: AppTextThemes.secondaryTextStyle(context).copyWith(
+        fontSize: 13.5,
+      ),
     );
   }
 
@@ -213,7 +161,6 @@ class MyApplicationsCard extends StatelessWidget {
     return Text(
       text,
       style: AppTextThemes.bodyTextStyle(context).copyWith(
-        fontSize: 13.5,
         color: color ?? AppColors.textPrimary,
       ),
     );
