@@ -30,9 +30,9 @@ class GlobalConstants {
   ];
 
   static const List<String> statusList = [
-    'Pending',
+    'Applied',
     'Rejected',
-    'Approved',
+    'Accepted',
   ];
 
   static List<String> locationTypes = [

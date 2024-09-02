@@ -59,7 +59,10 @@ class MyApplicationsCard extends StatelessWidget {
                 children: [
                   myApplications.status!.toLowerCase() == 'rejected'
                       ? const DotWidget(color: AppColors.red)
-                      : const DotWidget(),
+                      : myApplications.status!.toLowerCase() == 'applied'
+                          ? const DotWidget(
+                              color: Color.fromARGB(255, 221, 200, 6))
+                          : const DotWidget(),
                   const HorizontalSpace(),
                   Text(
                     myApplications.status == null
@@ -168,7 +171,7 @@ class MyApplicationsCard extends StatelessWidget {
 
   Text jobTitle(BuildContext context) {
     return Text(
-      myApplications.jobPostId?.title ?? 'Unknown job title',
+      myApplications.jobPostId?.title ?? 'Unknown job',
       style: AppTextThemes.subtitleStyle(context),
     );
   }
