@@ -154,6 +154,7 @@ class JobsController extends GetxController {
     jobs.remove(job);
     status.value = 'Applied';
     statusColor.value = Colors.green;
+    ToastWidgit.bottomToast("Applied");
     Get.back();
   }
 
@@ -308,20 +309,6 @@ class JobsController extends GetxController {
             }).toList() ??
             [];
 
-    Map<String, dynamic> body = {
-      "jobPostId": job.id,
-      "media": [
-        {
-          "url": videoUrl.value,
-          "type": "video",
-          "thumbnail": thumbnailUrl.value,
-        }
-      ],
-      "answers": answers,
-      "requiredSkills": requiredSkills,
-    };
-    LogHandler.debug(body);
-
     try {
       await apiClient
           .uploadVideoWithThumbnail(
@@ -332,7 +319,7 @@ class JobsController extends GetxController {
           .then((response) async {
         if (response['success']) {
           // Handle success
-          debugPrint('Upload successful: $response}');
+          LogHandler.debug('Upload successful: $response}');
           if (response['body']['videoURL'] == null ||
               (response['body']['videoURL'] is List &&
                   response['body']['videoURL'].isEmpty)) {
@@ -340,6 +327,7 @@ class JobsController extends GetxController {
           } else {
             videoUrl.value = response['body']['videoURL'][0];
           }
+          LogHandler.debug("videoUrl: ${videoUrl.value}");
 
           if (response['body']['thumbnailURL'] == null ||
               (response['body']['thumbnailURL'] is List &&
@@ -348,6 +336,21 @@ class JobsController extends GetxController {
           } else {
             thumbnailUrl.value = response['body']['thumbnailURL'][0];
           }
+          LogHandler.debug("thumbnailUrl: ${thumbnailUrl.value}");
+
+          Map<String, dynamic> body = {
+            "jobPostId": job.id,
+            "media": [
+              {
+                "url": videoUrl.value,
+                "type": "video",
+                "thumbnail": thumbnailUrl.value,
+              }
+            ],
+            "answers": answers,
+            "requiredSkills": requiredSkills,
+          };
+          LogHandler.debug(body);
 
           Map<String, dynamic> responseJobApply =
               await apiClient.post(endpoint, body);
@@ -357,18 +360,20 @@ class JobsController extends GetxController {
             applyJob(job);
             // Get.back();
           } else {
-            if (responseJobApply['error']['message'] ==
-                "You have already applied for this job") {
-              ToastWidgit.bottomToast('You have already applied for this job');
-              Get.back();
-            }
             String errorMsg = responseJobApply['error']['message'] ??
                 Errors.somethingWentWrong;
-            LogHandler.error(errorMsg);
+
+            if (errorMsg == "You have already applied for this job") {
+              // ToastWidgit.bottomToast('You have already applied for this job');
+              Get.back();
+            } else {
+              LogHandler.error(errorMsg);
+              ToastWidgit.bottomToast("Something went wrong");
+            }
           }
         } else {
           // Handle error
-          debugPrint('Upload failed: ${response['error']}');
+          LogHandler.debug('Upload failed: ${response['error']}');
         }
       });
     } catch (error) {
