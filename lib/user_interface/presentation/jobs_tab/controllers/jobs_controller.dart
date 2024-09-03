@@ -196,6 +196,7 @@ class JobsController extends GetxController {
 
     try {
       Map<String, dynamic> response = await apiClient.get(endpoint);
+      // LogHandler.debug("profile: $response");
 
       if (response['success']) {
         jobSeekerProfile.value = JobSeekerProfile.fromMap(

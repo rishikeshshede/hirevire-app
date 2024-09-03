@@ -78,16 +78,17 @@ class JobApplicationForm extends StatelessWidget {
                                     jobsController
                                         .jobSeekerProfile.value.skills!
                                         .map(
-                                      (s) =>
-                                          MapEntry(s.id ?? '', s.rating ?? 1.0),
+                                      (s) => MapEntry(
+                                          s.skill!.id ?? '', s.rating ?? 1.0),
                                     ),
                                   )
                                 : {};
 
                             var preFilledRating =
-                                seekerSkills[skill.id ?? ''] ?? 1.0;
+                                seekerSkills[skill.skill!.id ?? ''] ?? 1.0;
 
-                            jobsController.skillsRatings[skill.id ?? ''] =
+                            jobsController
+                                    .skillsRatings[skill.skill!.id ?? ''] =
                                 double.parse(preFilledRating.toString());
 
                             jobsController.skillRatingValue.value =
@@ -147,45 +148,6 @@ class JobApplicationForm extends StatelessWidget {
                             );
                           }) ??
                           []),
-
-                      // ...(job.requiredSkills?.map((skill) {
-                      //   // Creating a map of skill names to ratings from jobSeekerProfile
-                      //   final seekerSkills = jobsController.jobSeekerProfile.value.data?.skills != null
-                      //       ? Map.fromEntries(
-                      //       jobsController.jobSeekerProfile.value.data!.skills!.map((s) => MapEntry(s.skill?.id ?? '', s.rating ?? 1.0)))
-                      //       : {};
-                      //
-                      //   final preFilledRating = seekerSkills[skill.skill?.id ?? ''] ?? 1.0;
-                      //
-                      //   return Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       Text(
-                      //         textAlign: TextAlign.start,
-                      //         skill.skill?.name ?? 'other',
-                      //         style: AppTextThemes.bodyTextStyle(context).copyWith(fontSize: 14.adaptSize(context)),
-                      //       ),
-                      //       const VerticalSpace(space: 2,),
-                      //       Obx(
-                      //             () => Padding(
-                      //           padding: const EdgeInsets.only(left: 12.0),
-                      //           child: Slider(
-                      //             value: jobsController.skillsRatings[skill.skill?.id ?? ''] ?? 1.0,
-                      //             min: 1,
-                      //             max: 10,
-                      //             divisions: 9,
-                      //             label: (jobsController.skillsRatings[skill.skill?.id ?? ''] ?? 1.0).round().toString(),
-                      //             onChanged: (value) {
-                      //               jobsController.skillsRatings[skill.skill?.id ?? ''] = value;
-                      //             },
-                      //           ),
-                      //         ),
-                      //       ),
-                      //       const VerticalSpace(),
-                      //     ],
-                      //   );
-                      // }) ?? []),
-
                       VerticalSpace(space: 20.h(context)),
                       CustomTextField(
                         titleText: 'Additional note',
