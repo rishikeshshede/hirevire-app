@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
 import 'package:hirevire_app/employer_interface/models/job_posting.dart';
 import 'package:hirevire_app/services/api_service.dart';
@@ -14,9 +13,8 @@ import '../../../../constants/endpoint_constants.dart';
 import '../../../../constants/error_constants.dart';
 import '../../../../constants/global_constants.dart';
 import '../../../../services/api_endpoint_service.dart';
-import '../../../../utils/capitalize_first_letter.dart';
 import '../../../../utils/log_handler.dart';
-import '../../../models/MyApplication.dart';
+import '../../../models/my_application.dart';
 
 class MyApplicationsController extends GetxController {
   late ApiClient apiClient;

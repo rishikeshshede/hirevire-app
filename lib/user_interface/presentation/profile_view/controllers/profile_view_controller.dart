@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
-import 'package:hirevire_app/employer_interface/models/job_posting.dart';
 import 'package:hirevire_app/services/api_service.dart';
 import 'package:hirevire_app/utils/persistence_handler.dart';
 import 'package:hirevire_app/utils/show_toast_util.dart';
@@ -15,7 +14,7 @@ import '../../../../services/api_endpoint_service.dart';
 import '../../../../utils/capitalize_first_letter.dart';
 import '../../../../utils/log_handler.dart';
 import '../../../models/job_seeker_profile.dart';
-import '../../../models/job_seeker_profile.dart' as jobLocation;
+import '../../../models/job_seeker_profile.dart' as job_location;
 
 class ProfileViewController extends GetxController {
   late ApiClient apiClient;
@@ -106,7 +105,7 @@ class ProfileViewController extends GetxController {
     jobseekerPhoneController.text = phone ?? '';
   }
 
-  void setLocation(jobLocation.Location? location) {
+  void setLocation(job_location.Location? location) {
     locationCityController.text = location?.city ?? '';
     locationCountryController.text = location?.country ?? '';
     locationStateController.text = location?.state ?? '';
@@ -138,8 +137,7 @@ class ProfileViewController extends GetxController {
     if (jobMode == null || jobMode.isEmpty) {
       jobModeController.value = GlobalConstants.locationTypes[0];
     } else {
-      jobModeController.value = capitalizeFirstLetter(
-          jobMode?[0] ?? GlobalConstants.locationTypes[0]);
+      jobModeController.value = capitalizeFirstLetter(jobMode[0]);
     }
   }
 

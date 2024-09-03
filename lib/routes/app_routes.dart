@@ -3,7 +3,6 @@ import 'package:hirevire_app/common/screens/splash_screen.dart';
 import 'package:hirevire_app/common/screens/unknown_route_screen.dart';
 import 'package:hirevire_app/employer_interface/presentation/auth/bindings/emp_login_binding.dart';
 import 'package:hirevire_app/employer_interface/presentation/auth/emp_login_screen.dart';
-import 'package:hirevire_app/user_interface/models/job_seeker_profile.dart';
 import 'package:hirevire_app/user_interface/presentation/base_navigator.dart';
 import 'package:hirevire_app/common/screens/common_landing_screen.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/bindings/user_onb_binding.dart';

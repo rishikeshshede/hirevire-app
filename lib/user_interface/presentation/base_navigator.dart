@@ -8,7 +8,6 @@ import 'package:hirevire_app/user_interface/presentation/chat/bindings/chat_bind
 import 'package:hirevire_app/user_interface/presentation/chat/chat_screen.dart';
 import 'package:hirevire_app/user_interface/presentation/jobs_tab/bindings/jobs_binding.dart';
 import 'package:hirevire_app/user_interface/presentation/jobs_tab/jobs_tab.dart';
-import 'package:hirevire_app/user_interface/presentation/third_tab_screen.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 
 import 'my_applications_tab/bindings/my_applications_binding.dart';

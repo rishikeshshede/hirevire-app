@@ -28,7 +28,7 @@ class ChatCard extends StatelessWidget {
           children: [
             CustomImageView(
               imagePath:
-                  'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDZ8fHVzZXJ8ZW58MHx8MHx8fDA%3D',
+                  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
               height: 45,
               width: 45,
               radius: BorderRadius.circular(25),
@@ -48,7 +48,7 @@ class ChatCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Rohit Sharma',
+                    'Padama Parikh',
                     style: AppTextThemes.bodyTextStyle(context).copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: 15,
@@ -58,7 +58,7 @@ class ChatCard extends StatelessWidget {
                     padding:
                         EdgeInsets.only(right: Responsive.width(context, .1)),
                     child: Text(
-                      'We have scheduled your interview on 23rd?',
+                      'Did you checkout my resume I uploaded sent yesterday?',
                       style: AppTextThemes.bodyTextStyle(context)
                           .copyWith(fontSize: 13.5),
                       maxLines: 1,

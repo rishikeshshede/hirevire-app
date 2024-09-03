@@ -10,8 +10,6 @@ import 'package:hirevire_app/employer_interface/models/requisition.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 import 'package:hirevire_app/utils/string_handler.dart';
 
-import '../../../../common/widgets/button_outline.dart';
-
 class RequisitionsCard extends StatelessWidget {
   const RequisitionsCard({
     super.key,

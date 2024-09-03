@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hirevire_app/common/widgets/video_upload_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
+import 'package:hirevire_app/utils/log_handler.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
@@ -8,27 +9,28 @@ class ProfileUploadWidget extends StatefulWidget {
   final Function(File? selectedFile) onFileSelected;
   final String? profileImageUrl;
   final String? titleText;
-    final File? selectedProfileFile;
+  final File? selectedProfileFile;
 
   const ProfileUploadWidget({
     required this.onFileSelected,
     this.profileImageUrl,
     this.titleText,
-        this.selectedProfileFile,
+    this.selectedProfileFile,
     super.key,
   });
 
   @override
-  _ProfileUploadWidgetState createState() => _ProfileUploadWidgetState();
+  ProfileUploadWidgetState createState() => ProfileUploadWidgetState();
 }
 
-class _ProfileUploadWidgetState extends State<ProfileUploadWidget> {
+class ProfileUploadWidgetState extends State<ProfileUploadWidget> {
   File? selectedProfileFile;
 
   @override
   void initState() {
     super.initState();
-    selectedProfileFile = widget.profileImageUrl != null ? null : widget.profileImageUrl as File?;
+    selectedProfileFile =
+        widget.profileImageUrl != null ? null : widget.profileImageUrl as File?;
   }
 
   @override
@@ -95,13 +97,14 @@ class _ProfileUploadWidgetState extends State<ProfileUploadWidget> {
   Future<File?> _pickImageFromGallery() async {
     try {
       final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      final XFile? pickedFile =
+          await picker.pickImage(source: ImageSource.gallery);
 
       if (pickedFile != null) {
         return File(pickedFile.path);
       }
     } catch (e) {
-      print('Error picking image: $e');
+      LogHandler.error('Error picking image: $e');
     }
     return null;
   }

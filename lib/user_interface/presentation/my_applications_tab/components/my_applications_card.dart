@@ -3,7 +3,7 @@ import 'package:hirevire_app/common/widgets/green_dot.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
-import 'package:hirevire_app/user_interface/models/MyApplication.dart';
+import 'package:hirevire_app/user_interface/models/my_application.dart';
 import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/size_util.dart';
 import 'package:hirevire_app/utils/string_handler.dart';

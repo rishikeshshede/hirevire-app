@@ -505,8 +505,8 @@ class CompleteProfileController extends GetxController {
     String endpoint = Endpoints.uploadProfilePicture;
 
     try {
-      Map<String, dynamic> response =
-          await apiClient.uploadImageOrVideo(endpoint, profilePic.value!, false);
+      Map<String, dynamic> response = await apiClient.uploadImageOrVideo(
+          endpoint, profilePic.value!, false);
       LogHandler.debug(response);
 
       if (response['success']) {
@@ -551,14 +551,14 @@ class CompleteProfileController extends GetxController {
     String endpoint = Endpoints.updateProfile;
     String? number;
 
-    if (numberController.value.text.trim().length == 10) {
+    if (numberController.value.text.trim().isNotEmpty) {
       number = "$countryCode ${numberController.value.text.trim()}";
     }
 
     Map<String, dynamic> body = {
       "name": name.value,
       "email": email.value,
-      "phone": numberController.value.text.trim(),
+      "phone": number,
       "headline": headlineController.value.text.trim(),
       "bio": bioController.value.text.trim(),
       "socialUrls": {

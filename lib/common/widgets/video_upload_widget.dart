@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hirevire_app/common/widgets/custom_image_view.dart';
-import 'package:hirevire_app/common/widgets/loader_circular_with_bg.dart';
 import 'package:hirevire_app/common/widgets/shimmer_widgets.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
@@ -43,13 +42,14 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
 
   void _initializeVideo() {
     if (widget.videoUrl != null && widget.videoUrl!.isNotEmpty) {
-      _videoController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl!))
-        ..initialize().then((_) {
-          setState(() {});
-          _videoController!.play();
-        }).catchError((error) {
-          debugPrint("VideoController Error: $error");
-        });
+      _videoController =
+          VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl!))
+            ..initialize().then((_) {
+              setState(() {});
+              _videoController!.play();
+            }).catchError((error) {
+              debugPrint("VideoController Error: $error");
+            });
     }
   }
 

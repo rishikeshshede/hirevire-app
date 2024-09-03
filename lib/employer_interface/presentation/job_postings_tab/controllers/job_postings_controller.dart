@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
 import 'package:hirevire_app/employer_interface/models/job_posting.dart';
 import 'package:hirevire_app/services/api_service.dart';
@@ -107,21 +106,24 @@ class JobPostingsController extends GetxController {
   }
 
   void setPerks(String? perks) {
-    jobModeController.value =
-        perksController.text = perks ?? '';
+    jobModeController.value = perksController.text = perks ?? '';
   }
+
   void setCtc(CTC? ctc) {
     minCtcController.text = ctc?.min ?? '';
     maxCtcController.text = ctc?.max ?? '';
   }
+
   void setThiDays(String? growthPlan) {
-    print('growthplan');
-    print(growthPlan);
+    debugPrint('growthplan');
+    debugPrint(growthPlan);
     tDaysPlanController.text = growthPlan ?? '';
   }
+
   void setSixDays(String? growthPlan) {
     sDaysPlanController.text = growthPlan ?? '';
   }
+
   void setNinetyDays(String? growthPlan) {
     nDaysPlanController.text = growthPlan ?? '';
   }
@@ -280,7 +282,7 @@ class JobPostingsController extends GetxController {
       "project": jobPosting.project,
       "openingsCount": int.parse(openingCountController.text.trim()),
       "location": {
-        "country":  locationCountryController.text.trim(),
+        "country": locationCountryController.text.trim(),
         "city": locationCityController.text.trim(),
       },
       "jobMode": [jobModeController.value],
@@ -310,9 +312,13 @@ class JobPostingsController extends GetxController {
       "requiredSkills":
           jobPosting.requiredSkills?.map((s) => s.toMap()).toList(),
       'media': {
-        'url': selectedVideoFile != null ? videoUrl.value : jobPosting.media?[0].url,
+        'url': selectedVideoFile != null
+            ? videoUrl.value
+            : jobPosting.media?[0].url,
         'type': "video",
-        'thumbnail': selectedThumbnailFile != null ?  thumbnailUrl.value : jobPosting.media?[0].thumbnail,
+        'thumbnail': selectedThumbnailFile != null
+            ? thumbnailUrl.value
+            : jobPosting.media?[0].thumbnail,
       },
       "endsOn": jobPosting.endsOn?.toIso8601String(),
       "status": isClosedStatus.value ? 'closed' : jobPosting.status,
@@ -379,7 +385,6 @@ class JobPostingsController extends GetxController {
           LogHandler.error(errorMsg);
         }
       }
-
     } catch (error) {
       LogHandler.error(error);
     } finally {
