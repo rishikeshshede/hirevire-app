@@ -333,14 +333,16 @@ class JobsController extends GetxController {
           // Handle success
           debugPrint('Upload successful: $response}');
           if (response['body']['videoURL'] == null ||
-              response['body']['videoURL'].isBlank) {
+              (response['body']['videoURL'] is List &&
+                  response['body']['videoURL'].isEmpty)) {
             videoUrl.value = "";
           } else {
             videoUrl.value = response['body']['videoURL'][0];
           }
 
           if (response['body']['thumbnailURL'] == null ||
-              response['body']['thumbnailURL'].isBlank) {
+              (response['body']['thumbnailURL'] is List &&
+                  response['body']['thumbnailURL'].isEmpty)) {
             thumbnailUrl.value = "";
           } else {
             thumbnailUrl.value = response['body']['thumbnailURL'][0];
