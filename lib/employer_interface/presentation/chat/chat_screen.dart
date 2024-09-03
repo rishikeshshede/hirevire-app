@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
+import 'package:hirevire_app/employer_interface/presentation/chat/components/chat_card.dart';
 import 'package:hirevire_app/themes/text_theme.dart';
-import 'package:hirevire_app/user_interface/presentation/chat/components/chat_card.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});

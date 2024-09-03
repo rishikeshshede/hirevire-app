@@ -79,7 +79,7 @@ class ChatCard extends StatelessWidget {
                     width: 22,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppColors.primaryLight,
+                      color: AppColors.primaryDark,
                     ),
                     child: Text(
                       '1',
