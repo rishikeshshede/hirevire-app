@@ -30,15 +30,27 @@ class MyApplication {
   factory MyApplication.fromMap(Map<String, dynamic> map) {
     return MyApplication(
       id: map['_id'],
-      jobPostId: map['jobPostId'] != null ? JobPost.fromMap(map['jobPostId']) : null,
+      jobPostId:
+          map['jobPostId'] != null ? JobPost.fromMap(map['jobPostId']) : null,
       appliedBy: map['appliedBy'],
-      media: map['media'] != null ? List<Media>.from(map['media']?.map((x) => Media.fromMap(x))) : null,
-      answers: map['answers'] != null ? List<Answer>.from(map['answers']?.map((x) => Answer.fromMap(x))) : null,
+      media: map['media'] != null
+          ? List<Media>.from(map['media']?.map((x) => Media.fromMap(x)))
+          : null,
+      answers: map['answers'] != null
+          ? List<Answer>.from(map['answers']?.map((x) => Answer.fromMap(x)))
+          : null,
       status: map['status'],
-      requiredSkills: map['requiredSkills'] != null ? List<RequiredSkill>.from(map['requiredSkills']?.map((x) => RequiredSkill.fromMap(x))) : null,
-      updatedTime: map['updatedTime'] != null ? DateTime.parse(map['updatedTime']) : null,
-      createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
-      updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
+      requiredSkills: map['requiredSkills'] != null
+          ? List<RequiredSkill>.from(
+              map['requiredSkills']?.map((x) => RequiredSkill.fromMap(x)))
+          : null,
+      updatedTime: map['updatedTime'] != null
+          ? DateTime.parse(map['updatedTime'])
+          : null,
+      createdAt:
+          map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
+      updatedAt:
+          map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
       v: map['__v'],
       feedback: map['feedback'],
     );
@@ -93,7 +105,7 @@ class JobPost {
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
-  List<String>? leftSwipes;
+  List<LeftSwipe>? leftSwipes;
 
   JobPost({
     this.ctc,
@@ -124,28 +136,51 @@ class JobPost {
   factory JobPost.fromMap(Map<String, dynamic> map) {
     return JobPost(
       ctc: map['ctc'],
-      location: map['location'] != null ? Location.fromMap(map['location']) : null,
+      location:
+          map['location'] != null ? Location.fromMap(map['location']) : null,
       id: map['_id'],
-      postedBy: map['postedBy'] != null ? PostedBy.fromMap(map['postedBy']) : null,
-      requestedBy: map['requestedBy'] != null ? RequestedBy.fromMap(map['requestedBy']) : null,
+      postedBy:
+          map['postedBy'] != null ? PostedBy.fromMap(map['postedBy']) : null,
+      requestedBy: map['requestedBy'] != null
+          ? RequestedBy.fromMap(map['requestedBy'])
+          : null,
       jobRequisition: map['jobRequisition'],
       title: map['title'],
       department: map['department'],
       project: map['project'],
-      jobMode: map['jobMode'] != null ? List<String>.from(map['jobMode']) : null,
+      jobMode:
+          map['jobMode'] != null ? List<String>.from(map['jobMode']) : null,
       description: map['description'],
       status: map['status'],
-      questions: map['questions'] != null ? List<Question>.from(map['questions']?.map((x) => Question.fromMap(x))) : null,
-      growthPlan: map['growth_plan'] != null ? List<GrowthPlan>.from(map['growth_plan']?.map((x) => GrowthPlan.fromMap(x))) : null,
+      questions: map['questions'] != null
+          ? List<Question>.from(
+              map['questions']?.map((x) => Question.fromMap(x)))
+          : null,
+      growthPlan: map['growth_plan'] != null
+          ? List<GrowthPlan>.from(
+              map['growth_plan']?.map((x) => GrowthPlan.fromMap(x)))
+          : null,
       perks: map['perks'],
-      requiredSkills: map['requiredSkills'] != null ? List<RequiredSkill>.from(map['requiredSkills']?.map((x) => RequiredSkill.fromMap(x))) : null,
-      media: map['media'] != null ? List<Media>.from(map['media']?.map((x) => Media.fromMap(x))) : null,
+      requiredSkills: map['requiredSkills'] != null
+          ? List<RequiredSkill>.from(
+              map['requiredSkills']?.map((x) => RequiredSkill.fromMap(x)))
+          : null,
+      media: map['media'] != null
+          ? List<Media>.from(map['media']?.map((x) => Media.fromMap(x)))
+          : null,
       endsOn: map['endsOn'] != null ? DateTime.parse(map['endsOn']) : null,
-      savedApplications: map['savedApplications'] != null ? List<String>.from(map['savedApplications']) : null,
-      createdAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
-      updatedAt: map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
+      savedApplications: map['savedApplications'] != null
+          ? List<String>.from(map['savedApplications'])
+          : null,
+      createdAt:
+          map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
+      updatedAt:
+          map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
       v: map['__v'],
-      leftSwipes: map['leftSwipes'] != null ? List<String>.from(map['leftSwipes']) : null,
+      leftSwipes: map['leftSwipes'] != null
+          ? List<LeftSwipe>.from(
+              map['leftSwipes']?.map((x) => LeftSwipe.fromMap(x)))
+          : null,
     );
   }
 
@@ -173,7 +208,7 @@ class JobPost {
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
       '__v': v,
-      'leftSwipes': leftSwipes,
+      'leftSwipes': leftSwipes?.map((x) => x.toMap()).toList(),
     };
   }
 }
@@ -226,7 +261,10 @@ class PostedBy {
       description: map['description'],
       officialEmail: map['officialEmail'],
       industry: map['industry'],
-      socialUrls: map['socialUrls'] != null ? List<SocialUrl>.from(map['socialUrls']?.map((x) => SocialUrl.fromMap(x))) : null,
+      socialUrls: map['socialUrls'] != null
+          ? List<SocialUrl>.from(
+              map['socialUrls']?.map((x) => SocialUrl.fromMap(x)))
+          : null,
     );
   }
 
@@ -238,6 +276,50 @@ class PostedBy {
       'officialEmail': officialEmail,
       'industry': industry,
       'socialUrls': socialUrls?.map((x) => x.toMap()).toList(),
+    };
+  }
+}
+
+class LeftSwipe {
+  final String jobSeekerId;
+  final String timestamp;
+  final String id;
+
+  LeftSwipe({
+    required this.jobSeekerId,
+    required this.timestamp,
+    required this.id,
+  });
+
+  factory LeftSwipe.fromMap(Map<String, dynamic> map) {
+    return LeftSwipe(
+      jobSeekerId: map['jobSeekerId'],
+      timestamp: map['timestamp'],
+      id: map['_id'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'jobSeekerId': jobSeekerId,
+      'timestamp': timestamp,
+      '_id': id,
+    };
+  }
+
+  factory LeftSwipe.fromJson(Map<String, dynamic> json) {
+    return LeftSwipe(
+      jobSeekerId: json['jobSeekerId'],
+      timestamp: json['timestamp'],
+      id: json['_id'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'jobSeekerId': jobSeekerId,
+      'timestamp': timestamp,
+      '_id': id,
     };
   }
 }
@@ -315,7 +397,8 @@ class Question {
     return Question(
       content: map['content'],
       type: map['type'],
-      options: map['options'] != null ? List<String>.from(map['options']) : null,
+      options:
+          map['options'] != null ? List<String>.from(map['options']) : null,
       id: map['_id'],
     );
   }
@@ -409,7 +492,8 @@ class Answer {
     return Answer(
       question: map['question'],
       type: map['type'],
-      options: map['options'] != null ? List<String>.from(map['options']) : null,
+      options:
+          map['options'] != null ? List<String>.from(map['options']) : null,
       answer: map['answer'],
       id: map['_id'],
     );
@@ -444,7 +528,9 @@ class RequiredSkill {
       skill: map['skill'] != null ? Skill.fromMap(map['skill']) : null,
       rating: map['rating'],
       id: map['_id'],
-      lastUpdated: map['lastUpdated'] != null ? DateTime.parse(map['lastUpdated']) : null,
+      lastUpdated: map['lastUpdated'] != null
+          ? DateTime.parse(map['lastUpdated'])
+          : null,
     );
   }
 

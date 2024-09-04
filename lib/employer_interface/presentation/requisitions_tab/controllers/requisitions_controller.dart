@@ -308,8 +308,8 @@ class RequisitionsController extends GetxController {
           : descController.text.trim(),
       'videoRequirement': '',
       'ctc': {
-        "min": '${minCtcController.text.trim()}LPA',
-        "max": '${maxCtcController.text.trim()}LPA',
+        "min": '${minCtcController.text.trim()}',
+        "max": '${maxCtcController.text.trim()}',
       },
       'questions': [
         {"content": qOneController.text.trim(), "type": "text"},
