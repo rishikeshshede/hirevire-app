@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
 import 'package:hirevire_app/services/api_service.dart';
 import 'package:hirevire_app/utils/datetime_util.dart';
@@ -36,6 +37,8 @@ class JobsController extends GetxController {
   var statusColor = Colors.transparent.obs; // Status color
 
   var skillRatingValue = 0.00.obs;
+
+  RxInt preFilledRating = 1.obs;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController skillsSearchController = TextEditingController();
