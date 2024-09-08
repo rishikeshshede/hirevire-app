@@ -350,6 +350,7 @@ class ActionButtons extends StatelessWidget {
           width: 70.0,
           height: 70.0,
           child: FloatingActionButton(
+            heroTag: 'skipTag1',
             onPressed: onSkip,
             tooltip: 'Skip / Next',
             backgroundColor: AppColors.primary,
@@ -369,6 +370,7 @@ class ActionButtons extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               FloatingActionButton(
+                heroTag: 'rejectTag1',
                 onPressed: onReject,
                 tooltip: 'Reject',
                 shape: RoundedRectangleBorder(
@@ -382,6 +384,7 @@ class ActionButtons extends StatelessWidget {
                 ),
               ),
               FloatingActionButton(
+                heroTag: 'shortTag1',
                 onPressed: onAccept,
                 tooltip: 'Shortlist',
                 shape: RoundedRectangleBorder(
@@ -423,14 +426,14 @@ class RadarChartComponent extends StatelessWidget {
           radarTouchData: RadarTouchData(enabled: true),
           dataSets: [
             RadarDataSet(
-              fillColor: Colors.blue.withOpacity(0.5),
+              fillColor: Colors.blue.withOpacity(1),
               borderColor: Colors.blue,
               borderWidth: 2,
               entryRadius: 2,
               dataEntries: jobPostData,
             ),
             RadarDataSet(
-              fillColor: Colors.orange.withOpacity(0.5),
+              fillColor: Colors.orange.withOpacity(0.2),
               borderColor: Colors.orange,
               borderWidth: 2,
               entryRadius: 2,
@@ -442,8 +445,13 @@ class RadarChartComponent extends StatelessWidget {
           radarBorderData: const BorderSide(color: Colors.transparent),
           titlePositionPercentageOffset: 0.1,
           titleTextStyle: const TextStyle(color: Colors.grey, fontSize: 14),
+          radarShape: RadarShape.circle,
           getTitle: (index, angle) {
             if (skillNames != null && index < skillNames!.length) {
+              if (skillNames![index].startsWith('Dummy Skill')) {
+                return RadarChartTitle(
+                    text: '', angle: angle); // Skip dummy skill title
+              }
               return RadarChartTitle(
                 text: skillNames![index],
                 angle: angle,

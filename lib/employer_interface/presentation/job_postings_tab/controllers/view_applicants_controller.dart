@@ -111,41 +111,59 @@ class ViewApplicantsController extends GetxController {
       //isLoading.value = false;
     }
   }
-
   List<List<RadarEntry>> prepareRadarData(
-      JobPostId? jobPost, JobApplication applicant) {
-    final Map<String, int> jobPostSkills = jobPost?.requiredSkills != null
-        ? {
-            for (var skill in jobPost!.requiredSkills!)
-              skill.skill?.name ?? '': skill.rating ?? 0
-          }
-        : {};
+    JobPostId? jobPost, JobApplication applicant) {
+  final Map<String, int> jobPostSkills = jobPost?.requiredSkills != null
+      ? {
+          for (var skill in jobPost!.requiredSkills!)
+            skill.skill?.name ?? '': skill.rating ?? 0
+        }
+      : {};
 
-    final Map<String, int> applicantSkills = applicant.requiredSkills != null
-        ? {
-            for (var skill in applicant.requiredSkills!)
-              skill.skill?.name ?? '': skill.rating ?? 0
-          }
-        : {};
+  final Map<String, int> applicantSkills = applicant.requiredSkills != null
+      ? {
+          for (var skill in applicant.requiredSkills!)
+            skill.skill?.name ?? '': skill.rating ?? 0
+        }
+      : {};
 
-    final allSkills = <String>{}
-      ..addAll(jobPostSkills.keys)
-      ..addAll(applicantSkills.keys);
+  final allSkills = <String>{}
+    ..addAll(jobPostSkills.keys)
+    ..addAll(applicantSkills.keys);
 
-    final jobPostEntries = allSkills.map((skill) {
-      return RadarEntry(value: jobPostSkills[skill]?.toDouble() ?? 0.0);
-    }).toList();
+  // Create RadarEntries
+  List<RadarEntry> jobPostEntries = allSkills.map((skill) {
+    return RadarEntry(value: jobPostSkills[skill]?.toDouble() ?? 0.0);
+  }).toList();
 
-    final applicantEntries = allSkills.map((skill) {
-      return RadarEntry(value: applicantSkills[skill]?.toDouble() ?? 0.0);
-    }).toList();
+  List<RadarEntry> applicantEntries = allSkills.map((skill) {
+    return RadarEntry(value: applicantSkills[skill]?.toDouble() ?? 0.0);
+  }).toList();
 
-    return [jobPostEntries, applicantEntries];
+  // Add a dummy skill if there are less than 3 entries
+  if (jobPostEntries.length < 3) {
+    jobPostEntries.add(RadarEntry(value: 0.0)); // Add dummy skill
+    allSkills.add('Dummy Skill 1');
   }
+  if (jobPostEntries.length < 3) {
+    jobPostEntries.add(RadarEntry(value: 0.0)); // Add another dummy skill
+    allSkills.add('Dummy Skill 2');
+  }
+
+  if (applicantEntries.length < 3) {
+    applicantEntries.add(RadarEntry(value: 0.0)); // Add dummy skill
+  }
+  if (applicantEntries.length < 3) {
+    applicantEntries.add(RadarEntry(value: 0.0)); // Add another dummy skill
+  }
+
+  return [jobPostEntries, applicantEntries];
+}
+
 
   fetchJobApplications() async {
     isLoading.value = true;
-    String endpoint = '${EndpointService.getJobApplications}/$applicationJobId';
+    String endpoint = '${EndpointService.getAllJobApplications}/$applicationJobId';
 
     try {
       Map<String, dynamic> response = await apiClient.get(endpoint);

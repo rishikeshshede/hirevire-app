@@ -16,22 +16,23 @@ class EndpointService {
   // UPDATE Endpoints
   static const String updateUserProfile = 'jobSeeker/updateProfile';
 
-
   // ------------------ EMPLOYER ENDPOINTS ------------------
 
   // GET Endpoint
   static const String getRequisitions = 'jobPosting/requisitions';
   static const String getJobPostings = 'jobPosting/created';
-  static const String getJobApplications = 'jobApplication/recruiter/application';
-
+  static const String getJobApplications =
+      'jobApplication/recruiter/application';
+  static const String getAllJobApplications =
+      'jobApplication/recruiter/applicationsByJobPost';
 
   // POST Endpoints
   static const String createJobPostings = 'jobPosting/create';
-  static const String rightSwipeApplicant = 'jobApplication/recruiter/rightSwipe';
+  static const String rightSwipeApplicant =
+      'jobApplication/recruiter/rightSwipe';
   static const String leftSwipeApplicant = 'jobApplication/recruiter/leftSwipe';
 
   // UPDATE Endpoints
   static const String closeJobPostings = 'jobPosting/close';
   static const String updateJobPostings = 'jobPosting/update';
-
 }
