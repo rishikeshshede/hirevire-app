@@ -8,7 +8,6 @@ import 'package:hirevire_app/constants/error_constants.dart';
 import 'package:hirevire_app/constants/global_constants.dart';
 import 'package:hirevire_app/services/api_service.dart';
 import 'package:hirevire_app/user_interface/presentation/profile/professional_details/bio_section.dart';
-import 'package:hirevire_app/user_interface/presentation/onboarding/name_dob_section.dart';
 import 'package:hirevire_app/user_interface/presentation/profile/personal_details.dart/phone_number.dart';
 import 'package:hirevire_app/user_interface/presentation/profile/professional_details/experience_section.dart';
 import 'package:hirevire_app/user_interface/presentation/profile/professional_details/location_section.dart';
@@ -19,9 +18,16 @@ import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/log_handler.dart';
 import 'package:hirevire_app/utils/show_toast_util.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../constants/persistence_keys.dart';
+import '../../utils/persistence_handler.dart';
+import '../../utils/profile_complete_validator.dart';
 
 class CompleteProfileController extends GetxController {
   late ApiClient apiClient;
+
+  RxString name = ''.obs;
+  RxString email = ''.obs;
+
   String country = "IN";
   String countryCode = "+91";
   String defaultItemId = "Other";
@@ -94,8 +100,10 @@ class CompleteProfileController extends GetxController {
   final FocusNode socialUrlFocusNode = FocusNode();
   final FocusNode locationFocusNode = FocusNode();
 
+  var skillsRatings = <String, double>{}.obs; // Map to store ratings for skills
+
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     apiClient = ApiClient();
     // Bind the filteredSuggestions to changes in searchQuery
@@ -105,9 +113,16 @@ class CompleteProfileController extends GetxController {
         time: const Duration(milliseconds: 300));
     debounce(companySearchQuery, (_) => suggestCompany(),
         time: const Duration(milliseconds: 300));
+
+    await fetchLocalData();
   }
 
   // ----------------- Methods -----------------
+
+  fetchLocalData() async {
+    name.value = await PersistenceHandler.getString(PersistenceKeys.name);
+    email.value = await PersistenceHandler.getString(PersistenceKeys.email);
+  }
 
   showBottomToast(String message) {
     ToastWidgit.bottomToast(message);
@@ -115,7 +130,7 @@ class CompleteProfileController extends GetxController {
 
   List<Widget> sectionWidgets() {
     return [
-      const NameDobSection(),
+      //const NameDobSection(),
       const NumberSection(),
       const BioSection(),
       const SkillsSection(),
@@ -237,9 +252,35 @@ class CompleteProfileController extends GetxController {
     }
   }
 
+  // void addSkill(Map<String, dynamic> selectedSkill) {
+  //   Map<String, dynamic> skillMap = {
+  //     'data': selectedSkill['_id'],
+  //     'name': selectedSkill['name'],
+  //   };
+  //
+  //   bool skillExists = false;
+  //
+  //   if (selectedSkills.isEmpty) {
+  //     selectedSkills.add(skillMap);
+  //   } else {
+  //     for (var i = 0; i < selectedSkills.length; i++) {
+  //       var skill = selectedSkills[i];
+  //       if (skill['name'].toString().toLowerCase() ==
+  //           selectedSkill['name'].toString().toLowerCase()) {
+  //         skillExists = true;
+  //         return;
+  //       }
+  //     }
+  //     if (!skillExists) {
+  //       selectedSkills.add(skillMap);
+  //     }
+  //   }
+  //   skillsSearchController.clear();
+  // }
+
   void addSkill(Map<String, dynamic> selectedSkill) {
     Map<String, dynamic> skillMap = {
-      'data': selectedSkill['_id'],
+      '_id': selectedSkill['_id'],
       'name': selectedSkill['name'],
     };
 
@@ -247,9 +288,9 @@ class CompleteProfileController extends GetxController {
 
     if (selectedSkills.isEmpty) {
       selectedSkills.add(skillMap);
+      skillsRatings[selectedSkill['_id']] = 5.0; // Default rating
     } else {
-      for (var i = 0; i < selectedSkills.length; i++) {
-        var skill = selectedSkills[i];
+      for (var skill in selectedSkills) {
         if (skill['name'].toString().toLowerCase() ==
             selectedSkill['name'].toString().toLowerCase()) {
           skillExists = true;
@@ -258,14 +299,24 @@ class CompleteProfileController extends GetxController {
       }
       if (!skillExists) {
         selectedSkills.add(skillMap);
+        skillsRatings[selectedSkill['_id']] = 5.0; // Default rating
       }
     }
     skillsSearchController.clear();
   }
 
-  void removeSkill(Map<String, dynamic> titleObj) {
-    selectedSkills.removeWhere((skill) => skill['name'] == titleObj['name']);
+  void updateSkillRating(String skillId, double rating) {
+    skillsRatings[skillId] = rating;
   }
+
+  void removeSkill(Map<String, dynamic> skill) {
+    selectedSkills.remove(skill);
+    skillsRatings.remove(skill['_id']);
+  }
+
+  // void removeSkill(Map<String, dynamic> titleObj) {
+  //   selectedSkills.removeWhere((skill) => skill['name'] == titleObj['name']);
+  // }
 
   Future<void> suggestCompany() async {
     if (companySearchQuery.isEmpty) {
@@ -454,8 +505,8 @@ class CompleteProfileController extends GetxController {
     String endpoint = Endpoints.uploadProfilePicture;
 
     try {
-      Map<String, dynamic> response =
-          await apiClient.uploadImageOrVideo(endpoint, profilePic.value!);
+      Map<String, dynamic> response = await apiClient.uploadImageOrVideo(
+          endpoint, profilePic.value!, false);
       LogHandler.debug(response);
 
       if (response['success']) {
@@ -473,39 +524,68 @@ class CompleteProfileController extends GetxController {
     }
   }
 
-  signup() async {
+  List<Map<String, dynamic>> getSkillsData() {
+    return selectedSkills.map((skill) {
+      // Get the name of the skill
+      String skillName = skill['name'];
+
+      // Get the rating for the skill from the skillsRatings map
+      double skillRating = skillsRatings[skillName] ?? 0.0;
+
+      // Return the formatted skill data
+      return {
+        "data": skill['_id'] ?? 'other',
+        "name": skillName,
+        "rating": skillRating,
+      };
+    }).toList();
+  }
+
+  List<String> preferredJobModesList() {
+    return [preferredJobMode.value];
+  }
+
+  updateProfile() async {
     isSigningUp.value = true;
 
-    String endpoint = Endpoints.signup;
+    String endpoint = Endpoints.updateProfile;
     String? number;
 
-    if (numberController.value.text.trim().length == 10) {
+    if (numberController.value.text.trim().isNotEmpty) {
       number = "$countryCode ${numberController.value.text.trim()}";
     }
 
     Map<String, dynamic> body = {
+      "name": name.value,
+      "email": email.value,
       "phone": number,
-      "profilePicUrl": null,
-      "headline": headlineObj,
+      "headline": headlineController.value.text.trim(),
       "bio": bioController.value.text.trim(),
-      "skills": selectedSkills,
-      "experience": addedExp,
-      "socialUrls": socialProfiles,
+      "socialUrls": {
+        "GitHub": socialUrlController.value.text.trim(),
+        "LinkedIn": socialUrlController.value.text.trim(),
+        "Twitter": socialUrlController.value.text.trim()
+      },
+      "skills": getSkillsData(),
       "location": {
         "country": locationController.value.text.trim(),
-        "state": "",
-        "city": "",
-        "address": {"line1": "", "line2": ""}
+        "state": locationController.value.text.trim(),
+        "city": locationController.value.text.trim(),
+        "address": {
+          "line1": companyLocationController.value.text.trim(),
+          "line2": ''
+        }
       },
-      "preferredJobModes": [preferredJobMode.value],
+      "preferredJobModes": preferredJobModesList(),
     };
-    LogHandler.debug(body);
 
     try {
-      Map<String, dynamic> response = await apiClient.post(endpoint, body);
+      Map<String, dynamic> response = await apiClient.put(endpoint, body);
 
       if (response['success']) {
-        // TODO: save user data to user model
+        debugPrint(response.toString());
+
+        await saveProfileCompleteData(response['body']['data']);
 
         if (profilePic.value != null) {
           await uploadProfilePic();
@@ -526,6 +606,12 @@ class CompleteProfileController extends GetxController {
     }
   }
 
+  Future<void> saveProfileCompleteData(dynamic response) async {
+    if (ProfileCompleteValidator().validate(response)) {
+      PersistenceHandler.setBool(PersistenceKeys.isProfileComplete, true);
+    }
+  }
+
   // ----------------- Navigations -----------------
 
   navigateToOtpScreen() {
@@ -537,6 +623,6 @@ class CompleteProfileController extends GetxController {
   }
 
   navigateToBaseNav() {
-    Get.toNamed(AppRoutes.userBaseNavigator);
+    Get.offAllNamed(AppRoutes.userBaseNavigator);
   }
 }

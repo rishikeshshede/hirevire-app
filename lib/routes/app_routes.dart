@@ -7,9 +7,14 @@ import 'package:hirevire_app/user_interface/presentation/base_navigator.dart';
 import 'package:hirevire_app/common/screens/common_landing_screen.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/bindings/user_onb_binding.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/name_dob_section.dart';
+import 'package:hirevire_app/user_interface/presentation/profile/professional_details/bindings/user_profile_binding.dart';
 import 'package:hirevire_app/user_interface/presentation/profile/sliding_base.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/otp_screen.dart';
 import 'package:hirevire_app/user_interface/presentation/onboarding/user_email_validation_screen.dart';
+import 'package:hirevire_app/user_interface/presentation/profile_view/bindings/profile_view_binding.dart';
+import 'package:hirevire_app/user_interface/presentation/profile_view/profile_view_screen.dart';
+
+import '../employer_interface/presentation/emp_base_navigator.dart';
 
 class AppRoutes {
   // Routes
@@ -23,9 +28,11 @@ class AppRoutes {
   static const String nameScreen = '/nameScreen';
   static const String completeProfile = '/completeProfile';
   static const String userBaseNavigator = '/userBaseNavigator';
+  static const String userProfile = '/userProfile';
 
   // Employer Routes
   static const String empLoginScreen = '/empLoginScreen';
+  static const String empBaseNavigator = '/empBaseNavigator';
 
   // Pages
   static List<GetPage> pages = [
@@ -60,10 +67,16 @@ class AppRoutes {
     GetPage(
       name: completeProfile,
       page: () => const SlidingBase(),
+      binding: UserProfileBinding(),
     ),
     GetPage(
       name: userBaseNavigator,
       page: () => const UserBaseNavigator(),
+    ),
+    GetPage(
+      name: userProfile,
+      page: () => const ProfileViewScreen(),
+      binding: ProfileViewBinding(),
     ),
 
     // ######################### Employee Pages #########################
@@ -71,6 +84,10 @@ class AppRoutes {
       name: empLoginScreen,
       page: () => const EmpLoginScreen(),
       binding: EmpLoginBinding(),
+    ),
+    GetPage(
+      name: empBaseNavigator,
+      page: () => const EmployerBaseNavigator(),
     ),
   ];
 }

@@ -5,6 +5,8 @@ class GlobalConstants {
   static int maxBioChars = 1000;
   static int maxExpDescriptionChars = 4000;
   static double screenHorizontalPadding = 16.0;
+  static int trendingProfileMinViewCount = 1;
+
   static var suggestions = [
     'Web Development',
     'Web Design',
@@ -27,6 +29,12 @@ class GlobalConstants {
     'Trainee'
   ];
 
+  static const List<String> statusList = [
+    'Applied',
+    'Rejected',
+    'Accepted',
+  ];
+
   static List<String> locationTypes = [
     "Please select",
     'Onsite',
@@ -40,7 +48,9 @@ class GlobalConstants {
     'LinkedIn': ImageConstant.linkedInLogo,
     'Instagram': ImageConstant.instagramLogo,
     'X': ImageConstant.xLogo,
+    'Twitter': ImageConstant.xLogo,
     'Youtube': ImageConstant.youtubeLogo,
+    'Facebook': ImageConstant.facebookLogo,
     'Other': ImageConstant.linkOtherIcon,
   };
 

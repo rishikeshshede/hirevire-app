@@ -5,7 +5,7 @@ import 'package:hirevire_app/common/controllers/text_controller.dart';
 import 'package:hirevire_app/common/widgets/body_text_widget.dart';
 import 'package:hirevire_app/common/widgets/button_circular.dart';
 import 'package:hirevire_app/common/widgets/heading_large.dart';
-import 'package:hirevire_app/common/widgets/loader_circular.dart';
+import 'package:hirevire_app/common/widgets/loader_circular_with_bg.dart';
 import 'package:hirevire_app/common/widgets/padded_container.dart';
 import 'package:hirevire_app/common/widgets/text_field.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
@@ -58,7 +58,7 @@ class UserEmailValidationScreen extends GetWidget<UserOnbController> {
               children: [
                 Obx(
                   () => controller.isLoading.value
-                      ? const LoaderCircular()
+                      ? const LoaderCircularWithBg()
                       : ButtonCircular(
                           icon: ImageConstant.arrowNext,
                           onPressed: () {

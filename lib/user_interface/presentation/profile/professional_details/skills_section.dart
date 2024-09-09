@@ -98,13 +98,38 @@ class SkillsSection extends GetWidget<CompleteProfileController> {
                     runSpacing: 8,
                     children: List.generate(
                       controller.selectedSkills.length,
-                      (index) => CustomChip(
-                        text: controller.selectedSkills[index]['name'],
-                        onRemove: () {
-                          controller
-                              .removeSkill(controller.selectedSkills[index]);
-                        },
-                      ),
+                      (index) {
+                        var skill = controller.selectedSkills[index];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomChip(
+                              text: skill['name'],
+                              onRemove: () {
+                                controller.removeSkill(skill);
+                              },
+                            ),
+                            Obx(
+                              () => Slider(
+                                value: controller.skillsRatings[skill['_id']] ??
+                                    5.0,
+                                min: 1,
+                                max: 10,
+                                //divisions: 9,
+                                label:
+                                    (controller.skillsRatings[skill['_id']] ??
+                                            5.0)
+                                        .round()
+                                        .toString(),
+                                onChanged: (value) {
+                                  controller.updateSkillRating(
+                                      skill['_id'], value);
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ),

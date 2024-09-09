@@ -18,6 +18,7 @@ class EmpOnbController extends GetxController {
 
   RxBool isLoading = false.obs;
   RxBool isEmailValid = false.obs;
+  RxBool isLoginDataValid = false.obs;
   RxString errorMsg = ''.obs;
   Rx<EmployerModel> employer = EmployerModel().obs;
 
@@ -44,6 +45,14 @@ class EmpOnbController extends GetxController {
   void validateEmail({String? email}) {
     String emailToValidate = email ?? emailController.text.trim();
     isEmailValid.value = ValidationUtil.validateEmail(emailToValidate);
+    LogHandler.debug('emailValid: $isEmailValid');
+  }
+
+  void loginValidation({String? email}) {
+    validateEmail();
+    isLoginDataValid.value =
+        passwordController.text.trim().isNotEmpty && isEmailValid.value;
+    LogHandler.debug('loginValidation: $isLoginDataValid');
   }
 
   signin() async {
@@ -89,7 +98,6 @@ class EmpOnbController extends GetxController {
     PersistenceHandler.setBool(PersistenceKeys.isNew, false);
     PersistenceHandler.setBool(PersistenceKeys.isEmployer, true);
     PersistenceHandler.setBool(PersistenceKeys.isSignedIn, true);
-    // Get.toNamed(AppRoutes.empBaseNavigator);
-    Get.toNamed(AppRoutes.userBaseNavigator);
+    Get.toNamed(AppRoutes.empBaseNavigator);
   }
 }

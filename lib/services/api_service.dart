@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
 import 'package:hirevire_app/utils/log_handler.dart';
 import 'package:hirevire_app/utils/persistence_handler.dart';
@@ -8,14 +9,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 class ApiClient {
-  // Live
-  // static const String _baseUrl = 'https://sea-turtle-app-cpepq.ondigitalocean.app/api/v1/';
-
-  // Wifi
-  static const String _baseUrl = 'http://192.168.29.243:5000/api/v1/';
-
-  // Mobile hotspot
-  // static const String _baseUrl = 'http://192.168.11.29:5000/api/v1/';
+  static final String _baseUrl = dotenv.env['API_BASE_URL']!;
 
   static const Duration timeoutDuration = Duration(seconds: 30);
 
@@ -28,7 +22,10 @@ class ApiClient {
   }
 
   Future<String?> getToken() async {
-    return await PersistenceHandler.getString(PersistenceKeys.authToken);
+    String? token =
+        await PersistenceHandler.getString(PersistenceKeys.authToken);
+    // LogHandler.debug("Token: $token");
+    return token;
   }
 
   Map<String, String> setHeaders(String? authToken) {
@@ -154,9 +151,67 @@ class ApiClient {
     };
   }
 
-  dynamic uploadImageOrVideo(String endpoint, File imageFile) async {
-    final Uri url = Uri.parse(endpoint);
+  Future<Map<String, dynamic>> uploadVideoWithThumbnail(
+      String endpoint, File videoFile,
+      {File? thumbnailFile}) async {
+    final Uri url = Uri.parse(_baseUrl + endpoint);
     var request = http.MultipartRequest('POST', url);
+
+    LogHandler.info('Upload Video: $url');
+    try {
+      // Adding the video file
+      request.files.add(await http.MultipartFile.fromPath(
+        'media',
+        videoFile.path,
+        contentType:
+            MediaType.parse(lookupMimeType(videoFile.path) ?? 'video/mp4'),
+      ));
+
+      if (thumbnailFile != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'thumbnail',
+            thumbnailFile.path,
+            contentType: MediaType.parse(
+                lookupMimeType(thumbnailFile.path) ?? 'image/jpeg'),
+          ),
+        );
+      } else {
+        request.files.add(http.MultipartFile.fromString('thumbnail', ''));
+      }
+
+      var response = await request.send();
+      var statusCode = response.statusCode;
+
+      var responseString = await response.stream.bytesToString();
+      var responseBody = jsonDecode(responseString);
+      return {
+        'success': true,
+        'statusCode': statusCode,
+        'url': url,
+        'body': responseBody,
+      };
+    } catch (error) {
+      handleError(url, error);
+      return {
+        'success': false,
+        'error': error.toString(),
+      };
+    }
+  }
+
+  dynamic uploadImageOrVideo(
+      String endpoint, File imageFile, bool? update) async {
+    final Uri url = Uri.parse(_baseUrl + endpoint);
+
+    String? token = await getToken();
+    Map<String, String> headers = {
+      'Authorization': '$token',
+      'Content-Type': 'multipart/form-data',
+    };
+
+    var request = http.MultipartRequest(update != null ? 'PUT' : 'POST', url);
+    request.headers.addAll(headers);
 
     LogHandler.info('Upload Image Or Video: $url');
     try {

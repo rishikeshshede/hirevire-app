@@ -59,6 +59,7 @@ class CommonLandingScreen extends StatelessWidget {
               text: "I am looking",
               style: AppTextThemes.bodyTextStyle(context).copyWith(
                 fontWeight: FontWeight.w500,
+                fontSize: 16,
               ),
             ),
             ButtonPrimary(

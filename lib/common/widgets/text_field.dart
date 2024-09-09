@@ -17,6 +17,7 @@ class CustomTextField extends StatefulWidget {
     this.obscureText = false,
     this.textInputAction = TextInputAction.next,
     this.textInputType = TextInputType.text,
+    this.textCapitalization = TextCapitalization.sentences,
     this.maxLines,
     this.maxLength,
     this.hintText,
@@ -74,6 +75,7 @@ class CustomTextField extends StatefulWidget {
   final bool showCursor;
   final VoidCallback? onBackspacePressed;
   final bool readOnly;
+  final TextCapitalization textCapitalization;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -157,8 +159,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 style: widget.textStyle ?? AppTextThemes.bodyTextStyle(context),
                 obscureText: widget.obscureText!,
                 textInputAction: widget.textInputAction,
+                textCapitalization: widget.textCapitalization,
                 keyboardType: widget.textInputType,
                 maxLines: widget.maxLines ?? 1,
+                // minLines: 1,
                 maxLength: widget.maxLength,
                 decoration: getDecoration(context),
                 validator: widget.validator,

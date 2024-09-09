@@ -10,12 +10,16 @@ class ImageConstant {
 
   // ICONS
   static String linkedInLogo = "$iconPath/linkedin-icon.svg";
+  static String facebookLogo = "$iconPath/facebook-logo.svg";
   static String githubLogo = "$iconPath/github-icon.svg";
   static String instagramLogo = "$iconPath/instagram-icon.svg";
   static String xLogo = "$iconPath/x-icon.svg";
   static String youtubeLogo = "$iconPath/youtube-icon.svg";
   static String arrowLeft = "$iconPath/arrow-left.png";
   static String arrowNext = "$iconPath/arrow-next.png";
+  static String next = "$iconPath/next.png";
+  static String cross = "$iconPath/cross.png";
+  static String tickWhite = "$iconPath/tick-white.png";
   static String editIcon = "$iconPath/edit.png";
   static String tickIcon = "$iconPath/tick.png";
   static String linkOtherIcon = "$iconPath/link-other.png";
@@ -25,4 +29,7 @@ class ImageConstant {
   static String chatIcon = "$iconPath/chat-icon.png";
   static String settingsIcon = "$iconPath/settings-icon.png";
   static String chatButtonIcon = "$iconPath/chat-button.png";
+  static String fileIcon = "$iconPath/file-icon.png";
+  static String fireIcon = "$iconPath/fire.png";
+  static String iceIcon = "$iconPath/ice.png";
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hirevire_app/constants/color_constants.dart';
 
-class GreenDot extends StatelessWidget {
-  const GreenDot({
+class DotWidget extends StatelessWidget {
+  final Color color;
+
+  const DotWidget({
     super.key,
+    this.color = Colors.green,
   });
 
   @override
@@ -11,9 +13,9 @@ class GreenDot extends StatelessWidget {
     return Container(
       width: 6,
       height: 6,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: AppColors.green,
+        color: color,
       ),
     );
   }

@@ -18,6 +18,7 @@ class CustomImageView extends StatelessWidget {
   final double? padding;
   final ImageType? imageType;
   final bool showLoader;
+  final Widget? placeholderWidget;
 
   /// [CustomImageView] can be used for showing any type of images.
   /// It will show the placeholder image if the image is not found on the network.
@@ -37,6 +38,7 @@ class CustomImageView extends StatelessWidget {
     this.padding,
     this.imageType,
     this.showLoader = true,
+    this.placeholderWidget,
   });
 
   @override
@@ -112,8 +114,8 @@ class CustomImageView extends StatelessWidget {
       fit: fit ?? BoxFit.cover,
       color: color,
       placeholder: (context, url) => showLoader
-          ? const Center(
-              child: CircularProgressIndicator(),
+          ? Center(
+              child: placeholderWidget ?? const CircularProgressIndicator(),
             )
           : const SizedBox(),
       errorWidget: (context, url, error) => _placeholderImage(),

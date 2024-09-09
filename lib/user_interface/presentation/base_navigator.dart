@@ -4,10 +4,14 @@ import 'package:hirevire_app/common/widgets/custom_image_view.dart';
 import 'package:hirevire_app/constants/image_constants.dart';
 import 'package:hirevire_app/user_interface/controllers/navigation_controller.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
+import 'package:hirevire_app/user_interface/presentation/chat/bindings/chat_binding.dart';
+import 'package:hirevire_app/user_interface/presentation/chat/chat_screen.dart';
 import 'package:hirevire_app/user_interface/presentation/jobs_tab/bindings/jobs_binding.dart';
 import 'package:hirevire_app/user_interface/presentation/jobs_tab/jobs_tab.dart';
-import 'package:hirevire_app/user_interface/presentation/third_tab_screen.dart';
 import 'package:hirevire_app/utils/size_util.dart';
+
+import 'my_applications_tab/bindings/my_applications_binding.dart';
+import 'my_applications_tab/my_applications_tab.dart';
 
 class UserBaseNavigator extends StatefulWidget {
   const UserBaseNavigator({super.key});
@@ -29,13 +33,13 @@ class _UserBaseNavigatorState extends State<UserBaseNavigator> {
   }
 
   Widget applicationsTab() {
-    // ThirdTabBinding().dependencies();
-    return const ThirdTabScreen();
+    MyApplicationsBinding().dependencies();
+    return const MyApplicationsTab();
   }
 
   Widget chatTab() {
-    // ThirdTabBinding().dependencies();
-    return const ThirdTabScreen();
+    ChatBinding().dependencies();
+    return const ChatScreen();
   }
 
   late final List<Widget> _screens;
@@ -52,7 +56,7 @@ class _UserBaseNavigatorState extends State<UserBaseNavigator> {
     _screens = [
       jobsTab(),
       applicationsTab(),
-      applicationsTab(),
+      chatTab(),
     ];
   }
 

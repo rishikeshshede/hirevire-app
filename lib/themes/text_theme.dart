@@ -44,7 +44,7 @@ class AppTextThemes {
     );
   }
 
-  static TextStyle bodyTextStyle(BuildContext context) {
+  static TextStyle mediumTextStyle(BuildContext context) {
     return TextStyle(
       fontSize: _getResponsiveFontSize(context, 16.0.adaptSize(context)),
       fontWeight: FontWeight.w400,
@@ -52,23 +52,7 @@ class AppTextThemes {
     );
   }
 
-  static TextStyle secondaryTextStyle(BuildContext context) {
-    return TextStyle(
-      fontSize: _getResponsiveFontSize(context, 16.0.adaptSize(context)),
-      fontWeight: FontWeight.w400,
-      color: AppColors.greyDisabled,
-    );
-  }
-
-  static TextStyle buttonTextStyle(BuildContext context) {
-    return TextStyle(
-      fontSize: _getResponsiveFontSize(context, 16.0.adaptSize(context)),
-      fontWeight: FontWeight.w500,
-      color: Colors.white,
-    );
-  }
-
-  static TextStyle smallText(BuildContext context) {
+  static TextStyle bodyTextStyle(BuildContext context) {
     return TextStyle(
       fontSize: _getResponsiveFontSize(context, 14.0.adaptSize(context)),
       fontWeight: FontWeight.w400,
@@ -76,11 +60,46 @@ class AppTextThemes {
     );
   }
 
-  static TextStyle extraSmallText(BuildContext context) {
+  static TextStyle secondaryTextStyle(BuildContext context) {
     return TextStyle(
-      fontSize: _getResponsiveFontSize(context, 12.5.adaptSize(context)),
+      fontSize: _getResponsiveFontSize(context, 14.0.adaptSize(context)),
+      fontWeight: FontWeight.w400,
+      color: AppColors.greyDisabled,
+    );
+  }
+
+  static TextStyle buttonTextStyle(BuildContext context) {
+    return TextStyle(
+      fontSize: _getResponsiveFontSize(context, 14.0.adaptSize(context)),
+      fontWeight: FontWeight.w500,
+      color: Colors.white,
+    );
+  }
+
+  static TextStyle smallText(BuildContext context) {
+    return TextStyle(
+      fontSize: _getResponsiveFontSize(context, 12.0.adaptSize(context)),
       fontWeight: FontWeight.w400,
       color: AppColors.textPrimary,
+    );
+  }
+
+  static TextStyle extraSmallText(BuildContext context) {
+    return TextStyle(
+      fontSize: _getResponsiveFontSize(context, 10.5.adaptSize(context)),
+      fontWeight: FontWeight.w400,
+      color: AppColors.textPrimary,
+    );
+  }
+
+  //specially made for the global/common components
+  static TextStyle genericTextStyle(BuildContext context,
+      {Color? color, FontWeight? fontWeight, double? customFontSize}) {
+    return TextStyle(
+      fontSize: _getResponsiveFontSize(
+          context, customFontSize ?? 12.0.adaptSize(context)),
+      fontWeight: fontWeight ?? FontWeight.w400,
+      color: color ?? AppColors.textPrimary,
     );
   }
 }
