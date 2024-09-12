@@ -72,7 +72,10 @@ class JobCard extends StatelessWidget {
               growthPlans(context),
             const SectionTitle(title: 'Perks'),
             perks(context),
-            const SectionTitle(title: 'Social Handles'),
+            if (job.postedBy != null &&
+                job.postedBy!.socialUrls != null &&
+                job.postedBy!.socialUrls!.isNotEmpty)
+              const SectionTitle(title: 'Social Handles'),
             socialHandles(context),
             const VerticalSpace(space: 20),
           ],
@@ -283,9 +286,13 @@ class JobCard extends StatelessWidget {
           ),
         );
       },
-      body: Text(
-        plan.description ?? 'No plan provided',
-        style: AppTextThemes.bodyTextStyle(context),
+      body: Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          plan.description ?? 'No plan provided',
+          style: AppTextThemes.bodyTextStyle(context),
+          textAlign: TextAlign.left,
+        ),
       ),
       isExpanded: jobsController.isOpen[index],
       canTapOnHeader: true,
@@ -303,7 +310,7 @@ class JobCard extends StatelessWidget {
   Row socialHandles(BuildContext context) {
     return Row(
       children: List.generate(
-        job.postedBy!.socialUrls!.length,
+        job.postedBy == null ? 0 : job.postedBy!.socialUrls!.length,
         (index) => SocialIconWidget(
           socialMedia: job.postedBy!.socialUrls![index],
         ),

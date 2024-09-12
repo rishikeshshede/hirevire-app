@@ -101,26 +101,25 @@ class UserOnbController extends GetxController {
       "email": emailController.text.trim(),
       "otp": otp,
     };
+    LogHandler.debug(body);
 
     try {
       Map<String, dynamic> response = await apiClient.post(endpoint, body);
+      LogHandler.debug("Response: $response");
 
       if (response['success']) {
         PersistenceHandler.setBool(PersistenceKeys.isNew, false);
 
-        String token = response['body']['token'];
-        String name = response['body']['data']['name'];
-
-        PersistenceHandler.setString(PersistenceKeys.authToken, token);
-        PersistenceHandler.setString(PersistenceKeys.name, name);
-        PersistenceHandler.setBool(PersistenceKeys.isSignedIn, true);
-
-        if (ProfileCompleteValidator().validate(response['body']['data'])) {
-          PersistenceHandler.setBool(PersistenceKeys.isProfileComplete, true);
-        }
-
         bool accountExist = response['body']['accountExist'];
         if (accountExist) {
+          String token = response['body']['token'];
+          String name = response['body']['data']['name'];
+          PersistenceHandler.setString(PersistenceKeys.authToken, token);
+          PersistenceHandler.setString(PersistenceKeys.name, name);
+          PersistenceHandler.setBool(PersistenceKeys.isSignedIn, true);
+          if (ProfileCompleteValidator().validate(response['body']['data'])) {
+            PersistenceHandler.setBool(PersistenceKeys.isProfileComplete, true);
+          }
           navigateToBaseNav();
         } else {
           navigateToNameScreen();
