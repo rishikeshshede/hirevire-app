@@ -23,7 +23,7 @@ class VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         setState(() {});
       });
     _controller.setLooping(true); // Loop the video
-    _controller.play();
+    //_controller.play();
   }
 
   @override
@@ -62,6 +62,7 @@ class VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     return GestureDetector(
       // onTap: _togglePlayPause,
       onLongPress: _togglePlayPause,
+      onTap: _togglePlayPause,
       child: SizedBox(
         width: width,
         height: videoHeight,

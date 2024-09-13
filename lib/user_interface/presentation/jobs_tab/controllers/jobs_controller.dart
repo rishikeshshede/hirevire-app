@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:hirevire_app/constants/persistence_keys.dart';
+import 'package:hirevire_app/employer_interface/models/job_application_model.dart';
 import 'package:hirevire_app/services/api_service.dart';
 import 'package:hirevire_app/utils/datetime_util.dart';
 import 'package:hirevire_app/utils/persistence_handler.dart';
@@ -13,6 +14,7 @@ import '../../../../utils/log_handler.dart';
 import '../../../../utils/show_toast_util.dart';
 import '../../../models/job_recommendations.dart';
 import '../../../models/job_seeker_profile.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class JobsController extends GetxController {
   late ApiClient apiClient;
@@ -53,6 +55,8 @@ class JobsController extends GetxController {
   File? selectedVideoFile;
   File? selectedThumbnailFile = File('');
 
+  var isRadarChartVisible = false.obs;
+
   RxList<Map<String, dynamic>> selectedSkills = <Map<String, dynamic>>[].obs;
   var skillsRatings = <String, double>{}.obs; // Map to store ratings for skills
 
@@ -70,6 +74,59 @@ class JobsController extends GetxController {
         time: const Duration(milliseconds: 300));
     fetchRecommendedJobs();
     fetchUserProfile();
+  }
+
+  List<List<RadarEntry>> prepareRadarData(
+      JobSeekerProfile? jobPost, JobRecommendationsModel applicant) {
+    final Map<String, int> jobPostSkills = jobPost?.skills != null
+        ? {
+            for (var skill in jobPost!.skills!)
+              skill.skill?.name ?? '': skill.rating ?? 0
+          }
+        : {};
+
+    final Map<String, int> applicantSkills = applicant.requiredSkills != null
+        ? {
+            for (var skill in applicant.requiredSkills!)
+              skill.skill?.name ?? '': skill.rating ?? 0
+          }
+        : {};
+
+    final allSkills = <String>{}
+      ..addAll(jobPostSkills.keys)
+      ..addAll(applicantSkills.keys);
+
+    // Create RadarEntries
+    List<RadarEntry> jobPostEntries = allSkills.map((skill) {
+      return RadarEntry(value: jobPostSkills[skill]?.toDouble() ?? 0.0);
+    }).toList();
+
+    List<RadarEntry> applicantEntries = allSkills.map((skill) {
+      return RadarEntry(value: applicantSkills[skill]?.toDouble() ?? 0.0);
+    }).toList();
+
+    // Add a dummy skill if there are less than 3 entries
+    if (jobPostEntries.length < 3) {
+      jobPostEntries.add(RadarEntry(value: 0.0)); // Add dummy skill
+      allSkills.add('Dummy Skill 1');
+    }
+    if (jobPostEntries.length < 3) {
+      jobPostEntries.add(RadarEntry(value: 0.0)); // Add another dummy skill
+      allSkills.add('Dummy Skill 2');
+    }
+
+    if (applicantEntries.length < 3) {
+      applicantEntries.add(RadarEntry(value: 0.0)); // Add dummy skill
+    }
+    if (applicantEntries.length < 3) {
+      applicantEntries.add(RadarEntry(value: 0.0)); // Add another dummy skill
+    }
+
+    return [jobPostEntries, applicantEntries];
+  }
+
+  void toggleRadarChart() {
+    isRadarChartVisible.value = !isRadarChartVisible.value;
   }
 
   void addSkill(Map<String, dynamic> selectedSkill) {
