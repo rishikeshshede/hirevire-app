@@ -109,7 +109,7 @@ class VideoUploadWidgetState extends State<VideoUploadWidget> {
         _videoController = VideoPlayerController.file(_videoFile!)
           ..initialize().then((_) {
             setState(() {});
-            _videoController!.play();
+            //_videoController!.play();
           }).catchError((error) {
             debugPrint("VideoController Error: $error");
           });

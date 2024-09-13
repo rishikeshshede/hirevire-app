@@ -23,7 +23,7 @@ class VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         setState(() {});
       });
     _controller.setLooping(true); // Loop the video
-    //_controller.play();
+    _controller.play();
   }
 
   @override
