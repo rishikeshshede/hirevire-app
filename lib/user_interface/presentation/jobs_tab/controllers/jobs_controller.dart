@@ -40,8 +40,6 @@ class JobsController extends GetxController {
 
   var skillRatingValue = 0.00.obs;
 
-  RxInt preFilledRating = 1.obs;
-
   TextEditingController nameController = TextEditingController();
   TextEditingController skillsSearchController = TextEditingController();
   TextEditingController additionalNoteController = TextEditingController();

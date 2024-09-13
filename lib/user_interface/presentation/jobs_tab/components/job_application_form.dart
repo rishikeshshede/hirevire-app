@@ -84,15 +84,15 @@ class JobApplicationForm extends StatelessWidget {
                                   )
                                 : {};
 
-                            jobsController.preFilledRating.value =
+                            var preFilledRating =
                                 seekerSkills[skill.skill!.id ?? ''] ?? 1.0;
 
                             jobsController
                                     .skillsRatings[skill.skill!.id ?? ''] =
-                                double.parse(jobsController.preFilledRating.value.toString());
+                                double.parse(preFilledRating.toString());
 
                             jobsController.skillRatingValue.value =
-                                double.parse(jobsController.preFilledRating.value.toString());
+                                double.parse(preFilledRating.toString());
 
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
