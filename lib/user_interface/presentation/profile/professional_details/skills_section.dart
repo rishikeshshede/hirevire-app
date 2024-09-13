@@ -112,13 +112,14 @@ class SkillsSection extends GetWidget<CompleteProfileController> {
                             Obx(
                               () => Slider(
                                 value: controller.skillsRatings[skill['_id']] ??
-                                    5.0,
+                                    1.0,
                                 min: 1,
                                 max: 10,
-                                //divisions: 9,
+                                divisions: 9,
+                                activeColor: AppColors.primaryDark,
                                 label:
                                     (controller.skillsRatings[skill['_id']] ??
-                                            5.0)
+                                            1.0)
                                         .round()
                                         .toString(),
                                 onChanged: (value) {

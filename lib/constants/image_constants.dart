@@ -9,6 +9,7 @@ class ImageConstant {
   static String dummyUserImage = "$imagePath/user.png";
 
   // ICONS
+  static String logout = "$iconPath/logout.svg";
   static String linkedInLogo = "$iconPath/linkedin-icon.svg";
   static String facebookLogo = "$iconPath/facebook-logo.svg";
   static String githubLogo = "$iconPath/github-icon.svg";

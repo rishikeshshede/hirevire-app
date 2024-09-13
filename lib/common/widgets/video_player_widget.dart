@@ -62,6 +62,7 @@ class VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     return GestureDetector(
       // onTap: _togglePlayPause,
       onLongPress: _togglePlayPause,
+      onTap: _togglePlayPause,
       child: SizedBox(
         width: width,
         height: videoHeight,

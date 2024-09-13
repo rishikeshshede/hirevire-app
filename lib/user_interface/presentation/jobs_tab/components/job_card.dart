@@ -1,9 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hirevire_app/common/widgets/button_outline.dart';
 import 'package:hirevire_app/common/widgets/chip_widget.dart';
 import 'package:hirevire_app/common/widgets/custom_image_view.dart';
 import 'package:hirevire_app/common/widgets/green_dot.dart';
+import 'package:hirevire_app/common/widgets/radar_chart_widget.dart';
 import 'package:hirevire_app/common/widgets/social_icon_widget.dart';
 import 'package:hirevire_app/common/widgets/spacing_widget.dart';
 import 'package:hirevire_app/constants/color_constants.dart';
@@ -31,6 +33,11 @@ class JobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final radarData = jobsController.prepareRadarData(
+        jobsController.jobSeekerProfile.value, job);
+    final skillNames =
+        job.requiredSkills?.map((skill) => skill.skill?.name ?? '').toList();
+
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -66,13 +73,58 @@ class JobCard extends StatelessWidget {
               const SectionTitle(title: 'Required Skills'),
             if (job.requiredSkills != null && job.requiredSkills!.isNotEmpty)
               requiredSkills(),
+            const VerticalSpace(space: 22),
+            Obx(() {
+              return jobsController.isRadarChartVisible.value
+                  ? Stack(
+                      children: [
+                        SizedBox(
+                          //width: 200,
+                          child: RadarChartComponent(
+                            jobPostData: radarData[0],
+                            applicantData: radarData[1],
+                            skillNames: skillNames,
+                          ),
+                        ),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.close,
+                              size: 30,
+                            ),
+                            onPressed: () {
+                              jobsController.toggleRadarChart();
+                            },
+                          ),
+                        ),
+                      ],
+                    )
+                  : SizedBox(
+                      width: 200,
+                      child: ButtonOutline(
+                        btnText: 'Match Me',
+                        onPressed: () {
+                          if (job.requiredSkills != null &&
+                              job.requiredSkills!.isNotEmpty) {
+                            jobsController.toggleRadarChart();
+                          }
+                        },
+                      ),
+                    );
+            }),
+            //const VerticalSpace(space: 4),
             if (job.growthPlan != null && job.growthPlan!.isNotEmpty)
               const SectionTitle(title: 'Growth Plan', marginBottom: 0),
             if (job.growthPlan != null && job.growthPlan!.isNotEmpty)
               growthPlans(context),
             const SectionTitle(title: 'Perks'),
             perks(context),
-            const SectionTitle(title: 'Social Handles'),
+            if (job.postedBy != null &&
+                job.postedBy!.socialUrls != null &&
+                job.postedBy!.socialUrls!.isNotEmpty)
+              const SectionTitle(title: 'Social Handles'),
             socialHandles(context),
             const VerticalSpace(space: 20),
           ],
@@ -283,9 +335,13 @@ class JobCard extends StatelessWidget {
           ),
         );
       },
-      body: Text(
-        plan.description ?? 'No plan provided',
-        style: AppTextThemes.bodyTextStyle(context),
+      body: Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          plan.description ?? 'No plan provided',
+          style: AppTextThemes.bodyTextStyle(context),
+          textAlign: TextAlign.left,
+        ),
       ),
       isExpanded: jobsController.isOpen[index],
       canTapOnHeader: true,
@@ -303,7 +359,7 @@ class JobCard extends StatelessWidget {
   Row socialHandles(BuildContext context) {
     return Row(
       children: List.generate(
-        job.postedBy!.socialUrls!.length,
+        job.postedBy == null ? 0 : job.postedBy!.socialUrls!.length,
         (index) => SocialIconWidget(
           socialMedia: job.postedBy!.socialUrls![index],
         ),
