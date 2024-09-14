@@ -7,7 +7,7 @@ class ToastWidgit {
     Fluttertoast.showToast(
       msg: msg,
       toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
+      gravity: ToastGravity.CENTER,
       timeInSecForIosWeb: 3,
       backgroundColor: AppColors.disabled,
       textColor: AppColors.primaryDark,
